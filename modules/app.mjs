@@ -4,8 +4,10 @@ import * as data from './data.mjs';
 function start() {
     $('#status').text('Fetching Data');
 
-    data.getDistricts().then(ridings => {
-        const text = JSON.stringify(ridings, null, 4);
+    //data.getDistricts().then(ridings => {
+        //const text = JSON.stringify(ridings, null, 4);
+    data.getVotingResults().then(data => {
+        const text = JSON.stringify(data, null, 4);
         $('#data').text(text);
         $('#status').text('Ready');
     });

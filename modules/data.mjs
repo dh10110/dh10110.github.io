@@ -1,5 +1,6 @@
+import { readDelimitedFile } from './lineReader.mjs';
 
-export async function getDistricts() {
+export async function getRidings() {
     //Get text file content
     const ridings = await fetch('/datafiles/districts.txt')
         .catch(err => console.log(err))
@@ -22,3 +23,25 @@ export async function getDistricts() {
         });
     return ridings;
 }
+
+export async function getVotingResults() {
+    const results = await fetch('/datafiles/GE2021.txt')
+        .catch(err => console.log(err))
+        .then(response => response.text())
+        .then(text => readDelimitedFile(text, { skip: 2, delimiter: '\t' }))
+        .then(lines => {
+            //const districts = new Map();
+            const records = [];
+            for (const cols of lines) {
+                if (cols.length >= 14) {
+                    const [district_number, district_name, , results_type, , surname, ,, party, , votes, , district_rejected_ballots, district_total_votes] = cols;
+                    records.push({
+                        district_number, district_name, results_type, surname, party, votes, district_rejected_ballots, district_total_votes
+                    });
+                }
+            }
+            return records;
+        });
+    return results;
+}
+
