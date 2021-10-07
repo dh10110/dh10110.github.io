@@ -13,18 +13,11 @@ function showStatus(text) {
     $('#status').text(text);
 }
 
-function reportData(heading) {
-    return data => {
-        showData('getRidings', data);
-        dataCount += 1;
-        showStatus('Loaded ' + heading);
-    };
-}
-
 async function showResults() {
     let dataCount = 0;
     const fnDataCount = data => {
         dataCount += 1;
+        showStatus('Loaded ' + dataCount);
         return data;
     };
 
