@@ -8,7 +8,7 @@ export async function getDistricts() {
             const ridings = [];
             const lines = text.split(/\r\n|[\r\n]/g);
             const skipLines = 1; //header
-            for (const lineIndex = skipLines; lineIndex < lines.length; lineIndex += 1) {
+            for (let lineIndex = skipLines; lineIndex < lines.length; lineIndex += 1) {
                 const line = lines[lineIndex];
                 const values = line.split(/,/g);
                 if (values.length >= 2) {
