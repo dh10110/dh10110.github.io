@@ -35,13 +35,15 @@ export async function getVotingResults() {
             for (const cols of lines) {
                 if (cols.length >= 14) {
                     const [district_number, district_name, , results_type, , surname, ,, party, , votes, , district_rejected_ballots, district_total_votes] = cols;
-                    const districtItem = getOrAdd(map, district_number, () => ({
-                        district_number, district_name, district_total_votes, district_rejected_ballots,
-                        candidates: []
-                    }));
-                    districtItem.candidates.push({
-                        surname, party, votes
-                    });
+                    if (results_type === 'validated') {
+                        const districtItem = getOrAdd(map, district_number, () => ({
+                            district_number, district_name, district_total_votes, district_rejected_ballots,
+                            candidates: []
+                        }));
+                        districtItem.candidates.push({
+                            surname, party, votes
+                        });
+                    }
                 }
             }
             return districts;
