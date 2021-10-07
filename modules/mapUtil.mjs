@@ -4,6 +4,6 @@ export function getOrAdd(map, key, fnAdd) {
         return map.get(key);
     }
     const newItem = fnAdd();
-    map.set(newItem);
+    map.set(key, newItem);
     return newItem;
 }

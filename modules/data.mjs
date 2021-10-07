@@ -6,13 +6,10 @@ export async function getRidings() {
     const ridings = await fetch('/datafiles/districts.txt')
         .catch(err => console.log(err))
         .then(response => response.text())
-        .then(text => {
+        .then(text => readDelimitedFile(text, { skip: 1, delimiter: ',' }))
+        .then(lines => {
             const ridings = [];
-            const lines = text.split(/\r\n|[\r\n]/g);
-            const skipLines = 1; //header
-            for (let lineIndex = skipLines; lineIndex < lines.length; lineIndex += 1) {
-                const line = lines[lineIndex];
-                const values = line.split(/,/g);
+            for (const values of lines) {
                 if (values.length >= 2) {
                     ridings.push({
                         riding: values[0],
