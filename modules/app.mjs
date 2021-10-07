@@ -3,9 +3,11 @@ import * as data from './data.mjs';
 
 function start() {
     $('#status').text('Fetching Data');
-    const text = data.getDistricts();
-    $('#data').text(text);
-    $('#status').text('Ready');
+
+    const text = data.getDistricts().then(() => {
+        $('#data').text(text);
+        $('#status').text('Ready');
+    });
 }
 
 $(start);
