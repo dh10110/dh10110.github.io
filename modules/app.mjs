@@ -25,9 +25,18 @@ async function showResults() {
         data.getRidings().then(fnDataCount),
         data.getVotingResults().then(fnDataCount)
     ]);
-    showData('getRidings', ridings);
-    showData('getVotingResults', Array.from(voting.values()));
+    //showData('getRidings', ridings);
+    //showData('getVotingResults', Array.from(voting.values()));
 
+    for (const newRiding of ridings) {
+        ridings.voting = [];
+        for (const district_number of newRiding.districts) {
+            const districtVoting = voting.get(district_number);
+            ridings.voting.push(districtVoting);
+        }
+    }
+
+    showData('processed ridings', ridings);
 }
 
 
