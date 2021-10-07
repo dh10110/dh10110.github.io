@@ -33,7 +33,7 @@ async function showResults() {
     for (const newRiding of ridings) {
         const $nr = $('<article/>');
         const $nrd = $('<details/>').appendTo($nr);
-        $('<summary/>').text(newRiding.riding);
+        $('<summary/>').text(newRiding.riding).appendTo($nrd);
 
         newRiding.voting = [];
         for (const district_number of newRiding.districts) {
