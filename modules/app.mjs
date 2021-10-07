@@ -21,7 +21,7 @@ async function showResults() {
         return data;
     };
 
-    [ridings, voting] = await Promise.all([
+    const [ridings, voting] = await Promise.all([
         data.getRidings().then(fnDataCount),
         data.getVotingResults().then(fnDataCount)
     ]);
