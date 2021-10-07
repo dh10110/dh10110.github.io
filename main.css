@@ -5,4 +5,5 @@ body {
 
 #data {
     font-family: monospace;
+    white-space: pre;
 }
