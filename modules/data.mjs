@@ -1,4 +1,5 @@
 import { readDelimitedFile } from './lineReader.mjs';
+import { getOrAdd } from './mapUtil.mjs';
 
 export async function getRidings() {
     //Get text file content
@@ -30,17 +31,20 @@ export async function getVotingResults() {
         .then(response => response.text())
         .then(text => readDelimitedFile(text, { skip: 2, delimiter: '\t' }))
         .then(lines => {
-            //const districts = new Map();
-            const records = [];
+            const districts = new Map();
             for (const cols of lines) {
                 if (cols.length >= 14) {
                     const [district_number, district_name, , results_type, , surname, ,, party, , votes, , district_rejected_ballots, district_total_votes] = cols;
-                    records.push({
-                        district_number, district_name, results_type, surname, party, votes, district_rejected_ballots, district_total_votes
+                    const districtItem = getOrAdd(map, district_number, () => ({
+                        district_number, district_name, district_total_votes, district_rejected_ballots,
+                        candidates: []
+                    }));
+                    districtItem.candidates.push({
+                        surname, party, votes
                     });
                 }
             }
-            return records;
+            return districts;
         });
     return results;
 }
