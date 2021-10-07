@@ -21,10 +21,10 @@ async function showResults() {
         return data;
     };
 
-    [ridings, voting] = await Promise.all(
+    [ridings, voting] = await Promise.all([
         data.getRidings().then(fnDataCount),
         data.getVotingResults().then(fnDataCount)
-    );
+    ]);
     showData('getRidings', ridings);
     showData('getVotingResults', Array.from(voting.values()));
 
