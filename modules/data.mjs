@@ -14,7 +14,7 @@ export async function getDistricts() {
                 if (values.length >= 2) {
                     ridings.push({
                         riding: values[0],
-                        districts: value[1].split(/~/g)
+                        districts: values[1].split(/~/g)
                     });
                 }
             }
