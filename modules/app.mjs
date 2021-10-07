@@ -31,11 +31,23 @@ async function showResults() {
     //showData('getVotingResults', Array.from(voting.values()));
 
     for (const newRiding of ridings) {
+        const $nr = $('<article/>');
+        const $nrd = $('<details/>').appendTo($nr);
+        $('<summary/>').text(newRiding.riding);
+
         newRiding.voting = [];
         for (const district_number of newRiding.districts) {
             const districtVoting = voting.get(district_number);
             newRiding.voting.push(districtVoting);
+
+            $od = $('<details>').appendTo($nrd);
+            $('<summary/>').text(districtVoting.district_name).appendTo($od);
+
+            for (const candidate of districtVoting.candidates) {
+                $('<p/>').text(`${candidate.party} ${candidate.surname} ${candidate.votes}`).appendTo($od);
+            }
         }
+        $nr.appendTo($('#vote-initial'));
     }
 
     showData('processed ridings', ridings);
