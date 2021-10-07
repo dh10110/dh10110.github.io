@@ -7,7 +7,7 @@ function start() {
     //data.getDistricts().then(ridings => {
         //const text = JSON.stringify(ridings, null, 4);
     data.getVotingResults().then(data => {
-        const text = JSON.stringify(data, null, 4);
+        const text = JSON.stringify(Array.from(data.values()), null, 4);
         $('#data').text(text);
         $('#status').text('Ready');
     });
