@@ -1,0 +1,2 @@
+district,ridings
+Scarborough,35093~35094~35095~35096~35097~35098
