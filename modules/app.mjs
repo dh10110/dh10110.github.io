@@ -29,10 +29,10 @@ async function showResults() {
     //showData('getVotingResults', Array.from(voting.values()));
 
     for (const newRiding of ridings) {
-        ridings.voting = [];
+        newRiding.voting = [];
         for (const district_number of newRiding.districts) {
             const districtVoting = voting.get(district_number);
-            ridings.voting.push(districtVoting);
+            newRiding.voting.push(districtVoting);
         }
     }
 
