@@ -40,7 +40,7 @@ async function showResults() {
             const districtVoting = voting.get(district_number);
             newRiding.voting.push(districtVoting);
 
-            $od = $('<details>').appendTo($nrd);
+            const $od = $('<details>').appendTo($nrd);
             $('<summary/>').text(districtVoting.district_name).appendTo($od);
 
             for (const candidate of districtVoting.candidates) {
