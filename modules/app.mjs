@@ -1,7 +1,11 @@
 import $ from './lib/jquery.mjs';
+import * as data from './data.mjs';
 
 function start() {
-    $('#status').text('Hello World');
+    $('#status').text('Fetching Data');
+    const text = data.getDistricts();
+    $('#data').text(text);
+    $('#status').text('Ready');
 }
 
 $(start);
