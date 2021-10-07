@@ -2,3 +2,18 @@ html,
 body {
     font-family: sans-serif;
 }
+#data-container h2 {
+    margin-bottom: 0;
+    padding: 0.2em 0.2em 0.1em;
+    font-size: 100%;
+    border: 1px solid #cca;
+    border-bottom-width: 0;
+    background-color: #ffc;
+}
+
+#data-container pre {
+    border: 1px solid #cca;
+    padding: 0.5em;
+    background-color: #ffd;
+    margin-top: 0;
+}

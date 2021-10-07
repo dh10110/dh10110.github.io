@@ -7,7 +7,7 @@ function start() {
     data.getRidings().then(data => {
         const text = JSON.stringify(data, null, 4);
         $('<article/>')
-            .append($('<h2/>').text('getVotingResults'))
+            .append($('<h2/>').text('getRidings'))
             .append($('<pre/>').text(text))
             .appendTo($('#data-container'));
         $('#status').text('Loaded 1');
