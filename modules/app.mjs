@@ -9,17 +9,38 @@ function showData(heading, data) {
         .appendTo($('#data-container'));
 }
 
-function start() {
-    $('#status').text('Fetching Data');
+function showStatus(text) {
+    $('#status').text(text);
+}
 
-    data.getRidings().then(data => {
+function reportData(heading) {
+    return data => {
         showData('getRidings', data);
-        $('#status').text('Loaded 1');
-    });
-    data.getVotingResults().then(data => {
-        showData('getVotingResults', Array.from(data.values()));
-        $('#status').text('Loaded 2');
-    });
+        dataCount += 1;
+        showStatus('Loaded ' + heading);
+    };
+}
+
+async function showResults() {
+    let dataCount = 0;
+    const fnDataCount = data => {
+        dataCount += 1;
+        return data;
+    };
+
+    [ridings, voting] = await Promise.all(
+        data.getRidings().then(fnDataCount),
+        data.getVotingResults().then(fnDataCount)
+    );
+    showData('getRidings', ridings);
+    showData('getVotingResults', Array.from(voting.values()));
+
+}
+
+
+function start() {
+    showStatus('Fetching Data...');
+    showResults();
 }
 
 $(start);

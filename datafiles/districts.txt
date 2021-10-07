@@ -1,4 +1,4 @@
-district,ridings
+new riding,districts
 Scarborough,35093~35094~35095~35096~35097~35098
 Prince Edward Island,11001~11002~11003~11004
 Calgary North,48005~48006~48009~48010~48013
