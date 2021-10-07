@@ -4,7 +4,7 @@ import * as data from './data.mjs';
 function start() {
     $('#status').text('Fetching Data');
 
-    const text = data.getDistricts().then(() => {
+    data.getDistricts().then(text => {
         $('#data').text(text);
         $('#status').text('Ready');
     });
