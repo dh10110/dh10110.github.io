@@ -1,6 +1,13 @@
 import { readDelimitedFile } from './lineReader.mjs';
 import { getOrAdd } from './mapUtil.mjs';
 
+export async function getParties() {
+    const parties = await fetch('/datafiles/parties.json')
+        .catch(err => console.log(err))
+        .then(response => response.json());
+    return parties;
+}
+
 export async function getRidings() {
     //Get text file content
     const ridings = await fetch('/datafiles/districts.txt')

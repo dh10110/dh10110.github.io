@@ -21,10 +21,12 @@ async function showResults() {
         return data;
     };
 
-    const [ridings, voting] = await Promise.all([
+    const [parties, ridings, voting] = await Promise.all([
+        data.getParties().then(fnDataCount),
         data.getRidings().then(fnDataCount),
         data.getVotingResults().then(fnDataCount)
     ]);
+    showData('getParties', parties);
     //showData('getRidings', ridings);
     //showData('getVotingResults', Array.from(voting.values()));
 
