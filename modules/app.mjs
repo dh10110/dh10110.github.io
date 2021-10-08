@@ -53,16 +53,15 @@ async function showResults() {
                         `<span style="color: ${dv.candidates[0].color};">⬤</span>`
                     ).join('')}</summary>
                     ${newRiding.voting.map(dv => `
-                        <details open class="old-district">
-                            <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
-                            <section>
-                                ${dv.candidates.map(c => `
-                                    <div><span style="color: ${c.color || '#666'};">⬤</span>${c.surname} - ${c.party}</div>
-                                    <div style="position:relative;"><div style="position:absolute; left:0; width:${(100 * c.votes / dv.district_total_votes).toFixed(0)}%" background-color:${c.color};>${c.votes}</div></div>
-                                    <div><meter min="0" max="${dv.district_total_votes}" value="${c.votes}">${c.votes}</meter></div>
-                                `).join('')}
-                            </section>
-                        </details>
+                    <details open class="old-district">
+                        <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
+                        <section>
+                        ${dv.candidates.map(c => `
+                            <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
+                            <div class="meter"><div style="width:${(100 * c.votes / dv.district_total_votes).toFixed(0)}%; background-color:${c.color};">${c.votes}</div></div>
+                        `).join('')}
+                        </section>
+                    </details>
                     `).join('')}
                 </details>
             </article>

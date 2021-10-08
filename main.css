@@ -26,6 +26,15 @@ details[open] > summary {
     border-bottom: 1px dotted silver;
 }
 
+.meter {
+    position: relative;
+    height: 1.2em;
+}
+.meter > div {
+    position:absolute;
+     left:0;
+}
+
 summary {
     padding: 0.5em;
 }
