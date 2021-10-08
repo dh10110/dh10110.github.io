@@ -13,6 +13,10 @@ function showStatus(text) {
     $('#status').text(text);
 }
 
+function compareCandidates(a, b) {
+    return (b.votes - a.votes); //desc
+}
+
 async function showResults() {
     let dataCount = 0;
     const fnDataCount = data => {
@@ -31,25 +35,16 @@ async function showResults() {
     //showData('getVotingResults', Array.from(voting.values()));
 
     for (const newRiding of ridings) {
-        //const $nr = $('<article/>');
-        //const $nrd = $('<details/>').appendTo($nr);
-        //$('<summary/>').text(newRiding.riding).appendTo($nrd);
-
         newRiding.voting = [];
         for (const district_number of newRiding.districts) {
             const districtVoting = voting.get(district_number);
             newRiding.voting.push(districtVoting);
-
-            //const $od = $('<details>').appendTo($nrd);
-            //$('<summary/>').text(districtVoting.district_name).appendTo($od);
-
             for (const candidate of districtVoting.candidates) {
                 let partyObj = parties[candidate.party] || parties.default;
                 candidate.color = partyObj.color;
-                //$('<p/>').text(`${candidate.party} ${candidate.surname} ${candidate.votes}`).appendTo($od);
             }
+            districtVoting.candidates.sort(compareCandidates);
         }
-        //$nr.appendTo($('#vote-initial'));
 
         const ridingHtml = `
             <article>
@@ -57,9 +52,9 @@ async function showResults() {
                     <summary>${newRiding.riding}</summary>
                     ${newRiding.voting.map(dv => `
                         <details open class="old-district">
-                            <summary>${dv.district_name}</summary>
+                            <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
                             ${dv.candidates.map(c => `
-                                <div style="border-bottom: 1px dotted ${c.color || '#666'}">${c.surname} - ${c.party}</div>
+                                <div><span style="color: ${c.color || '#666'};">⬤</span>${c.surname} - ${c.party}</div>
                                 <div><meter min="0" max="${dv.district_total_votes}" value="${c.votes}">${c.votes}</meter></div>
                             `).join('')}
                         </details>
