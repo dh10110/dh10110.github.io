@@ -20,12 +20,25 @@ body {
 
 details {
     border: 1px solid silver;
-    margin: 1em;
+    margin: 0.5em;
 }
 details[open] > summary {
-    border-bottom: 1px solid silver;
+    border-bottom: 1px dotted silver;
 }
 
 summary {
-    padding: 1em;
+    padding: 0.5em;
+}
+
+details[open] summary ~ * {
+    animation: open 0.3s ease-in-out;
+}
+
+@keyframes open {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
