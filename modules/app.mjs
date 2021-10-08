@@ -58,10 +58,10 @@ async function showResults() {
                         <section>
                         ${dv.candidates.map(c => `
                             <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
-                            <div class="meter"><div style="width:${(100 * c.votes / dv.district_total_votes).toFixed(0)}%; background-color:${c.color};">${c.votes}</div></div>
+                            <div class="meter"><div style="width:${ratioWidth(c.votes, dv.district_total_votes)}; background-color:${c.color};">${c.votes}</div></div>
                         `).join('')}
                         <div>Rejected Ballots</div>
-                        <div class="meter"><div style="width:${(100 * dv.district_rejected_ballots / dv.district_total_votes).toFixed(0)};">${dv.district_rejected_ballots}</div></div>
+                        <div class="meter"><div style="width:${ratioWidth(dv.district_rejected_ballots, dv.district_total_votes)};" background-color:#aaa;>${dv.district_rejected_ballots}</div></div>
                         </section>
                     </details>
                     `).join('')}
@@ -73,6 +73,15 @@ async function showResults() {
     }
 
     showData('processed ridings', ridings);
+}
+
+function ratioWidth(numerator, denominator) {
+    const pct = (100 * numerator / denominator).toFixed(1);
+    if (pct == '0') {
+        return '1px';
+    } else {
+        return pct + '%';
+    }
 }
 
 
