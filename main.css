@@ -35,6 +35,14 @@ details[open] > summary {
      left:0;
 }
 
+.flex-meter {
+    display: flex;
+    flex-direction: row;
+}
+.flex-meter:nth-child(1) {
+    display: inline-block;
+}
+
 summary {
     padding: 0.5em;
 }
