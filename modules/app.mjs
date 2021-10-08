@@ -51,12 +51,12 @@ async function showResults() {
 
         const ridingHtml = `
             <article>
-                <details open>
+                <details open class="new-riding">
                     <summary>${newRiding.riding}</summary>
                     ${newRiding.voting.map(dv => `
-                        <details open>
+                        <details open class="old-district">
                             <summary>${dv.district_name}</summary>
-                            <dl>
+                            <dl class="votes">
                             ${dv.candidates.map(c => `
                                 <dt>${c.surname}</dt>
                                 <dd>${c.party}</dd>
