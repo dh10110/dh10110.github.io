@@ -58,10 +58,10 @@ async function showResults() {
                         <section>
                         ${dv.candidates.map(c => `
                             <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
-                            <div class="meter"><div style="width:${ratioWidth(c.votes, dv.district_total_votes)}; background-color:${c.color};">${c.votes}</div></div>
+                            ${makeMeter(c.votes, dv.district_total_votes, c.color)}
                         `).join('')}
                         <div>Rejected Ballots</div>
-                        <div class="meter"><div style="width:${ratioWidth(dv.district_rejected_ballots, dv.district_total_votes)};" background-color:#aaa;>${dv.district_rejected_ballots}</div></div>
+                        ${makeMeter(dv.district_rejected_ballots, dv.district_total_votes, '#aaa')}
                         </section>
                     </details>
                     `).join('')}
@@ -75,12 +75,20 @@ async function showResults() {
     showData('processed ridings', ridings);
 }
 
+function makeMeter(numerator, denominator, barColor) {
+    const pct = numerator / denominator;
+    const text = numerator;
+    //<div class="meter"><div style="width:${ratioWidth(c.votes, dv.district_total_votes)}; background-color:${c.color};">${c.votes}</div></div>
+    return `<div class="flex-meter"><span style="width:${ratioWidth(pct)}; background-color: ${barColor}"></span><span>${text}</span></div>`;
+}
+
 function ratioWidth(numerator, denominator) {
-    const pct = (100 * numerator / denominator).toFixed(1);
-    if (pct == '0') {
+    if (!denominator) denominator = 1;
+    const txtpct = (100 * numerator / denominator).toFixed(1);
+    if (txtpct == '0') {
         return '1px';
     } else {
-        return pct + '%';
+        return txtpct + '%';
     }
 }
 
