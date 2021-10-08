@@ -31,23 +31,45 @@ async function showResults() {
     //showData('getVotingResults', Array.from(voting.values()));
 
     for (const newRiding of ridings) {
-        const $nr = $('<article/>');
-        const $nrd = $('<details/>').appendTo($nr);
-        $('<summary/>').text(newRiding.riding).appendTo($nrd);
+        //const $nr = $('<article/>');
+        //const $nrd = $('<details/>').appendTo($nr);
+        //$('<summary/>').text(newRiding.riding).appendTo($nrd);
 
         newRiding.voting = [];
         for (const district_number of newRiding.districts) {
             const districtVoting = voting.get(district_number);
             newRiding.voting.push(districtVoting);
 
-            const $od = $('<details>').appendTo($nrd);
-            $('<summary/>').text(districtVoting.district_name).appendTo($od);
+            //const $od = $('<details>').appendTo($nrd);
+            //$('<summary/>').text(districtVoting.district_name).appendTo($od);
 
             for (const candidate of districtVoting.candidates) {
-                $('<p/>').text(`${candidate.party} ${candidate.surname} ${candidate.votes}`).appendTo($od);
+                //$('<p/>').text(`${candidate.party} ${candidate.surname} ${candidate.votes}`).appendTo($od);
             }
         }
-        $nr.appendTo($('#vote-initial'));
+        //$nr.appendTo($('#vote-initial'));
+
+        const ridingHtml = `
+            <article>
+                <details open>
+                    <summary>${newRiding.riding}</summary>
+                    ${newRiding.voting.map(dv => `
+                        <details open>
+                            <summary>${dv.district_name}</summary>
+                            <dl>
+                            ${dv.candidates.map(c => `
+                                <dt>${c.surname}</dt>
+                                <dd>${c.party}</dd>
+                                <dd>${c.votes}</dd>
+                            `)}
+                            </dl>
+                        </details>
+                    `)}
+                </details>
+            </article>
+        `;
+        const container = document.getElementById('vote-initial');
+        container.insertAdjacentHTML('beforeend', ridingHtml);
     }
 
     showData('processed ridings', ridings);
