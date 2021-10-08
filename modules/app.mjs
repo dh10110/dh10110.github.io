@@ -61,10 +61,10 @@ async function showResults() {
                                 <dt>${c.surname}</dt>
                                 <dd>${c.party}</dd>
                                 <dd>${c.votes}</dd>
-                            `)}
+                            `).join('')}
                             </dl>
                         </details>
-                    `)}
+                    `).join('')}
                 </details>
             </article>
         `;
