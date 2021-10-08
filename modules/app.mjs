@@ -44,6 +44,8 @@ async function showResults() {
             //$('<summary/>').text(districtVoting.district_name).appendTo($od);
 
             for (const candidate of districtVoting.candidates) {
+                let partyObj = parties[candidate.party] || parties.default;
+                candidate.color = partyObj.color;
                 //$('<p/>').text(`${candidate.party} ${candidate.surname} ${candidate.votes}`).appendTo($od);
             }
         }
@@ -56,13 +58,10 @@ async function showResults() {
                     ${newRiding.voting.map(dv => `
                         <details open class="old-district">
                             <summary>${dv.district_name}</summary>
-                            <dl class="votes">
                             ${dv.candidates.map(c => `
-                                <dt>${c.surname}</dt>
-                                <dd>${c.party}</dd>
-                                <dd>${c.votes}</dd>
+                                <div style="border-bottom: 1px dotted ${c.color || '#666'}">${c.surname} - ${c.party}</div>
+                                <div><meter min="0" max="${dv.district_total_votes}" value="${c.votes}">${c.votes}</meter></div>
                             `).join('')}
-                            </dl>
                         </details>
                     `).join('')}
                 </details>

@@ -17,3 +17,15 @@ body {
     background-color: #ffd;
     margin-top: 0;
 }
+
+details {
+    border: 1px solid silver;
+    margin: 1em;
+}
+details[open] > summary {
+    border-bottom: 1px solid silver;
+}
+
+summary {
+    padding: 1em;
+}
