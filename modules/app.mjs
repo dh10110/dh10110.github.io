@@ -60,6 +60,8 @@ async function showResults() {
                             <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
                             <div class="meter"><div style="width:${(100 * c.votes / dv.district_total_votes).toFixed(0)}%; background-color:${c.color};">${c.votes}</div></div>
                         `).join('')}
+                        <div>Rejected Ballots</div>
+                        <div class="meter"><div style="width:${(100 * dv.district_rejected_ballots / dv.district_total_votes).toFixed(0)};">${dv.district_rejected_ballots}</div></div>
                         </section>
                     </details>
                     `).join('')}
