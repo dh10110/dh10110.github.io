@@ -49,7 +49,9 @@ async function showResults() {
         const ridingHtml = `
             <article>
                 <details open class="new-riding">
-                    <summary>${newRiding.riding}</summary>
+                    <summary>${newRiding.riding} ${newRiding.voting.map(dv => `
+                        <span style="color: ${dv.candidates[0].color};">⬤</span>
+                    `).join('')}</summary>
                     ${newRiding.voting.map(dv => `
                         <details open class="old-district">
                             <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
