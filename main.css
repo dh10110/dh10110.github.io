@@ -18,6 +18,7 @@ body {
     margin-top: 0;
 }
 
+/*#region Details */
 details {
     border: 1px solid silver;
     margin: 0.5em;
@@ -26,29 +27,9 @@ details[open] > summary {
     border-bottom: 1px dotted silver;
 }
 
-.meter {
-    position: relative;
-    height: 1.2em;
-}
-.meter > div {
-    position:absolute;
-     left:0;
-}
-
-.flex-meter {
-    display: flex;
-    flex-direction: row;
-}
-.flex-meter > * {
-    display: inline-block;
-}
-
-.flex-meter > .label {
-    margin-left: 0.1em;
-}
-
 summary {
     padding: 0.5em;
+    cursor: pointer;
 }
 
 details > section {
@@ -67,3 +48,22 @@ details[open] summary ~ * {
         opacity: 1;
     }
 }
+/*#endregion*/
+
+.flex-meter {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex-meter > * {
+    display: inline-block;
+}
+
+.flex-meter:nth-child(1) {
+    min-width: 1px;
+}
+
+.flex-meter > .label {
+    margin-left: 0.1em;
+}
+
