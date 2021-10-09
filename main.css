@@ -39,8 +39,12 @@ details[open] > summary {
     display: flex;
     flex-direction: row;
 }
-.flex-meter:nth-child(1) {
+.flex-meter > * {
     display: inline-block;
+}
+
+.flex-meter > .label {
+    margin-left: 0.1em;
 }
 
 summary {
@@ -48,7 +52,7 @@ summary {
 }
 
 details > section {
-    padding-left: 0.5em;
+    padding: 0.5em;
 }
 
 details[open] summary ~ * {

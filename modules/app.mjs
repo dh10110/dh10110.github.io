@@ -1,6 +1,8 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
 
+const numFormat = new Intl.NumberFormat('en-CA').format;
+
 function showData(heading, data) {
     const text = JSON.stringify(data, null, 4);
     $('<article/>')
@@ -48,12 +50,12 @@ async function showResults() {
 
         const ridingHtml = `
             <article>
-                <details open class="new-riding">
+                <details class="new-riding">
                     <summary>${newRiding.riding} ${newRiding.voting.map(dv => 
                         `<span style="color: ${dv.candidates[0].color};">⬤</span>`
                     ).join('')}</summary>
                     ${newRiding.voting.map(dv => `
-                    <details open class="old-district">
+                    <details class="old-district">
                         <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
                         <section>
                         ${dv.candidates.map(c => `
@@ -77,9 +79,8 @@ async function showResults() {
 
 function makeMeter(numerator, denominator, barColor) {
     const pct = numerator / denominator;
-    const text = numerator;
-    //<div class="meter"><div style="width:${ratioWidth(c.votes, dv.district_total_votes)}; background-color:${c.color};">${c.votes}</div></div>
-    return `<div class="flex-meter"><span style="width:${ratioWidth(pct)}; background-color: ${barColor}"></span><span>${text}</span></div>`;
+    const text = numFormat(numerator);
+    return `<div class="flex-meter"><span style="width:${ratioWidth(pct)}; background-color: ${barColor}"></span><span class="label">${text}</span></div>`;
 }
 
 function ratioWidth(numerator, denominator) {
