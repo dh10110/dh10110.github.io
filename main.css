@@ -20,11 +20,24 @@ body {
 
 /*#region Details */
 details {
-    border: 1px solid silver;
+    border: 1px solid darkgray;
     margin: 0.5em;
+    border-radius: 3px;
 }
 details[open] > summary {
-    border-bottom: 1px dotted silver;
+    border-bottom: 1px dotted darkgray;
+}
+
+details details {
+    border-color: silver;
+}
+
+details details details {
+    border-color: lightgray;
+}
+
+details > summary {
+    border-color: inherit;
 }
 
 summary {

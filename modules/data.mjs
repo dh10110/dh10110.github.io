@@ -2,7 +2,7 @@ import { readDelimitedFile } from './lineReader.mjs';
 import { getOrAdd } from './mapUtil.mjs';
 
 export async function getParties() {
-    const parties = await fetch('/datafiles/parties.json')
+    const parties = await fetch('/datafiles/parties.json', { cache: 'no-cache' })
         .catch(err => console.log(err))
         .then(response => response.json());
     return parties;
@@ -10,7 +10,7 @@ export async function getParties() {
 
 export async function getRidings() {
     //Get text file content
-    const ridings = await fetch('/datafiles/districts.txt')
+    const ridings = await fetch('/datafiles/districts.txt', { cache: 'no-cache' })
         .catch(err => console.log(err))
         .then(response => response.text())
         .then(text => readDelimitedFile(text, { skip: 1, delimiter: ',' }))
