@@ -49,26 +49,28 @@ async function showResults() {
         }
 
         const ridingHtml = `
-            <article>
-                <details class="new-riding">
-                    <summary>${newRiding.riding} ${newRiding.voting.map(dv => 
-                        `<span style="color: ${dv.candidates[0].color};">⬤</span>`
-                    ).join('')}</summary>
-                    ${newRiding.voting.map(dv => `
-                    <details class="old-district">
-                        <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
-                        <section>
-                        ${dv.candidates.map(c => `
-                            <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
-                            ${makeMeter(c.votes, dv.district_total_votes, c.color)}
-                        `).join('')}
-                        <div>Rejected Ballots</div>
-                        ${makeMeter(dv.district_rejected_ballots, dv.district_total_votes, '#aaa')}
-                        </section>
-                    </details>
-                    `).join('')}
-                </details>
-            </article>
+<article>
+    <details class="new-riding">
+        <summary>${newRiding.riding} ${newRiding.voting.map(dv => 
+            `<span style="color: ${dv.candidates[0].color};">⬤</span>`
+        ).join('')}</summary>
+        <section class="details-body">
+            ${newRiding.voting.map(dv => `
+            <details class="old-district">
+                <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
+                <section class="details-body">
+                ${dv.candidates.map(c => `
+                    <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
+                    ${makeMeter(c.votes, dv.district_total_votes, c.color)}
+                `).join('')}
+                <div>Rejected Ballots</div>
+                ${makeMeter(dv.district_rejected_ballots, dv.district_total_votes, '#aaa')}
+                </section>
+            </details>
+        `).join('')}
+        </section>
+    </details>
+</article>
         `;
         const container = document.getElementById('vote-initial');
         container.insertAdjacentHTML('beforeend', ridingHtml);

@@ -2,9 +2,8 @@
     "Liberal": { "color": "#A50B0B" },
     "Conservative": { "color": "#0C499C" },
     "NDP-New Democratic Party": { "color":"#f48221", "abbr": "NDP" },
-    "x-NDP-New Democratic Party": { "color": "#DA3D00", "abbr": "NDP" },
     "Bloc Québécois": { "color": "#02819E", "abbr": "Bloc" },
     "Green Party": { "color": "#2E8724", "abbr": "Green" },
     "People's Party - PPC": { "color": "#4A3389", "abbr": "PPC" },
-    "default": { "color": "#676767" }
+    "default": { "color": "#676767", "abbr": "Other" }
 }

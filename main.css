@@ -18,14 +18,19 @@ body {
     margin-top: 0;
 }
 
+article + article {
+    margin-top: 1em;
+}
+
 /*#region Details */
 details {
     border: 1px solid darkgray;
-    margin: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
     border-radius: 3px;
 }
 details[open] > summary {
-    border-bottom: 1px dotted darkgray;
+    border-bottom: 1px dotted silver;
 }
 
 details details {
@@ -36,16 +41,14 @@ details details details {
     border-color: lightgray;
 }
 
-details > summary {
-    border-color: inherit;
-}
-
 summary {
-    padding: 0.5em;
+    padding: 0.2em 0.5em 0.3em;
     cursor: pointer;
 }
 
 details > section {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
     padding: 0.5em;
 }
 
