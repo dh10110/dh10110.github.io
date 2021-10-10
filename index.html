@@ -6,11 +6,22 @@
     </head>
     <body>
         <h1>Vote Compare</h1>
-        <p>Status: <span id="status">Loading...</span></p>
+        <div>Status: <span id="status">Loading...</span></div>
 
-        <section id="vote-initial"></section>
+        <section>
+            <h2>Actual Votes in General Election</h2>
+            <section id="vote-initial"></section>
+        </section>
 
-        <section id="data-container"></section>
+        <section>
+            <h2>Simulation of STV</h2>
+            <section id="vote-stv"></section>
+        </section>
+
+        <section>
+            <h2>Data</h2>
+            <section id="data-container"></section>
+        </section>
 
         <script type="module" src="./modules/app.mjs"></script>
     </body>

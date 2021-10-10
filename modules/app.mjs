@@ -1,6 +1,6 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
-import { getOrAdd } from './mapUtil.mjs';
+import { getOrAdd, concat } from './mapUtil.mjs';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -69,6 +69,38 @@ async function showResults() {
     }
 
     showData('processed ridings', ridings);
+
+    for (const newRiding of ridings) {
+        newRiding.positions = 0;
+        newRiding.candidates = [];
+        for (const dv of newRiding.voting) {
+            newRiding.positions += 1;
+            for (const candidate of dv.candidates) {
+                newRiding.candidates.push(candidate);
+            }
+        }
+        newRiding.candidates.sort(compareCandidates);
+    }
+
+    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(ridings, r => {
+        return `
+<article>
+    <details>
+        <summary>${newRiding.riding}</summary>
+        <section class="details-body">
+            ${concat(newRiding.candidates, c => {
+                return makeVoteLine({
+                    heading: `${c.surname} - ${c.party}`,
+                    votes: c.votes,
+                    voteTotal: newRiding.summary.total,
+                    color: c.color
+                });
+            })}
+        </section>
+    </details>
+</article>
+        `;
+    }))
 }
 
 function makeRidingHtml(newRiding) {
