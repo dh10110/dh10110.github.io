@@ -73,17 +73,17 @@ async function showResults() {
     <details class="new-riding">
         <summary>${newRiding.riding} ${newRiding.voting.map(dv => 
             `<span style="color: ${dv.candidates[0].color};">⬤</span>`
-        ).join('')}</summary>
+        ).join('')}
+            <div style="display:flex;">
+            ${Array.from(newRiding.summary.byParty.values()).map(pt =>
+                `<div style="height: 5px; background-color: ${pt.color}; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
+            ).join('')}
+                <div style="height: 5px; background-color: #aaa; flex-grow: ${(newRiding.summary.rejected / newRiding.summary.total).toFixed(3)}"></div>
+            <div>
+        </summary>
         <section class="details-body">
             <details class="old-district">
-                <summary>Totals
-                    <div style="display:flex;">
-                    ${Array.from(newRiding.summary.byParty.values()).map(pt =>
-                        `<div style="height: 5px; background-color: ${pt.color}; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
-                    ).join('')}
-                        <div style="height: 5px; background-color: #aaa; flex-grow: ${(newRiding.summary.rejected / newRiding.summary.total).toFixed(3)}"></div>
-                    <div>
-                </summary>
+                <summary>Totals</summary>
                 <section class="details-body">
                 ${Array.from(newRiding.summary.byParty.values()).map(pt => `
                     <div class="vote-total">
