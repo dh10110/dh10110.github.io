@@ -143,8 +143,9 @@ function makeVoteLine({ heading, votes, voteTotal, color = '#aaa'} = {}) {
 
 function makeMeter(numerator, denominator, barColor) {
     const pct = numerator / denominator;
+    const txtPct = (100 * pct).toFixed(1) + '%';
     const text = numFormat(numerator);
-    return `<div class="flex-meter"><span style="width:${ratioWidth(pct)}; background-color: ${barColor}"></span><span class="label">${text}</span></div>`;
+    return `<div class="flex-meter"><span style="width:${txtPct}; background-color: ${barColor}"></span><span class="label">${text} (${txtpct})</span></div>`;
 }
 
 function ratioWidth(numerator, denominator) {
