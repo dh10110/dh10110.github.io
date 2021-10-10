@@ -95,8 +95,8 @@ function makeRidingHtml(newRiding) {
                             votes: pt.votes,
                             voteTotal: newRiding.summary.total,
                             color: pt.color 
-                        }).join('')
-                    )}
+                        })
+                    ).join('')}
                     ${makeVoteLine({
                         heading: 'Rejected Ballots',
                         votes: newRiding.summary.rejected,
@@ -115,8 +115,8 @@ function makeRidingHtml(newRiding) {
                             votes: c.votes,
                             voteTotal: dv.district_total_votes,
                             color: c.color 
-                        }).join('')
-                    )}
+                        })
+                    ).join('')}
                     ${makeVoteLine({
                         heading: 'Rejected Ballots',
                         votes: dv.district_rejected_ballots,
