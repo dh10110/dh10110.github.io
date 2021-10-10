@@ -1,5 +1,6 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
+import { getOrAdd } from './mapUtil.mjs';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -47,6 +48,25 @@ async function showResults() {
             }
             districtVoting.candidates.sort(compareCandidates);
         }
+        newRiding.summary = newRiding.voting.reduce((sum, dv) => {
+            for (const candidate of dv.candidates) {
+                const partyObj = parties[candidate.party] || parties.default;
+                const key = partyObj.abbr === 'Other' ? 'Other' : candidate.party;
+                const partyTotal = getOrAdd(sum.byParty, key, () => ({
+                    party: candidate.party,
+                    color: candidate.color,
+                    votes: 0
+                }));
+                partyTotal.votes += candidate.votes;
+            }
+            sum.total += dv.district_total_votes;
+            sum.rejected += dv.district_rejected_ballots;
+            return sum;
+        }, {
+            total: 0,
+            rejected: 0,
+            byParty: new Map()
+        });
 
         const ridingHtml = `
 <article>
@@ -55,16 +75,28 @@ async function showResults() {
             `<span style="color: ${dv.candidates[0].color};">⬤</span>`
         ).join('')}</summary>
         <section class="details-body">
+            <section class="summary">
+            ${newRiding.summary.byParty.map(pt => `
+                <div class="vote-total">
+                    <div><span style="color: ${pt.color};">⬤</span>${pt.party}</div>
+                    ${makeMeter(pt.votes, sum.total, pt.color)}
+                </div>
+            `).join('')}
+                <div>Rejected Ballots</div>
+                ${makeMeter(sum.rejected, sum.total, '#aaa')}
+            </section>
             ${newRiding.voting.map(dv => `
             <details class="old-district">
                 <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
                 <section class="details-body">
                 ${dv.candidates.map(c => `
-                    <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
-                    ${makeMeter(c.votes, dv.district_total_votes, c.color)}
+                    <div class="vote-total">
+                        <div><span style="color: ${c.color};">⬤</span>${c.surname} - ${c.party}</div>
+                        ${makeMeter(c.votes, dv.district_total_votes, c.color)}
+                    </div>
                 `).join('')}
-                <div>Rejected Ballots</div>
-                ${makeMeter(dv.district_rejected_ballots, dv.district_total_votes, '#aaa')}
+                    <div>Rejected Ballots</div>
+                    ${makeMeter(dv.district_rejected_ballots, dv.district_total_votes, '#aaa')}
                 </section>
             </details>
         `).join('')}

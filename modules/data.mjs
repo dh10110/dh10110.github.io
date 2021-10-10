@@ -41,11 +41,14 @@ export async function getVotingResults() {
                     const [district_number, district_name, , results_type, , surname, ,, party, , votes, , district_rejected_ballots, district_total_votes] = cols;
                     if (results_type === 'validated') {
                         const districtItem = getOrAdd(districts, district_number, () => ({
-                            district_number, district_name, district_total_votes, district_rejected_ballots,
+                            district_number, district_name,
+                            district_total_votes: Number(district_total_votes),
+                            district_rejected_ballots: Number(district_rejected_ballots),
                             candidates: []
                         }));
                         districtItem.candidates.push({
-                            surname, party, votes
+                            surname, party,
+                            votes: Number(votes)
                         });
                     }
                 }
