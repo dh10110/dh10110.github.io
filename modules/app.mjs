@@ -76,7 +76,7 @@ async function showResults() {
         ).join('')}</summary>
         <section class="details-body">
             <section class="summary">
-            ${newRiding.summary.byParty.map(pt => `
+            ${Array.from(newRiding.summary.byParty.values()).map(pt => `
                 <div class="vote-total">
                     <div><span style="color: ${pt.color};">⬤</span>${pt.party}</div>
                     ${makeMeter(pt.votes, sum.total, pt.color)}
