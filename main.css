@@ -22,7 +22,7 @@ article + article {
     margin-top: 1em;
 }
 
-.vote-totals + .vote-totals {
+.vote-total + .vote-total {
     margin-top: 0.3em;
 }
 
