@@ -51,9 +51,11 @@ async function showResults() {
                 const partyTotal = getOrAdd(mapByParty, sumKey, () => ({
                     party: sumKey,
                     color: partyObj.color,
-                    votes: 0
+                    votes: 0,
+                    candidates: []
                 }));
                 partyTotal.votes += candidate.votes;
+                partyTotal.candidates.push(candidate);
             }
             newRiding.summary.total += districtVoting.district_total_votes;
             newRiding.summary.rejected += districtVoting.district_rejected_ballots;
@@ -62,6 +64,9 @@ async function showResults() {
         }
         newRiding.summary.byParty = Array.from(mapByParty.values());
         newRiding.summary.byParty.sort(compareCandidates);
+        for (const pt of newRiding.summary.byParty) {
+            pt.candidates.sort(compareCandidates);
+        }
 
         const ridingHtml = makeRidingHtml(newRiding);
         const container = document.getElementById('vote-initial');

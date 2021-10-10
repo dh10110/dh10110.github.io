@@ -76,9 +76,6 @@ details[open] summary ~ * {
 
 .flex-meter > * {
     display: inline-block;
-}
-
-.flex-meter:nth-child(1) {
     min-width: 1px;
 }
 
