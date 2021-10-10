@@ -79,7 +79,7 @@ async function showResults() {
                 <summary>Totals
                     <div style="display:flex;">
                     ${Array.from(newRiding.summary.byParty.values()).map(pt =>
-                        `<div style="height: 5px; flex-grow: ${toFixed(pt.votes / newRiding.summary.total, 3)}"></div>`
+                        `<div style="height: 5px; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
                     )}
                     <div>
                 </summary>
