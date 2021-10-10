@@ -55,8 +55,8 @@ async function showResults() {
                 }));
                 partyTotal.votes += candidate.votes;
             }
-            summary.total += districtVoting.district_total_votes;
-            summary.rejected += districtVoting.district_rejected_ballots;
+            newRiding.summary.total += districtVoting.district_total_votes;
+            newRiding.summary.rejected += districtVoting.district_rejected_ballots;
 
             districtVoting.candidates.sort(compareCandidates);
         }
