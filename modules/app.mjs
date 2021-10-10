@@ -82,7 +82,7 @@ async function showResults() {
         newRiding.candidates.sort(compareCandidates);
     }
 
-    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(ridings, r => {
+    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(ridings, newRiding => {
         return `
 <article>
     <details>
