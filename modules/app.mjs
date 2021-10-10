@@ -69,8 +69,7 @@ async function showResults() {
         }
 
         const ridingHtml = makeRidingHtml(newRiding);
-        const container = document.getElementById('vote-initial');
-        container.insertAdjacentHTML('beforeend', ridingHtml);
+        document.getElementById('vote-initial').insertAdjacentHTML('beforeend', ridingHtml);
     }
 
     showData('processed ridings', ridings);
@@ -84,6 +83,7 @@ async function showResults() {
                 newRiding.candidates.push(candidate);
             }
         }
+        newRiding.summary.quota = Math.ceil(newRiding.summary.total / (newRiding.positions + 1)) //droop quota
         newRiding.candidates.sort(compareCandidates);
     }
 
@@ -93,6 +93,17 @@ async function showResults() {
     <details>
         <summary>${newRiding.riding}</summary>
         <section class="details-body">
+            <details>
+                <summary>First Choice Votes</summary>
+                <section class="details-body">
+            ${
+                makeVoteLine({
+                    heading: 'Quota',
+                    votes: newRiding.summary.quota,
+                    voteTotal: newRiding.summary.total,
+                    color: '#333'
+                })
+            }
             ${concat(newRiding.candidates, c => {
                 return makeVoteLine({
                     heading: `${c.surname} - ${c.party}`,
@@ -101,6 +112,8 @@ async function showResults() {
                     color: c.color
                 });
             })}
+                </section>
+            </details>
         </section>
     </details>
 </article>
