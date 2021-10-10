@@ -76,7 +76,13 @@ async function showResults() {
         ).join('')}</summary>
         <section class="details-body">
             <details class="old-district">
-                <summary>Totals</summary>
+                <summary>Totals
+                    <div style="display:flex;">
+                    ${Array.from(newRiding.summary.byParty.values()).map(pt =>
+                        `<div style="height: 5px; flex-grow: ${toFixed(pt.votes / newRiding.summary.total, 3)}"></div>`
+                    )}
+                    <div>
+                </summary>
                 <section class="details-body">
                 ${Array.from(newRiding.summary.byParty.values()).map(pt => `
                     <div class="vote-total">

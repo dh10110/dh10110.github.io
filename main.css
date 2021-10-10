@@ -22,6 +22,10 @@ article + article {
     margin-top: 1em;
 }
 
+.vote-totals + .vote-totals {
+    margin-top: 0.3em;
+}
+
 /*#region Details */
 details {
     border: 1px solid darkgray;
@@ -63,6 +67,7 @@ details[open] summary ~ * {
     }
 }
 /*#endregion*/
+
 
 .flex-meter {
     display: flex;
