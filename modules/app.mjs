@@ -79,11 +79,11 @@ async function showResults() {
             ${Array.from(newRiding.summary.byParty.values()).map(pt => `
                 <div class="vote-total">
                     <div><span style="color: ${pt.color};">⬤</span>${pt.party}</div>
-                    ${makeMeter(pt.votes, sum.total, pt.color)}
+                    ${makeMeter(pt.votes, newRiding.summary.total, pt.color)}
                 </div>
             `).join('')}
                 <div>Rejected Ballots</div>
-                ${makeMeter(sum.rejected, sum.total, '#aaa')}
+                ${makeMeter(newRiding.summary.rejected, newRiding.summary.total, '#aaa')}
             </section>
             ${newRiding.voting.map(dv => `
             <details class="old-district">
