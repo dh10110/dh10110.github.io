@@ -6,10 +6,17 @@ const numFormat = new Intl.NumberFormat('en-CA').format;
 
 function showData(heading, data) {
     const text = JSON.stringify(data, null, 4);
-    $('<article/>')
-        .append($('<h2/>').text(heading))
-        .append($('<pre/>').text(text))
-        .appendTo($('#data-container'));
+    const dataHtml = `
+<article class="show-data">
+    <details open>
+        <summary>${heading}</summary>
+        <section class="details-body">
+            <pre>${text}
+        </section>
+    </details>
+</article>
+    `;
+    document.getElementById('data-container').insertAdjacentHTML('beforeend', dataHtml);
 }
 
 function showStatus(text) {

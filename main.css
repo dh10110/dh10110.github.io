@@ -1,21 +1,23 @@
 html,
 body {
     font-family: sans-serif;
-}
-#data-container h2 {
-    margin-bottom: 0;
-    padding: 0.2em 0.2em 0.1em;
-    font-size: 100%;
-    border: 1px solid #cca;
-    border-bottom-width: 0;
-    background-color: #ffc;
+    font-size: 1em;
 }
 
-#data-container pre {
+#data-container details {
     border: 1px solid #cca;
-    padding: 0.5em;
     background-color: #ffd;
-    margin-top: 0;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+#data-container summary {
+    padding: 0.2em 0.5em 0.3em;
+    cursor: pointer;
+    background-color: #ffc;
+}
+#data-container details[open] > summary {
+    border-bottom: 1px solid #cca;
 }
 
 article + article {
