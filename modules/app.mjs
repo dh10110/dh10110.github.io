@@ -4,11 +4,11 @@ import { getOrAdd, concat } from './mapUtil.mjs';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
-function showData(heading, data) {
+function showData(heading, data, open = true) {
     const text = JSON.stringify(data, null, 4);
     const dataHtml = `
 <article class="show-data">
-    <details open>
+    <details${open ? ' open' : ''}>
         <summary>${heading}</summary>
         <section class="details-body">
             <pre>${text}
@@ -41,8 +41,8 @@ async function showResults() {
         data.getVotingResults().then(fnDataCount)
     ]);
     showData('getParties', parties);
-    //showData('getRidings', ridings);
-    //showData('getVotingResults', Array.from(voting.values()));
+    showData('getRidings', ridings, false);
+    showData('getVotingResults', Array.from(voting.values()), false);
 
     for (const newRiding of ridings) {
         newRiding.voting = [];
