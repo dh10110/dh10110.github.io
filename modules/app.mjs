@@ -4,7 +4,7 @@ import { getOrAdd, concat } from './mapUtil.mjs';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
-function showData(heading, data, open = true) {
+function showData(heading, data, open = false) {
     const text = JSON.stringify(data, null, 4);
     const dataHtml = `
 <article class="show-data">
@@ -41,8 +41,8 @@ async function showResults() {
         data.getVotingResults().then(fnDataCount)
     ]);
     showData('getParties', parties);
-    showData('getRidings', ridings, false);
-    showData('getVotingResults', Array.from(voting.values()), false);
+    showData('getRidings', ridings);
+    showData('getVotingResults', Array.from(voting.values()));
 
     for (const newRiding of ridings) {
         newRiding.voting = [];
