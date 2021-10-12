@@ -83,7 +83,7 @@ async function showResults() {
 
     showData('stvDistricts', stvDistricts);
 
-    document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml));
+    document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml(d)));
 
     for (const stvDistrict of stvDistricts) {
        for (const d of stvDistrict.districts) {
