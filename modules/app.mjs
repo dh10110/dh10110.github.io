@@ -184,7 +184,7 @@ function makeRidingHtml(newRiding) {
                     <section class="details-body">
                         ${concat(dv.candidates, c => 
                             makeVoteLine({
-                                heading: `${c.surname} - ${c.party}`,
+                                heading: `${c.surname} <small>${c.given_name}</small> - ${c.party} - ${c.vote_pct}`,
                                 votes: c.votes,
                                 voteTotal: dv.district_total_votes,
                                 color: c.color 

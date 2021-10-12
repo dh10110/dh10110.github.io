@@ -38,7 +38,7 @@ export async function getVotingResults() {
             const districts = new Map();
             for (const cols of lines) {
                 if (cols.length >= 14) {
-                    const [district_number, district_name, , results_type, , surname, ,, party, , votes, , district_rejected_ballots, district_total_votes] = cols;
+                    const [district_number, district_name, , results_type, , surname, middle_name, given_name, party, , votes, vote_pct, district_rejected_ballots, district_total_votes] = cols;
                     if (results_type === 'validated') {
                         const districtItem = getOrAdd(districts, district_number, () => ({
                             district_number, district_name,
@@ -47,8 +47,9 @@ export async function getVotingResults() {
                             candidates: []
                         }));
                         districtItem.candidates.push({
-                            surname, party,
-                            votes: Number(votes)
+                            surname, middle_name, given_name, party,
+                            votes: Number(votes),
+                            vote_pct: Number(vote_pct)
                         });
                     }
                 }
