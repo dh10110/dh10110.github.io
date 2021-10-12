@@ -77,13 +77,13 @@ async function showResults() {
 
         stvDistricts.push(stvDistrict);
 
-        const ridingHtml = makeRidingHtml(newRiding);
-        document.getElementById('vote-initial').insertAdjacentHTML('beforeend', ridingHtml);
+        //const ridingHtml = makeRidingHtml(newRiding);
+        //document.getElementById('vote-initial').insertAdjacentHTML('beforeend', ridingHtml);
     }
 
-    document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml));
-
     showData('stvDistricts', stvDistricts);
+
+    document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml));
 
     for (const stvDistrict of stvDistricts) {
        for (const d of stvDistrict.districts) {
