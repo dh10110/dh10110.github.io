@@ -1,5 +1,6 @@
 import { readDelimitedFile } from './lineReader.mjs';
 import { getOrAdd } from './mapUtil.mjs';
+import { District, Candidate } from './classes.mjs';
 
 export async function getParties() {
     const parties = await fetch('/datafiles/parties.json', { cache: 'no-cache' })
@@ -38,8 +39,15 @@ export async function getVotingResults() {
             const districts = new Map();
             for (const cols of lines) {
                 if (cols.length >= 14) {
-                    const [district_number, district_name, , results_type, , surname, middle_name, given_name, party, , votes, vote_pct, district_rejected_ballots, district_total_votes] = cols;
+                    const [districtNumber, districtName, , resultsType, , surname, middleNames, givenName, partyName, , votes, votePct, rejectedBallots, totalBallots] = cols;
                     if (results_type === 'validated') {
+                        const districtItem = getOrAdd(districts, districtNumber, () => new District({
+                            districtNumber, districtName, rejectedBallots, totalBallots
+                        }));
+                        districtItem.addCandidate(new Candidate({
+                            surname, middleNames, givenName, partyName, votes, votePct
+                        }));
+                        /*
                         const districtItem = getOrAdd(districts, district_number, () => ({
                             district_number, district_name,
                             district_total_votes: Number(district_total_votes),
@@ -51,6 +59,7 @@ export async function getVotingResults() {
                             votes: Number(votes),
                             vote_pct: Number(vote_pct)
                         });
+                        */
                     }
                 }
             }

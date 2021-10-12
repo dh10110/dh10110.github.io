@@ -1,6 +1,7 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
+import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -44,61 +45,61 @@ async function showResults() {
     showData('getRidings', ridings);
     showData('getVotingResults', Array.from(voting.values()));
 
+    const stvDistricts = [];
+    
     for (const newRiding of ridings) {
-        newRiding.voting = [];
-        newRiding.summary = { total: 0, rejected: 0 };
+        const stvDistrict = new StvDistrict({ districtNmame: newRiding.riding });
         const mapByParty = new Map();
-        for (const district_number of newRiding.districts) {
-            const districtVoting = voting.get(district_number);
-            newRiding.voting.push(districtVoting);
-            for (const candidate of districtVoting.candidates) {
+        for (const districtNumber of newRiding.districts) {
+            const oldDistrict = voting.get(districtNumber);
+            stvDistrict.addDistrict(oldDistrict);
+            for (const candidate of oldDistrict.candidates) {
                 const partyObj = parties[candidate.party] || parties.default;
                 candidate.color = partyObj.color;
-                const sumKey = partyObj.abbr === 'Other' ? 'Other' : candidate.party;
-                const partyTotal = getOrAdd(mapByParty, sumKey, () => ({
-                    party: sumKey,
-                    color: partyObj.color,
-                    votes: 0,
-                    candidates: []
+                const partyKey = partyObj.abbr === 'Other' ? 'Other' : candidate.party;
+                const partyTotal = getOrAdd(mapByParty, partyKey, () => new CandidateGroup({
+                    groupName: partyKey,
+                    color: partyObj.color
                 }));
                 partyTotal.votes += candidate.votes;
                 partyTotal.candidates.push(candidate);
             }
-            newRiding.summary.total += districtVoting.district_total_votes;
-            newRiding.summary.rejected += districtVoting.district_rejected_ballots;
+            stvDistrict.totalBallots += oldDistrict.totalBallots;
+            stvDistrict.rejectedBallots += oldDistrict.rejectedBallots;
 
-            districtVoting.candidates.sort(compareCandidates);
+            oldDistrict.candidates.sort(compareCandidates);
         }
-        newRiding.summary.byParty = Array.from(mapByParty.values());
-        newRiding.summary.byParty.sort(compareCandidates);
-        for (const pt of newRiding.summary.byParty) {
-            pt.candidates.sort(compareCandidates);
+        stvDistrict.byParty = Array.from(mapByParty.values());
+        stvDistrict.byParty.sort(compareCandidates);
+        for (const partyTotal of stvDistrict.byParty) {
+            partyTotal.candidates.sort(compareCandidates);
         }
+
+        stvDistricts.push(stvDistrict);
 
         const ridingHtml = makeRidingHtml(newRiding);
         document.getElementById('vote-initial').insertAdjacentHTML('beforeend', ridingHtml);
     }
 
-    showData('processed ridings', ridings);
+    document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml));
 
-    for (const newRiding of ridings) {
-        newRiding.positions = 0;
-        newRiding.candidates = [];
-        for (const dv of newRiding.voting) {
-            newRiding.positions += 1;
-            for (const candidate of dv.candidates) {
-                newRiding.candidates.push(candidate);
-            }
-        }
-        newRiding.summary.quota = Math.ceil((newRiding.summary.total - newRiding.summary.rejected) / (newRiding.positions + 1)) //droop quota
-        newRiding.candidates.sort(compareCandidates);
-    }
+    showData('stvDistricts', stvDistricts);
 
-    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(ridings, newRiding => {
+    for (const stvDistrict of stvDistricts) {
+       for (const d of stvDistrict.districts) {
+           for (const c of d.candidates) {
+               stvDistrict.addCandidate(c);
+           }
+       }
+       stvDistrict.quota = Math.ceil(stvDistrict.validVotes / (stvDistrict.seats + 1)); //droop
+       stvDistrict.candidates.sort(compareCandidates);
+   }
+
+    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
         return `
 <article>
     <details>
-        <summary>${newRiding.riding}</summary>
+        <summary>${stvDistrict.districtName}</summary>
         <section class="details-body">
             <details>
                 <summary>First Choice Votes</summary>
@@ -106,16 +107,16 @@ async function showResults() {
                     ${
                         makeVoteLine({
                             heading: 'Quota',
-                            votes: newRiding.summary.quota,
-                            voteTotal: newRiding.summary.total - newRiding.summary.rejected,
+                            votes: stvDistrict.quota,
+                            voteTotal: stvDistrict.validVotes,
                             color: '#333'
                         })
                     }
-                    ${concat(newRiding.candidates, c => {
+                    ${concat(stvDistrict.candidates, c => {
                         return makeVoteLine({
                             heading: `${c.surname} <small>${c.given_name}</small> - ${c.party}`,
                             votes: c.votes,
-                            voteTotal: newRiding.summary.total - newRiding.summary.rejected,
+                            voteTotal: stvDistrict.validVotes,
                             color: c.color
                         });
                     })}
@@ -194,6 +195,69 @@ function makeRidingHtml(newRiding) {
                             heading: 'Rejected Ballots',
                             votes: dv.district_rejected_ballots,
                             voteTotal: dv.district_total_votes,
+                            color: '#aaa'
+                        })}
+                    </section>
+                </details>
+            `)}
+        </section>
+    </details>
+</article>
+    `;
+}
+
+function makeInitialHtml(stvDistrict) {
+    return `
+<article>
+    <details class="new-riding">
+        <summary>${stvDistrict.districtName} ${concat(stvDistrict.districts, d => colorDot(d.candidates[0].color))}
+            ${colorBar([
+                ...stvDistrict.byParty.map(pt => ({
+                    color: pt.color,
+                    weight: (pt.votes / stvDistrict.validVotes).toFixed(3)
+                })),
+                {
+                    color: '#aaa',
+                    weight: (stvDistrict.rejectedBallots / stvDistrict.totalBallots).toFixed(3)
+                }
+            ])}
+        </summary>
+        <section class="details-body">
+            <details class="old-district">
+                <summary>Totals</summary>
+                <section class="details-body">
+                    ${concat(stvDistrict.byParty, pt => 
+                        makeVoteLine({
+                            heading: pt.party,
+                            votes: pt.votes,
+                            voteTotal: stvDistrict.validVotes,
+                            color: pt.color
+                        })
+                    )}
+                    ${makeVoteLine({
+                        heading: 'Rejected Ballots',
+                        votes: stvDistrict.rejectedBallots,
+                        voteTotal: stvDistrict.totalBallots,
+                        color: '#aaa'
+                    })}
+                </section>
+            </details>
+            ${concat(stvDistrict.districts, dv => `
+                <details class="old-district">
+                    <summary>${colorDot(dv.candidates[0].color)} ${dv.districtName} <small>${dv.districtNumber}</small></summary>
+                    <section class="details-body">
+                        ${concat(dv.candidates, c =>
+                            makeVoteLine({
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                votes: c.votes,
+                                voteTotal: dv.validVotes,
+                                color: c.color 
+                            })
+                        )}
+                        ${makeVoteLine({
+                            heading: 'Rejected Ballots',
+                            votes: dv.rejectedBallots,
+                            voteTotal: dv.totalBallots,
                             color: '#aaa'
                         })}
                     </section>

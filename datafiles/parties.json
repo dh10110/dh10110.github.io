@@ -1,6 +1,6 @@
 {
-    "Liberal": { "color": "#A50B0B" },
-    "Conservative": { "color": "#0C499C" },
+    "Liberal": { "color": "#A50B0B", "abbr": "Liberal" },
+    "Conservative": { "color": "#0C499C", "abbr": "Conservative" },
     "NDP-New Democratic Party": { "color":"#f48221", "abbr": "NDP" },
     "Bloc Québécois": { "color": "#02819E", "abbr": "Bloc" },
     "Green Party": { "color": "#2E8724", "abbr": "Green" },
