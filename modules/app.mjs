@@ -180,7 +180,7 @@ function makeInitialHtml(stvDistrict) {
                     <section class="details-body">
                         ${concat(dv.candidates, c =>
                             makeVoteLine({
-                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                heading: `${c.surname} <small>(${c.givenName})</small> - ${c.partyName}`,
                                 votes: c.votes,
                                 voteTotal: dv.validVotes,
                                 color: c.color 

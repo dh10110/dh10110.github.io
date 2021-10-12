@@ -30,17 +30,10 @@ article + article {
 
 /*#region Details */
 details {
-    border-left: 1px solid gray;
+    border-left: 3px solid gray;
+    border-radius: 5px;
     margin-top: 0.5em;
     margin-bottom: 0.5em;
-    border-radius: 5px;
-}
-details > summary {
-    background-color: #f8f8f8;
-}
-details[open] > summary {
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
 }
 
 details details {
@@ -52,6 +45,7 @@ details details details {
 }
 
 summary {
+    border-radius: 5px;
     padding: 0.2em 0.5em 0.3em;
     cursor: pointer;
 }
