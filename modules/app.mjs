@@ -175,7 +175,7 @@ function makeInitialHtml(stvDistrict) {
                 </section>
             </details>
             ${concat(stvDistrict.districts, dv => `
-                <details class="old-district">
+                <details class="old-district" style="border-color: ${dv.candidates[0].color}">
                     <summary>${colorDot(dv.candidates[0].color)} ${dv.districtName} <small>${dv.districtNumber}</small></summary>
                     <section class="details-body">
                         ${concat(dv.candidates, c =>
