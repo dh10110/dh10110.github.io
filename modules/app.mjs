@@ -88,7 +88,7 @@ async function showResults() {
                stvDistrict.addCandidate(c);
            }
        }
-       stvDistrict.quota = Math.ceil(stvDistrict.validVotes / (stvDistrict.seats + 1)); //droop
+       stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
        stvDistrict.candidates.sort(compareCandidates);
    }
 
@@ -101,14 +101,12 @@ async function showResults() {
             <details>
                 <summary>First Choice Votes</summary>
                 <section class="details-body">
-                    ${
-                        makeVoteLine({
-                            heading: 'Quota',
-                            votes: stvDistrict.quota,
-                            voteTotal: stvDistrict.validVotes,
-                            color: '#333'
-                        })
-                    }
+                    ${makeVoteLine({
+                        heading: 'Quota',
+                        votes: stvDistrict.quota,
+                        voteTotal: stvDistrict.validVotes,
+                        color: '#333'
+                    })}
                     ${concat(stvDistrict.candidates, c => {
                         return makeVoteLine({
                             heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
@@ -143,7 +141,7 @@ function colorBar(items) {
 function makeInitialHtml(stvDistrict) {
     return `
 <article>
-    <details class="new-riding">
+    <details class="stv-district">
         <summary>${stvDistrict.districtName} ${concat(stvDistrict.districts, d => colorDot(d.candidates[0].color))}
             ${colorBar([
                 ...stvDistrict.byParty.map(pt => ({
