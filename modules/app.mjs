@@ -103,22 +103,22 @@ async function showResults() {
             <details>
                 <summary>First Choice Votes</summary>
                 <section class="details-body">
-            ${
-                makeVoteLine({
-                    heading: 'Quota',
-                    votes: newRiding.summary.quota,
-                    voteTotal: newRiding.summary.total,
-                    color: '#333'
-                })
-            }
-            ${concat(newRiding.candidates, c => {
-                return makeVoteLine({
-                    heading: `${c.surname} - ${c.party}`,
-                    votes: c.votes,
-                    voteTotal: newRiding.summary.total,
-                    color: c.color
-                });
-            })}
+                    ${
+                        makeVoteLine({
+                            heading: 'Quota',
+                            votes: newRiding.summary.quota,
+                            voteTotal: newRiding.summary.total,
+                            color: '#333'
+                        })
+                    }
+                    ${concat(newRiding.candidates, c => {
+                        return makeVoteLine({
+                            heading: `${c.surname} - ${c.party}`,
+                            votes: c.votes,
+                            voteTotal: newRiding.summary.total,
+                            color: c.color
+                        });
+                    })}
                 </section>
             </details>
         </section>
@@ -138,9 +138,9 @@ function makeRidingHtml(newRiding) {
     <details class="new-riding">
         <summary>${newRiding.riding} ${concat(newRiding.voting, dv => colorDot(dv.candidates[0].color))}
             <div style="display:flex;">
-            ${newRiding.summary.byParty.map(pt =>
+            ${concat(newRiding.summary.byParty, pt =>
                 `<div style="height: 10px; background-color: ${pt.color}; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
-            ).join('')}
+            )}
                 <div style="height: 10px; background-color: #aaa; flex-grow: ${(newRiding.summary.rejected / newRiding.summary.total).toFixed(3)}"></div>
             <div>
         </summary>
@@ -148,14 +148,14 @@ function makeRidingHtml(newRiding) {
             <details class="old-district">
                 <summary>Totals</summary>
                 <section class="details-body">
-                    ${newRiding.summary.byParty.map(pt => 
+                    ${concat(newRiding.summary.byParty, pt => 
                         makeVoteLine({
                             heading: pt.party,
                             votes: pt.votes,
                             voteTotal: newRiding.summary.total,
                             color: pt.color 
                         })
-                    ).join('')}
+                    )}
                     ${makeVoteLine({
                         heading: 'Rejected Ballots',
                         votes: newRiding.summary.rejected,
@@ -164,27 +164,27 @@ function makeRidingHtml(newRiding) {
                     })}
                 </section>
             </details>
-            ${newRiding.voting.map(dv => `
-            <details class="old-district">
-                <summary>${dv.district_name} <span style="color: ${dv.candidates[0].color};">⬤</span></summary>
-                <section class="details-body">
-                    ${dv.candidates.map(c => 
-                        makeVoteLine({
-                            heading: `${c.surname} - ${c.party}`,
-                            votes: c.votes,
+            ${concat(newRiding.voting, dv => `
+                <details class="old-district">
+                    <summary>${dv.district_name} ${colorDot(dv.candidates[0].color)}</summary>
+                    <section class="details-body">
+                        ${concat(dv.candidates, c => 
+                            makeVoteLine({
+                                heading: `${c.surname} - ${c.party}`,
+                                votes: c.votes,
+                                voteTotal: dv.district_total_votes,
+                                color: c.color 
+                            })
+                        )}
+                        ${makeVoteLine({
+                            heading: 'Rejected Ballots',
+                            votes: dv.district_rejected_ballots,
                             voteTotal: dv.district_total_votes,
-                            color: c.color 
-                        })
-                    ).join('')}
-                    ${makeVoteLine({
-                        heading: 'Rejected Ballots',
-                        votes: dv.district_rejected_ballots,
-                        voteTotal: dv.district_total_votes,
-                        color: '#aaa'
-                    })}
-                </section>
-            </details>
-        `).join('')}
+                            color: '#aaa'
+                        })}
+                    </section>
+                </details>
+            `)}
         </section>
     </details>
 </article>
@@ -194,7 +194,7 @@ function makeRidingHtml(newRiding) {
 function makeVoteLine({ heading, votes, voteTotal, color = '#aaa'} = {}) {
     return `
                     <div class="vote-total">
-                        <div><span style="color: ${color};">⬤</span>${heading}</div>
+                        <div>${colorDot(color)}${heading}</div>
                         ${makeMeter(votes, voteTotal, color)}
                     </div>
     `;
@@ -205,16 +205,6 @@ function makeMeter(numerator, denominator, barColor) {
     const txtPct = (100 * pct).toFixed(1) + '%';
     const text = numFormat(numerator);
     return `<div class="flex-meter"><span style="width:${txtPct}; background-color: ${barColor}"></span><span class="label">${text} (${txtPct})</span></div>`;
-}
-
-function ratioWidth(numerator, denominator) {
-    if (!denominator) denominator = 1;
-    const txtpct = (100 * numerator / denominator).toFixed(1);
-    if (txtpct == '0') {
-        return '1px';
-    } else {
-        return txtpct + '%';
-    }
 }
 
 
