@@ -76,9 +76,6 @@ async function showResults() {
         }
 
         stvDistricts.push(stvDistrict);
-
-        //const ridingHtml = makeRidingHtml(newRiding);
-        //document.getElementById('vote-initial').insertAdjacentHTML('beforeend', ridingHtml);
     }
 
     showData('stvDistricts', stvDistricts);
@@ -143,69 +140,6 @@ function colorBar(items) {
     `;
 }
 
-function makeRidingHtml(newRiding) {
-    return `
-<article>
-    <details class="new-riding">
-        <summary>${newRiding.riding} ${concat(newRiding.voting, dv => colorDot(dv.candidates[0].color))}
-            ${colorBar([
-                ...newRiding.summary.byParty.map(pt => ({
-                    color: pt.color,
-                    weight: (pt.votes / newRiding.summary.total).toFixed(3)
-                })),
-                {
-                    color: '#aaa',
-                    weight: (newRiding.summary.rejected / newRiding.summary.total).toFixed(3)
-                }
-            ])}
-        </summary>
-        <section class="details-body">
-            <details class="old-district">
-                <summary>Totals</summary>
-                <section class="details-body">
-                    ${concat(newRiding.summary.byParty, pt => 
-                        makeVoteLine({
-                            heading: pt.party,
-                            votes: pt.votes,
-                            voteTotal: newRiding.summary.total,
-                            color: pt.color 
-                        })
-                    )}
-                    ${makeVoteLine({
-                        heading: 'Rejected Ballots',
-                        votes: newRiding.summary.rejected,
-                        voteTotal: newRiding.summary.total,
-                        color: '#aaa'
-                    })}
-                </section>
-            </details>
-            ${concat(newRiding.voting, dv => `
-                <details class="old-district">
-                    <summary>${colorDot(dv.candidates[0].color)} ${dv.district_name} <small>${dv.district_number}</small></summary>
-                    <section class="details-body">
-                        ${concat(dv.candidates, c =>
-                            makeVoteLine({
-                                heading: `${c.surname} <small>${c.given_name}</small> - ${c.party}`,
-                                votes: c.votes,
-                                voteTotal: dv.district_total_votes - dv.district_rejected_ballots,
-                                color: c.color 
-                            })
-                        )}
-                        ${makeVoteLine({
-                            heading: 'Rejected Ballots',
-                            votes: dv.district_rejected_ballots,
-                            voteTotal: dv.district_total_votes,
-                            color: '#aaa'
-                        })}
-                    </section>
-                </details>
-            `)}
-        </section>
-    </details>
-</article>
-    `;
-}
-
 function makeInitialHtml(stvDistrict) {
     return `
 <article>
@@ -228,7 +162,7 @@ function makeInitialHtml(stvDistrict) {
                 <section class="details-body">
                     ${concat(stvDistrict.byParty, pt => 
                         makeVoteLine({
-                            heading: pt.party,
+                            heading: pt.groupName,
                             votes: pt.votes,
                             voteTotal: stvDistrict.validVotes,
                             color: pt.color
