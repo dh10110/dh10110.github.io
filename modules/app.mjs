@@ -113,7 +113,7 @@ async function showResults() {
                     }
                     ${concat(newRiding.candidates, c => {
                         return makeVoteLine({
-                            heading: `${c.surname} - ${c.party}`,
+                            heading: `${c.surname} <small>${c.given_name}</small> - ${c.party}`,
                             votes: c.votes,
                             voteTotal: newRiding.summary.total - newRiding.summary.rejected,
                             color: c.color
@@ -184,7 +184,7 @@ function makeRidingHtml(newRiding) {
                     <section class="details-body">
                         ${concat(dv.candidates, c =>
                             makeVoteLine({
-                                heading: `${c.surname} <small>${c.given_name}</small> - ${c.party} - ${c.vote_pct}`,
+                                heading: `${c.surname} <small>${c.given_name}</small> - ${c.party}`,
                                 votes: c.votes,
                                 voteTotal: dv.district_total_votes - dv.district_rejected_ballots,
                                 color: c.color 
