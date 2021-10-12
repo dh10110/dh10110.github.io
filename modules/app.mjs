@@ -128,13 +128,15 @@ async function showResults() {
     }))
 }
 
+function colorDot(color) {
+    return `<span style="color: ${color};">⬤</span>`
+}
+
 function makeRidingHtml(newRiding) {
     return `
 <article>
     <details class="new-riding">
-        <summary>${newRiding.riding} ${newRiding.voting.map(dv => 
-            `<span style="color: ${dv.candidates[0].color};">⬤</span>`
-        ).join('')}
+        <summary>${newRiding.riding} ${concat(newRiding.voting, dv => colorDot(dv.candidates[0].color))}
             <div style="display:flex;">
             ${newRiding.summary.byParty.map(pt =>
                 `<div style="height: 10px; background-color: ${pt.color}; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
