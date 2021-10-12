@@ -11,7 +11,7 @@ function showData(heading, data, open = false) {
     <details${open ? ' open' : ''}>
         <summary>${heading}</summary>
         <section class="details-body">
-            <pre>${text}
+            <pre>${text}</pre>
         </section>
     </details>
 </article>
@@ -90,7 +90,7 @@ async function showResults() {
                 newRiding.candidates.push(candidate);
             }
         }
-        newRiding.summary.quota = Math.ceil(newRiding.summary.total / (newRiding.positions + 1)) //droop quota
+        newRiding.summary.quota = Math.ceil((newRiding.summary.total - newRiding.summary.rejected) / (newRiding.positions + 1)) //droop quota
         newRiding.candidates.sort(compareCandidates);
     }
 
@@ -107,7 +107,7 @@ async function showResults() {
                         makeVoteLine({
                             heading: 'Quota',
                             votes: newRiding.summary.quota,
-                            voteTotal: newRiding.summary.total,
+                            voteTotal: newRiding.summary.total - newRiding.summary.rejected,
                             color: '#333'
                         })
                     }
@@ -115,7 +115,7 @@ async function showResults() {
                         return makeVoteLine({
                             heading: `${c.surname} - ${c.party}`,
                             votes: c.votes,
-                            voteTotal: newRiding.summary.total,
+                            voteTotal: newRiding.summary.total - newRiding.summary.rejected,
                             color: c.color
                         });
                     })}
