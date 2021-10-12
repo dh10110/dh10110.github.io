@@ -182,11 +182,11 @@ function makeRidingHtml(newRiding) {
                 <details class="old-district">
                     <summary>${colorDot(dv.candidates[0].color)} ${dv.district_name} <small>${dv.district_number}</small></summary>
                     <section class="details-body">
-                        ${concat(dv.candidates, c => 
+                        ${concat(dv.candidates, c =>
                             makeVoteLine({
                                 heading: `${c.surname} <small>${c.given_name}</small> - ${c.party} - ${c.vote_pct}`,
                                 votes: c.votes,
-                                voteTotal: dv.district_total_votes,
+                                voteTotal: dv.district_total_votes - dv.district_rejected_ballots,
                                 color: c.color 
                             })
                         )}
