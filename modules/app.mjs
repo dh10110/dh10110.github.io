@@ -132,17 +132,31 @@ function colorDot(color) {
     return `<span style="color: ${color};">⬤</span>`
 }
 
+function colorBar(items) {
+    return `
+        <div class="flex-meter color-bar">
+            ${concat(items, i => {
+                return `<div style="background-color: ${i.color}; flex-grow: ${i.weight}"></div>`
+            })}
+        </div>
+    `;
+}
+
 function makeRidingHtml(newRiding) {
     return `
 <article>
     <details class="new-riding">
         <summary>${newRiding.riding} ${concat(newRiding.voting, dv => colorDot(dv.candidates[0].color))}
-            <div style="display:flex;">
-            ${concat(newRiding.summary.byParty, pt =>
-                `<div style="height: 10px; background-color: ${pt.color}; flex-grow: ${(pt.votes / newRiding.summary.total).toFixed(3)}"></div>`
-            )}
-                <div style="height: 10px; background-color: #aaa; flex-grow: ${(newRiding.summary.rejected / newRiding.summary.total).toFixed(3)}"></div>
-            <div>
+            ${colorBar([
+                ...newRiding.summary.byParty.map(pt => ({
+                    color: pt.color,
+                    weight: (pt.votes / newRiding.summary.total).toFixed(3)
+                })),
+                {
+                    color: '#aaa',
+                    weight: (newRiding.summary.rejected / newRiding.summary.total).toFixed(3)
+                }
+            ])}
         </summary>
         <section class="details-body">
             <details class="old-district">
@@ -166,7 +180,7 @@ function makeRidingHtml(newRiding) {
             </details>
             ${concat(newRiding.voting, dv => `
                 <details class="old-district">
-                    <summary>${dv.district_name} ${colorDot(dv.candidates[0].color)}</summary>
+                    <summary>${colorDot(dv.candidates[0].color)} ${dv.district_name} <small>${dv.district_number}</small></summary>
                     <section class="details-body">
                         ${concat(dv.candidates, c => 
                             makeVoteLine({

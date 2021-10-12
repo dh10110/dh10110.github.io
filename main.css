@@ -85,3 +85,6 @@ details[open] summary ~ * {
     margin-left: 0.1em;
 }
 
+.color-bar {
+    height: 10px;
+}
