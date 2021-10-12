@@ -48,15 +48,15 @@ async function showResults() {
     const stvDistricts = [];
     
     for (const newRiding of ridings) {
-        const stvDistrict = new StvDistrict({ districtNmame: newRiding.riding });
+        const stvDistrict = new StvDistrict({ districtName: newRiding.riding });
         const mapByParty = new Map();
         for (const districtNumber of newRiding.districts) {
             const oldDistrict = voting.get(districtNumber);
             stvDistrict.addDistrict(oldDistrict);
             for (const candidate of oldDistrict.candidates) {
-                const partyObj = parties[candidate.party] || parties.default;
+                const partyObj = parties[candidate.partyName] || parties.default;
                 candidate.color = partyObj.color;
-                const partyKey = partyObj.abbr === 'Other' ? 'Other' : candidate.party;
+                const partyKey = partyObj.abbr === 'Other' ? 'Other' : candidate.partyName;
                 const partyTotal = getOrAdd(mapByParty, partyKey, () => new CandidateGroup({
                     groupName: partyKey,
                     color: partyObj.color
@@ -114,7 +114,7 @@ async function showResults() {
                     }
                     ${concat(stvDistrict.candidates, c => {
                         return makeVoteLine({
-                            heading: `${c.surname} <small>${c.given_name}</small> - ${c.party}`,
+                            heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                             votes: c.votes,
                             voteTotal: stvDistrict.validVotes,
                             color: c.color
