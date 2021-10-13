@@ -7,8 +7,8 @@ export function generateBallots(stvDistrict) {
     for (const candidate of stvDistrict.candidates) {
         const key = candidate.partyName === 'Independent' ? 'Ind: ' + candidate.surname : candidate.partyName;
         const partyGroup = getOrAdd(partyMap, key, () => new CandidateGroup({
-            groupName = candidate.partyName,
-            color = candidate.color
+            groupName: candidate.partyName,
+            color: candidate.color
         }));
         partyGroup.addCandidate(candidate);
     }
