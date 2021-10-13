@@ -33,12 +33,12 @@ export function generateBallots(stvDistrict) {
 }
 
 function withoutIndex(array, i) {
-    console.log(array);
+    console.log(array.map(c => c.surname).join(','));
     const arrayWithoutIndex = [
         ...array.slice(0, i),
         ...array.slice(i + 1, array.length)
     ];
-    console.log(array);
+    console.log('without ' + i + ': ' + arrayWithoutIndex.map(c => c.surname).join(','));
     return arrayWithoutIndex;
 }
 
@@ -52,7 +52,8 @@ function* getBallots(unordered, ordered = [], orderedWeight = 1) {
     if (unordered.length === 1) {
         yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
     } else if (unordered.length === 0) {
-
+        console.error('how did we get here?');
+        debugger;
     } else {
 
         let totalWeight = 0;
