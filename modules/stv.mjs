@@ -33,8 +33,8 @@ export function generateBallots(stvDistrict) {
 
 function withoutIndex(array, i) {
     return [
-        array.slice(0, i),
-        array.slice(i + 1)
+        ...array.slice(0, i),
+        ...array.slice(i + 1)
     ];
 }
 
