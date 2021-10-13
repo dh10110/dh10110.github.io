@@ -43,7 +43,7 @@ function withoutIndex(array, i) {
 
 function* getBallots(unordered, ordered = [], orderedWeight = 0) {
     if (unordered.length === 1) {
-        yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
+        yield { ordered: [...ordered, ...unordered], weight: orderedWeight || 1 };
         
     } else if (unordered.length === 0) {
         console.error('how did we get here?');
