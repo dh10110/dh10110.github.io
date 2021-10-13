@@ -33,34 +33,30 @@ export function generateBallots(stvDistrict) {
 }
 
 function withoutIndex(array, i) {
-    console.log(array.map(c => c.surname).join(','));
     const arrayWithoutIndex = [
         ...array.slice(0, i),
         ...array.slice(i + 1, array.length)
     ];
-    console.log('without ' + i + ': ' + arrayWithoutIndex.map(c => c.surname).join(','));
     return arrayWithoutIndex;
 }
 
 function* getBallots(unordered, ordered = [], orderedWeight = 1) {
-    if (!unordered || !unordered[0]) {
-        //console.log(ordered);
-    } else {
-        //console.log('>'.repeat(ordered.length) + unordered[0].surname);
-    }
-
     if (unordered.length === 1) {
         yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
+        
     } else if (unordered.length === 0) {
         console.error('how did we get here?');
         debugger;
+
     } else {
 
         let totalWeight = 0;
         const itemWeights = [];
         for (let i = 0; i <= unordered.length; i += 1) {
             const item = unordered[i];
-            const itemWeight = itemWeights[i] = 1; //todo: by party, and favor adjacent districts
+            //weight candidate by how popular they were in home riding
+            //todo: favor adjacent districts
+            const itemWeight = itemWeights[i] = item.votePct;
             totalWeight += itemWeight;
         }
         
