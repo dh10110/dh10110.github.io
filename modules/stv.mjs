@@ -36,7 +36,7 @@ function withoutIndex(array, i) {
     console.log(array);
     const arrayWithoutIndex = [
         ...array.slice(0, i),
-        ...array.slice(i + 1)
+        ...array.slice(i + 1, array.length)
     ];
     console.log(array);
     return arrayWithoutIndex;
@@ -66,7 +66,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 1) {
         for (let i = 0; i <= unordered.length; i += 1) {
             const item = unordered[i];
             yield* getBallots(
-                [],//withoutIndex(unordered, i),
+                withoutIndex(unordered, i),
                 [...ordered, item],
                 orderedWeight * itemWeights[i] / totalWeight
             );
