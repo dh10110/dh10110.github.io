@@ -44,9 +44,9 @@ function withoutIndex(array, i) {
 
 function* getBallots(unordered, ordered = [], orderedWeight = 1) {
     if (!unordered || !unordered[0]) {
-        console.log(ordered);
+        //console.log(ordered);
     } else {
-        console.log('>'.repeat(ordered.length) + unordered[0].surname);
+        //console.log('>'.repeat(ordered.length) + unordered[0].surname);
     }
 
     if (unordered.length === 1) {
