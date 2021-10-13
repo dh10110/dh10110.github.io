@@ -52,7 +52,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 1) {
 
         let totalWeight = 0;
         const itemWeights = [];
-        for (let i = 0; i <= unordered.length; i += 1) {
+        for (let i = 0; i < unordered.length; i += 1) {
             const item = unordered[i];
             //weight candidate by how popular they were in home riding
             //todo: favor adjacent districts
