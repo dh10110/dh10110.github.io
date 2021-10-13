@@ -102,7 +102,7 @@ async function showResults() {
     <div style="display: flex">
         <div>${ballot.countExact}</div>
         ${concat(ballot.ordered, c =>
-            `<div style="border: 1px solid ${c.color};">${c.surname}<br>${c.votes}</div>`
+            c ? `<div style="border: 1px solid ${c.color};">${c.surname}<br>${c.votes}</div>` : 'undefined'
         )}
     </div>
 </article>
