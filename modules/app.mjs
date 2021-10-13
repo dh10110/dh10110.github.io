@@ -1,5 +1,6 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
+import * as stv from './stv.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
@@ -90,7 +91,10 @@ async function showResults() {
        }
        stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
        stvDistrict.candidates.sort(compareCandidates);
-   }
+    }
+
+    const ballots = stv.generateBallots(stvDistrict);
+    showData('ballots', ballots);
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
         return `
