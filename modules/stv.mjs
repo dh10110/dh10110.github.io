@@ -41,7 +41,7 @@ function withoutIndex(array, i) {
     return arrayWithoutIndex;
 }
 
-function* getBallots(unordered, ordered = [], orderedWeight = 1) {
+function* getBallots(unordered, ordered = [], orderedWeight = 0) {
     if (unordered.length === 1) {
         yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
         
@@ -66,7 +66,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 1) {
             yield* getBallots(
                 withoutIndex(unordered, i),
                 [...ordered, item],
-                orderedWeight * itemWeights[i] / totalWeight
+                orderedWeight ? orderedWeight * itemWeights[i] / totalWeight : 1
             );
         }
     }
