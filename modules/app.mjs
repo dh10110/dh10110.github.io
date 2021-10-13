@@ -96,6 +96,19 @@ async function showResults() {
     const ballots = stv.generateBallots(stvDistricts[1]);
     showData('ballots', ballots);
 
+    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(ballots, ballot => {
+        return `
+<article>
+    <div style="display: flex">
+        <div>${ballot.countExact}</div>
+        ${concat(ballot.ordered, c =>
+            `<div style="border: 1px solid ${c.color};">${c.surname}<br>${c.votes}</div>`
+        )}
+    </div>
+</article>
+        `
+    }));
+
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
         return `
 <article>
