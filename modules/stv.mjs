@@ -18,7 +18,8 @@ export function generateBallots(stvDistrict) {
     const ballots = [];
     for (const [key, party] of partyMap) {
         let maxItem = { weight: 0, ballot: null };
-        for (const ballotDef of getBallots(party.candidates)) {
+        const ballotDefs = getBallots(party.candidates);
+        for (const ballotDef of ballotDefs) {
             const ballot = {
                 ordered: ballotDef.ordered,
                 count: Math.floor(ballotDef.ordered[0].votes * ballotDef.weight),
@@ -39,7 +40,11 @@ function withoutIndex(array, i) {
 }
 
 function* getBallots(unordered, ordered = [], orderedWeight = 1) {
-    console.log('>'.repeat(ordered.length) + unordered[0].surname);
+    if (!unordered || !unordered[0]) {
+        console.log(ordered);
+    } else {
+        console.log('>'.repeat(ordered.length) + unordered[0].surname);
+    }
 
     if (unordered.length === 1) {
         yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
