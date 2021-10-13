@@ -22,6 +22,7 @@ export function generateBallots(stvDistrict) {
         for (const ballotDef of ballotDefs) {
             const ballot = {
                 ordered: ballotDef.ordered,
+                weight: ballotDef.weight,
                 count: Math.floor(ballotDef.ordered[0].votes * ballotDef.weight),
                 countExact: ballotDef.ordered[0].votes * ballotDef.weight
             };
