@@ -39,26 +39,28 @@ function withoutIndex(array, i) {
 }
 
 function* getBallots(unordered, ordered = [], orderedWeight = 1) {
+    console.log('>'.repeat(ordered.length) + unordered[0].surname);
+
     if (unordered.length === 1) {
         yield { ordered: [...ordered, ...unordered], weight: orderedWeight };
-        return;
-    }
 
-    let totalWeight = 0;
-    const itemWeights = [];
-    for (let i = 0; i <= unordered.length; i += 1) {
-        const item = unordered[i];
-        const itemWeight = itemWeights[i] = 1; //todo: by party, and favor adjacent districts
-        totalWeight += itemWeight;
-    }
-    
-    for (let i = 0; i <= unordered.length; i += 1) {
-        const item = unordered[i];
-        yield* getBallots(
-            [...ordered, item],
-            withoutIndex(unordered, i),
-            orderedWeight * itemWeights[i] / totalWeight
-        );
-    }
+    } else {
 
+        let totalWeight = 0;
+        const itemWeights = [];
+        for (let i = 0; i <= unordered.length; i += 1) {
+            const item = unordered[i];
+            const itemWeight = itemWeights[i] = 1; //todo: by party, and favor adjacent districts
+            totalWeight += itemWeight;
+        }
+        
+        for (let i = 0; i <= unordered.length; i += 1) {
+            const item = unordered[i];
+            yield* getBallots(
+                [...ordered, item],
+                withoutIndex(unordered, i),
+                orderedWeight * itemWeights[i] / totalWeight
+            );
+        }
+    }
 }
