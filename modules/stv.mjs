@@ -64,7 +64,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 1) {
             totalWeight += itemWeight;
         }
         
-        for (let i = 0; i <= unordered.length; i += 1) {
+        for (let i = 0; i < unordered.length; i += 1) {
             const item = unordered[i];
             yield* getBallots(
                 withoutIndex(unordered, i),
