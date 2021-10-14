@@ -77,7 +77,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 0) {
                         defaultBallot = ballot;
                     }
                 }
-                if (unassignedBallots < 0 || unassignedBallots >= ballot.ordered.length) {
+                if (unassignedBallots < 0 || unassignedBallots >= ballots.length) {
                     throw new Error('Ballot calculation error');
                 }
                 if (unassignedBallots > 0) {
