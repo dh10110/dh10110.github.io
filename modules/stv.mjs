@@ -93,12 +93,6 @@ function* getBallots(unordered, ordered = [], orderedWeight = 0) {
                     orderedWeight * itemWeights[i] / totalWeight
                 )
             }
-
-            yield* getBallots(
-                withoutIndex(unordered, i),
-                [...ordered, item],
-                orderedWeight ? orderedWeight * itemWeights[i] / totalWeight : 1
-            );
         }
     }
 }
