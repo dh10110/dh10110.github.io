@@ -67,6 +67,7 @@ function* getBallots(unordered, ordered = [], orderedWeight = 0) {
                     [item],
                     1
                 );
+                ballots = [...ballots];
                 let unassignedBallots = item.votes;
                 let defaultBallot = { weight: 0 };
                 for (const ballot of ballots) {
