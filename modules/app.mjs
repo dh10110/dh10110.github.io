@@ -93,7 +93,7 @@ async function showResults() {
        stvDistrict.candidates.sort(compareCandidates);
     }
 
-    const ballots = stv.generateBallots(stvDistricts[1]);
+    const ballots = stv.generateBallots(stvDistricts[0]);
     showData('ballots', ballots);
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
