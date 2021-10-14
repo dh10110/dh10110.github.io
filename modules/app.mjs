@@ -93,16 +93,19 @@ async function showResults() {
        stvDistrict.candidates.sort(compareCandidates);
     }
 
-    const ballots = stv.generateBallots(stvDistricts[0]);
-    showData('ballots', ballots);
-
-    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
+    {
+        let stvDistrict = stvDistricts[1];
+        const ballots = stv.generateBallots(stvDistrict);
+        showData('ballots', ballots);
+    
+        document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
 <article>
     <style>
         .ballots {
             display: flex;
             flex-wrap: wrap;
             gap: 0.4em;
+            align-items: flex-start;
         }
         .ballot {
             border: 1px solid silver;
@@ -134,7 +137,8 @@ async function showResults() {
         `)}
     </div>
 </article>
-    `);
+        `);
+    }
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
         return `
