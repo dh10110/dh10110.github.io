@@ -98,16 +98,32 @@ async function showResults() {
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
 <article>
-    <div style="display:flex;">
+    <style>
+        .ballots {
+            dispaly: flex;
+            flex-wrap: wrap;
+        }
+        .ballot > ol {
+            list-style-position: inside;
+            padding: 0;
+        }
+        .ballot > hr {
+            margin: 0.3em 0;
+        }
+        .ballot > .count {
+            text-align: center;
+        }
+    </style>
+    <div class="ballots">
         ${concat(ballots, ballot => `
-            <div>
-                <div>${ballot.count}</div>
-                <hr>
+            <div class="ballot">
                 <ol>
                     ${concat(ballot.ordered, c => 
                         `<li>${colorDot(c.color)} ${c.surname}</li>`
                     )}
                 </ol>
+                <hr>
+                <div class="count">× ${ballot.count}</div>
             </div>
         `)}
     </div>
