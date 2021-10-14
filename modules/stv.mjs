@@ -19,7 +19,7 @@ export function generateBallots(stvDistrict) {
     for (const [key, party] of partyMap) {
         let maxItem = { weight: 0, ballot: null };
         const ballotDefs = getBallots(party.candidates);
-        for (const ballotDef of ballotDefs) {
+        /*for (const ballotDef of ballotDefs) {
             const ballot = {
                 ordered: ballotDef.ordered,
                 weight: ballotDef.weight,
@@ -27,7 +27,8 @@ export function generateBallots(stvDistrict) {
                 countExact: ballotDef.ordered[0].votes * ballotDef.weight
             };
             ballots.push(ballot);
-        }
+        }*/
+        ballots.push(...ballotDefs);
     }
     
     return ballots;
@@ -42,13 +43,9 @@ function withoutIndex(array, i) {
 }
 
 function* getBallots(unordered, ordered = [], orderedWeight = 0) {
-    if (unordered.length === 1) {
-        yield { ordered: [...ordered, ...unordered], weight: orderedWeight || 1 };
+    if (unordered.length === 0) {
+        yield { ordered: ordered, weight: orderedWeight };
         
-    } else if (unordered.length === 0) {
-        console.error('how did we get here?');
-        debugger;
-
     } else {
 
         let totalWeight = 0;
@@ -63,6 +60,39 @@ function* getBallots(unordered, ordered = [], orderedWeight = 0) {
         
         for (let i = 0; i < unordered.length; i += 1) {
             const item = unordered[i];
+            if (orderedWeight === 0) {
+                //top level; get % weights of each branch beginning with this item
+                let ballots = getBallots(
+                    withoutIndex(unordered, i),
+                    [item],
+                    1
+                );
+                let unassignedBallots = item.votes;
+                let defaultBallot = { weight: 0 };
+                for (const ballot of ballots) {
+                    ballot.count = Math.floor(item.votes * ballot.weight);
+                    unassignedBallots -= ballot.count;
+                    if (ballot.weight > defaultBallot.weight) {
+                        defaultBallot = ballot;
+                    }
+                }
+                if (unassignedBallots < 0 || unassignedBallots >= ballot.ordered.length) {
+                    throw new Error('Ballot calculation error');
+                }
+                if (unassignedBallots > 0) {
+                    defaultBallot.count += unassignedBallots;
+                }
+                yield* ballots;
+
+            } else {
+                //recursing call, continue
+                yield* getBallots(
+                    withoutIndex(unordered, i),
+                    [...ordered, item],
+                    orderedWeight * itemWeights[i] / totalWeight
+                )
+            }
+
             yield* getBallots(
                 withoutIndex(unordered, i),
                 [...ordered, item],
