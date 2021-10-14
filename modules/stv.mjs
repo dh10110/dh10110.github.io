@@ -13,8 +13,6 @@ export function generateBallots(stvDistrict) {
         partyGroup.addCandidate(candidate);
     }
 
-    //TODO: compute weights
-
     const ballots = [];
     for (const [key, party] of partyMap) {
         let maxItem = { weight: 0, ballot: null };
@@ -23,6 +21,43 @@ export function generateBallots(stvDistrict) {
     }
     
     return ballots;
+}
+
+const HOPEFUL = 0;
+const ELECTED = 1;
+const PENDING = 2;
+const DEFEATED = 3;
+
+export function doElection(stvDistrict, fnReport) {
+    //https://prfound.org/resources/reference/reference-meek-rule/
+    //Ref A
+    const omega = 10E-6;
+
+    for (const candidate of stvDistrict.candidates) {
+        candidate.stv = { state: HOPEFUL, kf: 1 };
+    }
+
+    const ballotDefs = generateBallots(stvDistrict);
+    const ballots = [];
+    for (const ballotDef of ballotDefs) {
+        for (let i = 0; i < ballotDef.count; i += 1) {
+            ballots.push({ candidates: ballotDef.candidates });
+        }
+    }
+
+    //Ref B
+    //Ref B.1 Test if Count Complete
+
+    //Ref B.2 Iterate
+    //Ref B.2.a Distribute
+    for (const ballot of ballots) {
+        //set ballot wieght w to 1
+        ballot.weight = 1;
+        for (const candidate of ballot.candidates) {
+            
+        }
+    }
+
 }
 
 function withoutIndex(array, i) {
