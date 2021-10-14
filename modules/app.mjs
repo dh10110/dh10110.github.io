@@ -100,7 +100,7 @@ async function showResults() {
 <article>
     <style>
         .ballots {
-            dispaly: flex;
+            display: flex;
             flex-wrap: wrap;
             gap: 0.4em;
         }
