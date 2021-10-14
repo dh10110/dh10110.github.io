@@ -102,9 +102,10 @@ async function showResults() {
         ${concat(ballots, ballot => `
             <div>
                 <div>${ballot.count}</div>
+                <hr>
                 <ol>
                     ${concat(ballot.ordered, c => 
-                        `<li>${c.surname}</li>`
+                        `<li>${colorDot(c.color)} ${c.surname}</li>`
                     )}
                 </ol>
             </div>
