@@ -100,7 +100,7 @@ async function showResults() {
         return `
 <article>
     <div style="display: flex">
-        <div>${ballot.weight}</div>
+        <div>${ballot.weight}<br>${ballot.count}</div>
         ${concat(ballot.ordered, c =>
             c ? `<div style="border: 1px solid ${c.color};">${c.surname}<br>${c.votes}</div>` : 'undefined'
         )}
