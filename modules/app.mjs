@@ -99,7 +99,7 @@ async function showResults() {
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
 <article>
     <div style="display:flex;">
-        ${concat(ballots, ballot => {
+        ${concat(ballots, ballot => `
             <div>
                 <div>${ballot.count}</div>
                 <ol>
@@ -108,7 +108,7 @@ async function showResults() {
                     )}
                 </ol>
             </div>
-        })}
+        `)}
     </div>
 </article>
     `);
