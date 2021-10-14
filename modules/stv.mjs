@@ -19,15 +19,6 @@ export function generateBallots(stvDistrict) {
     for (const [key, party] of partyMap) {
         let maxItem = { weight: 0, ballot: null };
         const ballotDefs = getBallots(party.candidates);
-        /*for (const ballotDef of ballotDefs) {
-            const ballot = {
-                ordered: ballotDef.ordered,
-                weight: ballotDef.weight,
-                count: Math.floor(ballotDef.ordered[0].votes * ballotDef.weight),
-                countExact: ballotDef.ordered[0].votes * ballotDef.weight
-            };
-            ballots.push(ballot);
-        }*/
         ballots.push(...ballotDefs);
     }
     
