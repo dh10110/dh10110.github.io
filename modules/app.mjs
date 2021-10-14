@@ -102,10 +102,16 @@ async function showResults() {
         .ballots {
             dispaly: flex;
             flex-wrap: wrap;
+            gap: 0.4em;
+        }
+        .ballot {
+            border: 1px solid silver;
+            border-radius: 5px;
         }
         .ballot > ol {
             list-style-position: inside;
-            padding: 0;
+            padding: 0 0.2em;
+            margin: 0;
         }
         .ballot > hr {
             margin: 0.3em 0;
