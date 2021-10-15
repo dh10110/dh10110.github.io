@@ -123,7 +123,7 @@ function runElection(stvDistrict) {
                         : ''
                     }
                     ${rpt.candidates ?
-                        concat([...rpt.candidates].sort(compareCandidates), c => 
+                        concat([...rpt.candidates].sort(compareStvCandidates), c => 
                             makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName} [${c.stv.state}] ${c.stv.kf}`,
                                 votes: c.stv.vote,
@@ -139,7 +139,9 @@ function runElection(stvDistrict) {
     });
 }
 
-
+function compareStvCandidates(a, b) {
+    return (a.stv.winnerOrder - b.stv.winnerOrder) || compareCandidates(a, b);
+}
 
 function colorDot(color) {
     return `<span style="color: ${color};">⬤</span>`
