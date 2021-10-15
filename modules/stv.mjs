@@ -110,6 +110,9 @@ export function doElection(stvDistrict, fnReport) {
                 }
             }
 
+            //Report to UI
+            fnReport({heading: `Round ${roundNum}-${iterationNum}`, quota, candidates: stvDistrict.candidates});
+
             //Ref B.2.e Test for Iteration finished
             if (anyWinners) {
                 //break, continue at B.1
@@ -123,9 +126,6 @@ export function doElection(stvDistrict, fnReport) {
             for (const elected of winners) {
                 elected.stv.kf = ceil(ceil(elected.stv.kf * quota, 9) / elected.stv.vote, 9);
             }
-
-            //Report to UI
-            fnReport({heading: `Round ${roundNum}-${iterationNum}`, quota, candidates: stvDistrict.candidates});
 
             //Continue at B.2.a
             return true;
@@ -146,6 +146,7 @@ export function doElection(stvDistrict, fnReport) {
         }
         lowest.stv.state = DEFEATED;
         lowest.stv.kf = 0;
+        fnReport({heading: 'Defeated: ' + lowest.surname, candidates: candidates});
 
         //Ref B.4 Continue (B.1)
         return true;
