@@ -74,6 +74,9 @@ export function doElection(stvDistrict, fnReport) {
             iterationNum += 1;
 
             //Ref B.2.a Distribute
+            for (const candidate of stvDistrict.candidates) {
+                candidate.stv.vote = 0;
+            }
             for (const ballot of ballots) {
                 ballot.weight = 1;
                 for (const candidate of ballot.candidates) {
