@@ -125,7 +125,8 @@ function runElection(stvDistrict) {
                     ${rpt.candidates ?
                         concat([...rpt.candidates].sort(compareStvCandidates), c => 
                             makeVoteLine({
-                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName} [${c.stv.state}] ${c.stv.kf}`,
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}
+                                    ${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}`,
                                 votes: c.stv.vote,
                                 voteTotal: stvDistrict.validVotes,
                                 color: c.color

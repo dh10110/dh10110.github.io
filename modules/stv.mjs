@@ -33,7 +33,7 @@ export function doElection(stvDistrict, fnReport) {
     
     const hopeful = new Set();
     const winners = [];
-    const winnerOrder = 1;
+    let winnerOrder = 1;
     
     //Ref A
     const omega = 10E-6;
@@ -159,10 +159,9 @@ export function doElection(stvDistrict, fnReport) {
     //Ref C Count Complete
     if (winners.length < stvDistrict.seats) {
         //Ref C.1 Elect remaining
-        const wo = winnerOrder++;
         for (const candidate of hopeful.values()) {
             candidate.stv.state = ELECTED;
-            candidate.stv.winnerOrder = wo;
+            candidate.stv.winnerOrder = winnerOrder;
             winners.push(candidate);
         }
     } else {
