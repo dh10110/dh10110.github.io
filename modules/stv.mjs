@@ -32,12 +32,14 @@ export function doElection(stvDistrict, fnReport) {
     //https://prfound.org/resources/reference/reference-meek-rule/
     
     const winners = [];
+    const hopeful = new Set();
     
     //Ref A
     const omega = 10E-6;
 
     for (const candidate of stvDistrict.candidates) {
         candidate.stv = { state: HOPEFUL, kf: 1, vote: 0 };
+        hopeful.add(candidate);
     }
 
     const ballotDefs = generateBallots(stvDistrict);
@@ -54,16 +56,7 @@ export function doElection(stvDistrict, fnReport) {
         roundNum += 1;
 
         //Ref B.1 Test if Count Complete
-        if (winners.length === stvDistrict.seats) {
-            return false;
-        }
-        let electedOrHopeful = winners.length;
-        for (const candidate of stvDistrict.candidates) {
-            if (candidate.stv.state === HOPEFUL) {
-                electedOrHopeful += 1;
-            }
-        }
-        if (electedOrHopeful <= stvDistrict.seats) {
+        if (winners.length + hopeful.size <= stvDistrict.seats) {
             return false;
         }
 
@@ -95,31 +88,34 @@ export function doElection(stvDistrict, fnReport) {
             const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
 
             //Ref B.2.c Find winners
-            let anyWinners = false;
+            let newWinners = [];
             for (const candidate of stvDistrict.candidates) {
                 if (candidate.stv.state === HOPEFUL && candidate.stv.vote >= quota) {
                     candidate.stv.state = ELECTED;
                     winners.push(candidate);
-                    anyWinners = true;
+                    newWinners.push(candidate);
+                    hopeful.delete(candidate);
                 }
             }
 
             //Ref B.2.d Calculate total surplus
             let totalSurplus = 0;
-            for (const elected of winners) {
-                const surplus = elected.stv.vote - quota;
+            for (const winner of winners) {
+                const surplus = winner.stv.vote - quota;
                 if (surplus > 0) {
                     totalSurplus += surplus;
                 }
             }
 
             //Report to UI
-            fnReport({heading: `Round ${roundNum}-${iterationNum}`, quota, candidates: stvDistrict.candidates});
+            //fnReport({heading: `Round ${roundNum}-${iterationNum}`, quota, candidates: stvDistrict.candidates});
 
             //Ref B.2.e Test for Iteration finished
-            if (anyWinners) {
-                //break, continue at B.1
-                return 2;
+            if (newWinners.length > 0) {
+                fnReport({heading: `Round ${roundNum} - Elected: ${newWinners.map(w =>
+                    `<span style="color: ${w.color};">⬤</span>${w.surname}`
+                ).join(', ')}`, candidates: [...hopeful.values()]});
+                return 2; //break, continue at B.1
             } else if (totalSurplus < omega || totalSurplus >= prevSurplus) {
                 return false; //stop iterating
             }
@@ -141,36 +137,44 @@ export function doElection(stvDistrict, fnReport) {
         }
 
         //Ref B.3 Defeat low candidate
-        let lowest = { stv: {vote: Number.MAX_SAFE_INTEGER} };
-        for (const candidate of stvDistrict.candidates) {
-            if (candidate.stv.state === HOPEFUL && candidate.stv.vote < lowest.stv.vote) {
+        let lowest = null;
+        for (const candidate of hopeful.values()) {
+            if (lowest === null || candidate.stv.vote < lowest.stv.vote) {
                 lowest = candidate;
             }
-            //TODO: equality for lowest includes surplus, tiebreaks
+            //TODO: use equality for lowest includes surplus, tiebreaks
         }
         lowest.stv.state = DEFEATED;
         lowest.stv.kf = 0;
-        fnReport({heading: 'Defeated: ' + lowest.surname, candidates: stvDistrict.candidates});
+        hopeful.delete(lowest);
+        fnReport({heading: `Round ${roundNum} - Defeated: <span style="color: ${lowest.color};">⬤</span>${lowest.surname}`, candidates: [lowest, ...hopeful.values()]});
 
         //Ref B.4 Continue (B.1)
         return true;
     }
     while (fnRound());
 
-    //Ref C Elect or Defeat remaining
-    //TODO
-    fnReport({heading: 'TODO: Elect or Defeat remaining', candidates: winners});
+    //Ref C Count Complete
+    if (winners.length < stvDistrict.seats) {
+        //Ref C.1 Elect remaining
+        for (const candidate of hopeful.values()) {
+            candidate.stv.state = ELECTED;
+            winners.push(candidate);
+        }
+    } else {
+        //Ref C.2 Defeat remaining
+        for (const candidate of hopeful.values()) {
+            candidate.stv.state = DEFEATED;
+        }
+    }
+    fnReport({heading: 'Final Winners', candidates: winners});
 }
 
 function ceil(value, decimalPlaces = 0) {
-    //const factor = Math.pow(10, decimalPlaces);
-    //return Math.ceil(value * factor) / factor;
     return Number(Math.ceil(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
 }
 
 function floor(value, decimalPlaces = 0) {
-    //const factor = Math.pow(10, decimalPlaces);
-    //return Math.floor(value * factor) / factor;
     return Number(Math.floor(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
 }
 
