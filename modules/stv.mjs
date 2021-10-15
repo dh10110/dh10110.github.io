@@ -139,7 +139,7 @@ export function doElection(stvDistrict, fnReport) {
         //Ref B.3 Defeat low candidate
         let lowest = { stv: {vote: Number.MAX_SAFE_INTEGER} };
         for (const candidate of stvDistrict.candidates) {
-            if (candidate.state === HOPEFUL && candidate.stv.vote < lowest.stv.vote) {
+            if (candidate.stv.state === HOPEFUL && candidate.stv.vote < lowest.stv.vote) {
                 lowest = candidate;
             }
             //TODO: equality for lowest includes surplus, tiebreaks
