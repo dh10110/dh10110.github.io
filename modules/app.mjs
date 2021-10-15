@@ -128,7 +128,7 @@ function runElectionWorker(stvDistrict) {
     const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
     worker.addEventListener('message', e => {
         const rpt = e.data;
-        if (rpt.progress) {
+        if (typeof rpt.progress !== 'undefined') {
             progress = rpt.progress;
         }
         if (rpt.final) {
