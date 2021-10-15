@@ -131,7 +131,15 @@ function runElectionWorker(stvDistrict) {
         const rpt = e.data;
         if (rpt.progress) {
             progress = rpt.progress;
-        } else {
+        }
+        if (rpt.final) {
+            document.getElementById(statusId).insertAdjacentHTML('beforeend', `
+                ${concat([...rpt.candidates].sort(compareStvCandidates), c =>
+                    `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`
+                )}
+            `);
+        }
+        if (rpt.heading) {
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.heading}</summary>
