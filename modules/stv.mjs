@@ -150,6 +150,7 @@ export function doElection(stvDistrict, fnReport) {
         //Ref B.4 Continue (B.1)
         return true;
     }
+    while (fnRound());
 
     //Ref C Elect or Defeat remaining
     //TODO
