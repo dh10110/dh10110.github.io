@@ -57,7 +57,7 @@ export function doElection(stvDistrict, fnReport) {
         for (const ballot of ballots) {
             ballot.weight = 1;
             for (const candidate of ballot.candidates) {
-                const voteDelta = ceil(ballot.weight * candidate.kf, 9);
+                const voteDelta = ceil(ballot.weight * candidate.stv.kf, 9);
                 candidate.stv.vote += voteDelta;
                 ballot.weight -= voteDelta;
                 if (ballot.weight <= 0) break;
