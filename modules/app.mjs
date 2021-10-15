@@ -93,7 +93,7 @@ async function showResults() {
        //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    setTimeout(() => runElection(stvDistricts[2]), 5000);
+    setTimeout(() => runElection(stvDistricts[2]), 1000);
 
 }
 
@@ -101,7 +101,8 @@ async function showResults() {
 function runElection(stvDistrict) {
     const detailsId = `stv-${stvDistrict.districtName}`;
     const statusId = `stat-${stvDistrict.districtName}`;
-    let progress = 'Running';
+    let progress = 'Starting...';
+    let lastProgress = null;
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
         <article>
@@ -112,53 +113,69 @@ function runElection(stvDistrict) {
             </details>
         </article>
     `);
-    stv.doElection(stvDistrict, rpt => {
-        if (rpt.progress) {
-            progress = rpt.progress;
-            window.requestAnimationFrame(() => {
-                document.getElementById(statusId).textContent = progress;
-            });
-        } else {
-            document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
-                <details>
-                    <summary>${rpt.heading}</summary>
-                    <section class="details-body">
-                        ${rpt.quota ?
-                            makeVoteLine({
-                                heading: 'Quota',
-                                votes: rpt.quota,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#333'
-                            })
-                            : ''
-                        }
-                        ${rpt.candidates ?
-                            concat([...rpt.candidates].sort(compareStvCandidates), c => 
-                                makeVoteLine({
-                                    heading:
-                                        `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
-                                        ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                    votes: c.stv.vote,
-                                    voteTotal: stvDistrict.validVotes,
-                                    color: c.color
-                                })
-                            )
-                            : ''
-                        }
-                        ${rpt.exhausted ?
-                            makeVoteLine({
-                                heading: 'Exhausted Ballots',
-                                votes: rpt.exhausted,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#888'
-                            })
-                            : ''
-                        }
-                    </section>
-                </details>
-            `);
+
+    const showProgress = function () {
+        if (progress !== lastProgress) {
+            document.getElementById(statusId).textContent = progress;
+            lastProgress = progress;
         }
-    });
+        if (progress) {
+            window.requestAnimationFrame(showProgress);
+        }
+    }
+
+    window.setTimeout(run, 1000);
+    
+    function run() {
+        window.requestAnimationFrame(showProgress);
+
+        stv.doElection(stvDistrict, rpt => {
+            if (rpt.progress) {
+                progress = rpt.progress;
+            } else {
+                document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
+                    <details>
+                        <summary>${rpt.heading}</summary>
+                        <section class="details-body">
+                            ${rpt.quota ?
+                                makeVoteLine({
+                                    heading: 'Quota',
+                                    votes: rpt.quota,
+                                    voteTotal: stvDistrict.validVotes,
+                                    color: '#333'
+                                })
+                                : ''
+                            }
+                            ${rpt.candidates ?
+                                concat([...rpt.candidates].sort(compareStvCandidates), c => 
+                                    makeVoteLine({
+                                        heading:
+                                            `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
+                                            ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                        votes: c.stv.vote,
+                                        voteTotal: stvDistrict.validVotes,
+                                        color: c.color
+                                    })
+                                )
+                                : ''
+                            }
+                            ${rpt.exhausted ?
+                                makeVoteLine({
+                                    heading: 'Exhausted Ballots',
+                                    votes: rpt.exhausted,
+                                    voteTotal: stvDistrict.validVotes,
+                                    color: '#888'
+                                })
+                                : ''
+                            }
+                        </section>
+                    </details>
+                `);
+            }
+        });
+
+        progress = null;
+    }
 }
 
 function compareStvCandidates(a, b) {
