@@ -109,7 +109,7 @@ async function showResults() {
                 <details>
                     <summary>${rpt.heading}</summary>
                     <section class="details-body">
-                        ${quota ?
+                        ${rpt.quota ?
                             makeVoteLine({
                                 heading: 'Quota',
                                 votes: rpt.quota,
