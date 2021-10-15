@@ -128,24 +128,25 @@ function runElectionWorker(stvDistrict) {
     window.requestAnimationFrame(showProgress);
     const worker = new Worker('/modules/stv-worker.mjs', {type:'module'});
     worker.addEventListener('message', e => {
-        if (e.progress) {
-            progress = e.progress;
+        const rpt = e.data;
+        if (rpt.progress) {
+            progress = rpt.progress;
         } else {
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
-                    <summary>${e.heading}</summary>
+                    <summary>${rpt.heading}</summary>
                     <section class="details-body">
-                        ${e.quota ?
+                        ${rpt.quota ?
                             makeVoteLine({
                                 heading: 'Quota',
-                                votes: e.quota,
+                                votes: rpt.quota,
                                 voteTotal: stvDistrict.validVotes,
                                 color: '#333'
                             })
                             : ''
                         }
-                        ${e.candidates ?
-                            concat([...e.candidates].sort(compareStvCandidates), c => 
+                        ${rpt.candidates ?
+                            concat([...rpt.candidates].sort(compareStvCandidates), c => 
                                 makeVoteLine({
                                     heading:
                                         `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
@@ -157,10 +158,10 @@ function runElectionWorker(stvDistrict) {
                             )
                             : ''
                         }
-                        ${e.exhausted ?
+                        ${rpt.exhausted ?
                             makeVoteLine({
                                 heading: 'Exhausted Ballots',
-                                votes: e.exhausted,
+                                votes: rpt.exhausted,
                                 voteTotal: stvDistrict.validVotes,
                                 color: '#888'
                             })

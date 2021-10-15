@@ -2,8 +2,8 @@ import { getOrAdd } from './mapUtil.mjs';
 import { CandidateGroup } from './classes.mjs';
 
 addEventListener('message', e => {
-    if (e.stvDistrict) {
-        doElection(e.stvDistrict);
+    if (e.data.stvDistrict) {
+        doElection(e.data.stvDistrict);
     }
 });
 
