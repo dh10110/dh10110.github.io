@@ -116,7 +116,11 @@ function runElectionWorker(stvDistrict) {
 
     const showProgress = function () {
         if (progress !== lastProgress) {
-            document.getElementById(statusId).textContent = `(${progress})`;
+            if (!progress) {
+                document.getElementById(statusId).textContent = '';
+            }else {
+                document.getElementById(statusId).textContent = `(${progress})`;
+            }
             lastProgress = progress;
         }
         if (progress) {
