@@ -30,11 +30,14 @@ const DEFEATED = 3;
 
 export function doElection(stvDistrict, fnReport) {
     //https://prfound.org/resources/reference/reference-meek-rule/
+    
+    const winners = [];
+    
     //Ref A
     const omega = 10E-6;
 
     for (const candidate of stvDistrict.candidates) {
-        candidate.stv = { state: HOPEFUL, kf: 1 };
+        candidate.stv = { state: HOPEFUL, kf: 1, vote: 0 };
     }
 
     const ballotDefs = generateBallots(stvDistrict);
@@ -49,16 +52,51 @@ export function doElection(stvDistrict, fnReport) {
     //Ref B.1 Test if Count Complete
 
     //Ref B.2 Iterate
-    //Ref B.2.a Distribute
-    for (const ballot of ballots) {
-        //set ballot wieght w to 1
-        ballot.weight = 1;
-        for (const candidate of ballot.candidates) {
-            
+    const fnIterate = function () {
+        //Ref B.2.a Distribute
+        for (const ballot of ballots) {
+            ballot.weight = 1;
+            for (const candidate of ballot.candidates) {
+                voteDelta = ceil(ballot.weight * candidate.kf, 9);
+                candidate.stv.vote += voteDelta;
+                ballot.weight -= voteDelta;
+                if (ballot.weight <= 0) break;
+            }
         }
+        //Ref B.2.b Update Quota
+        let totalVote = 0;
+        for (const candidate in stvDistrict.candidates) {
+            totalVote += candidate.stv.vote;
+        }
+        const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
+        //Ref B.2.c Find winners
+        //Ref B.2.d Calculate total surplus
+        //Ref B.2.e Test for Iteration finished
+        //Ref B.2.f Update keep factors
+
+        fnReport({header: 'Initial Count', candidates: stvDistrict.candidates})
+        return false; //temp: stop iterating right away
     }
+    while(fnIterate());
+    //Ref B.3 Defeat low candidate
+    //Ref B.4 Continue (B.1)
+
+    //Ref C Elect or Defeat remaining
 
 }
+
+function ceil(value, decimalPlaces = 0) {
+    //const factor = Math.pow(10, decimalPlaces);
+    //return Math.ceil(value * factor) / factor;
+    return Number(Math.ceil(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
+}
+
+function floor(value, decimalPlaces = 0) {
+    //const factor = Math.pow(10, decimalPlaces);
+    //return Math.floor(value * factor) / factor;
+    return Number(Math.floor(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
+}
+
 
 function withoutIndex(array, i) {
     const arrayWithoutIndex = [

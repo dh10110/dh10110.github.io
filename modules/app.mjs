@@ -90,9 +90,40 @@ async function showResults() {
            }
        }
        stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
-       stvDistrict.candidates.sort(compareCandidates);
+       //stvDistrict.candidates.sort(compareCandidates);
     }
 
+    {
+        let stvDistrict = stvDistricts[1];
+        document.getElementById('vote-initial').insertAdjacentHTML('beforeend', `
+            <article>
+                <details>
+                    <summary>${stvDistrict.districtName}</summary>
+                    <section class="details-body" id="stv-${stvDistrict.districtName}">
+                    </section>
+                </details>
+            </article>
+        `);
+        stv.doElection(stvDistrict, rpt => {
+            document.getElementById('stv-' + stvDistrict.districtName).insertAdjacentHTML('beforeend', `
+                <details>
+                    <summary>${rpt.heading}</summary>
+                    <section class="details-body">
+                        ${concat(rpt.candidates, c => 
+                            makeVoteLine({
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                votes: c.stv.vote,
+                                voteTotal: stvDistrict.validVotes,
+                                color: c.color
+                            })
+                        )}
+                    </section>
+                </details>
+            `);
+        });
+    }
+
+    /*
     {
         let stvDistrict = stvDistricts[1];
         const ballots = stv.generateBallots(stvDistrict);
@@ -139,6 +170,7 @@ async function showResults() {
 </article>
         `);
     }
+    */
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
         return `
