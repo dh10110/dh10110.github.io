@@ -126,7 +126,7 @@ function runElectionWorker(stvDistrict) {
 
     //Start Worker
     window.requestAnimationFrame(showProgress);
-    const worker = new Worker('/modules/stv-worker.mjs', {module:true});
+    const worker = new Worker('/modules/stv-worker.mjs', {type:'module'});
     worker.addEventListener('message', e => {
         if (e.progress) {
             progress = e.progress;
