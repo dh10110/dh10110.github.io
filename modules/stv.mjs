@@ -146,7 +146,7 @@ export function doElection(stvDistrict, fnReport) {
         }
         lowest.stv.state = DEFEATED;
         lowest.stv.kf = 0;
-        fnReport({heading: 'Defeated: ' + lowest.surname, candidates: candidates});
+        fnReport({heading: 'Defeated: ' + lowest.surname, candidates: stvDistrict.candidates});
 
         //Ref B.4 Continue (B.1)
         return true;
