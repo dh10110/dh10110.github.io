@@ -97,7 +97,7 @@ export function doElection(stvDistrict, fnReport) {
             //Ref B.2.c Find winners
             let anyWinners = false;
             for (const candidate of stvDistrict.candidates) {
-                if (candidate.stv.vote >= quota) {
+                if (candidate.stv.state === HOPEFUL && candidate.stv.vote >= quota) {
                     candidate.stv.state = ELECTED;
                     winners.push(candidate);
                     anyWinners = true;

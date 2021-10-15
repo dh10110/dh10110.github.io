@@ -93,47 +93,7 @@ async function showResults() {
        //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    {
-        let stvDistrict = stvDistricts[1];
-        document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
-            <article>
-                <details>
-                    <summary>${stvDistrict.districtName}</summary>
-                    <section class="details-body" id="stv-${stvDistrict.districtName}">
-                    </section>
-                </details>
-            </article>
-        `);
-        stv.doElection(stvDistrict, rpt => {
-            document.getElementById('stv-' + stvDistrict.districtName).insertAdjacentHTML('beforeend', `
-                <details>
-                    <summary>${rpt.heading}</summary>
-                    <section class="details-body">
-                        ${rpt.quota ?
-                            makeVoteLine({
-                                heading: 'Quota',
-                                votes: rpt.quota,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#333'
-                            })
-                            : ''
-                        }
-                        ${rpt.candidates ?
-                            concat([...rpt.candidates].sort(compareCandidates), c => 
-                                makeVoteLine({
-                                    heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName} [${c.stv.state}] ${c.stv.kf}`,
-                                    votes: c.stv.vote,
-                                    voteTotal: stvDistrict.validVotes,
-                                    color: c.color
-                                })
-                            )
-                            : ''
-                        }
-                    </section>
-                </details>
-            `);
-        });
-    }
+    setInterval(() => runElection(stvDistrict), 5000);
 
     /*
     {
@@ -215,6 +175,50 @@ async function showResults() {
         `;
     }))
 }
+
+
+function runElection(stvDistrict) {
+    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
+        <article>
+            <details>
+                <summary>${stvDistrict.districtName}</summary>
+                <section class="details-body" id="stv-${stvDistrict.districtName}">
+                </section>
+            </details>
+        </article>
+    `);
+    stv.doElection(stvDistrict, rpt => {
+        document.getElementById('stv-' + stvDistrict.districtName).insertAdjacentHTML('beforeend', `
+            <details>
+                <summary>${rpt.heading}</summary>
+                <section class="details-body">
+                    ${rpt.quota ?
+                        makeVoteLine({
+                            heading: 'Quota',
+                            votes: rpt.quota,
+                            voteTotal: stvDistrict.validVotes,
+                            color: '#333'
+                        })
+                        : ''
+                    }
+                    ${rpt.candidates ?
+                        concat([...rpt.candidates].sort(compareCandidates), c => 
+                            makeVoteLine({
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName} [${c.stv.state}] ${c.stv.kf}`,
+                                votes: c.stv.vote,
+                                voteTotal: stvDistrict.validVotes,
+                                color: c.color
+                            })
+                        )
+                        : ''
+                    }
+                </section>
+            </details>
+        `);
+    });
+}
+
+
 
 function colorDot(color) {
     return `<span style="color: ${color};">⬤</span>`
