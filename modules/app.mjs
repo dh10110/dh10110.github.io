@@ -93,7 +93,7 @@ async function showResults() {
        //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    setTimeout(() => runElection(stvDistricts[0]), 5000);
+    setTimeout(() => runElection(stvDistricts[2]), 5000);
 
 }
 
@@ -137,7 +137,7 @@ function runElection(stvDistrict) {
                     }
                     ${rpt.exhausted ?
                         makeVoteLine({
-                            heading: 'Exhausted',
+                            heading: 'Exhausted Ballots',
                             votes: rpt.exhausted,
                             voteTotal: stvDistrict.validVotes,
                             color: '#888'
