@@ -49,43 +49,111 @@ export function doElection(stvDistrict, fnReport) {
     }
 
     //Ref B
-    //Ref B.1 Test if Count Complete
+    let roundNum = 0;
+    const fnRound = function () {
+        roundNum += 1;
 
-    //Ref B.2 Iterate
-    const fnIterate = function () {
-        //Ref B.2.a Distribute
-        for (const ballot of ballots) {
-            ballot.weight = 1;
-            for (const candidate of ballot.candidates) {
-                const voteDelta = ceil(ballot.weight * candidate.stv.kf, 9);
-                candidate.stv.vote += voteDelta;
-                ballot.weight -= voteDelta;
-                if (ballot.weight <= 0) break;
+        //Ref B.1 Test if Count Complete
+        if (winners.length === stvDistrict.seats) {
+            return false;
+        }
+        let electedOrHopeful = winners.length;
+        for (const candidate of stvDistrict.candidates) {
+            if (candidate.stv.state === HOPEFUL) {
+                electedOrHopeful += 1;
             }
         }
-
-        //Ref B.2.b Update Quota
-        let totalVote = 0;
-        for (const candidate of stvDistrict.candidates) {
-            totalVote += candidate.stv.vote;
+        if (electedOrHopeful <= stvDistrict.seats) {
+            return false;
         }
-        const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
-        
-        //Ref B.2.c Find winners
-        //Ref B.2.d Calculate total surplus
-        //Ref B.2.e Test for Iteration finished
-        //Ref B.2.f Update keep factors
 
-        fnReport({heading: 'Initial Count', quota, candidates: stvDistrict.candidates});
+        //Ref B.2 Iterate
+        let iterationNum = 0;
+        let prevSurplus = Number.MAX_SAFE_INTEGER;
+        const fnIterate = function () {
+            iterationNum += 1;
 
-        return false; //temp: stop iterating right away
+            //Ref B.2.a Distribute
+            for (const ballot of ballots) {
+                ballot.weight = 1;
+                for (const candidate of ballot.candidates) {
+                    const voteDelta = ceil(ballot.weight * candidate.stv.kf, 9);
+                    candidate.stv.vote += voteDelta;
+                    ballot.weight -= voteDelta;
+                    if (ballot.weight <= 0) break;
+                }
+            }
+
+            //Ref B.2.b Update Quota
+            let totalVote = 0;
+            for (const candidate of stvDistrict.candidates) {
+                totalVote += candidate.stv.vote;
+            }
+            const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
+
+            //Ref B.2.c Find winners
+            let anyWinners = false;
+            for (const candidate of stvDistrict.candidates) {
+                if (candidate.stv.vote >= quota) {
+                    candidate.stv.state = ELECTED;
+                    winners.push(candidate);
+                    anyWinners = true;
+                }
+            }
+
+            //Ref B.2.d Calculate total surplus
+            let totalSurplus = 0;
+            for (const elected of winners) {
+                const surplus = elected.stv.vote - quota;
+                if (surplus > 0) {
+                    totalSurplus += surplus;
+                }
+            }
+
+            //Ref B.2.e Test for Iteration finished
+            if (anyWinners) {
+                //break, continue at B.1
+                return 2;
+            } else if (totalSurplus < omega || totalSurplus >= prevSurplus) {
+                return false; //stop iterating
+            }
+            prevSurplus = totalSurplus;
+
+            //Ref B.2.f Update keep factors
+            for (const elected of winners) {
+                elected.stv.kf = ceil(ceil(elected.stv.kf * quota, 9) / elected.stv.vote, 9);
+            }
+
+            //Report to UI
+            fnReport({heading: `Round ${roundNum}-${iterationNum}`, quota, candidates: stvDistrict.candidates});
+
+            //Continue at B.2.a
+            return true;
+        }
+        let iterationResult = false;
+        while(iterationResult = fnIterate());
+        if (iterationResult === 2) {
+            return true; //continue at B.1 after winner declared
+        }
+
+        //Ref B.3 Defeat low candidate
+        let lowest = { stv: {vote: Number.MAX_SAFE_INTEGER} };
+        for (const candidate of stvDistrict.candidates) {
+            if (candidate.state === HOPEFUL && candidate.stv.vote < lowest.stv.vote) {
+                lowest = candidate;
+            }
+            //TODO: equality for lowest includes surplus, tiebreaks
+        }
+        lowest.stv.state = DEFEATED;
+        lowest.stv.kf = 0;
+
+        //Ref B.4 Continue (B.1)
+        return true;
     }
-    while(fnIterate());
-    //Ref B.3 Defeat low candidate
-    //Ref B.4 Continue (B.1)
 
     //Ref C Elect or Defeat remaining
-
+    //TODO
+    fnReport({heading: 'TODO: Elect or Defeat remaining', candidates: winners});
 }
 
 function ceil(value, decimalPlaces = 0) {

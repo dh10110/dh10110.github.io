@@ -109,20 +109,26 @@ async function showResults() {
                 <details>
                     <summary>${rpt.heading}</summary>
                     <section class="details-body">
-                        ${makeVoteLine({
-                            heading: 'Quota',
-                            votes: rpt.quota,
-                            voteTotal: stvDistrict.validVotes,
-                            color: '#333'
-                        })}
-                        ${concat([...rpt.candidates].sort(compareCandidates), c => 
+                        ${quota ?
                             makeVoteLine({
-                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                votes: c.stv.vote,
+                                heading: 'Quota',
+                                votes: rpt.quota,
                                 voteTotal: stvDistrict.validVotes,
-                                color: c.color
+                                color: '#333'
                             })
-                        )}
+                            : ''
+                        }
+                        ${rpt.candidates ?
+                            concat([...rpt.candidates].sort(compareCandidates), c => 
+                                makeVoteLine({
+                                    heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName} [${c.stv.state}] ${c.stv.kf}`,
+                                    votes: c.stv.vote,
+                                    voteTotal: stvDistrict.validVotes,
+                                    color: c.color
+                                })
+                            )
+                            : ''
+                        }
                     </section>
                 </details>
             `);
