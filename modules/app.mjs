@@ -90,11 +90,9 @@ async function showResults() {
            }
        }
        stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
-       //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    //setTimeout(() => runElection(stvDistricts[2]), 1000);
-    runElectionWorker(stvDistricts[2]);
+    runElectionWorker(stvDistricts[1]);
 
 }
 
