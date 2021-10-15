@@ -99,54 +99,65 @@ async function showResults() {
 
 
 function runElection(stvDistrict) {
+    const detailsId = `stv-${stvDistrict.districtName}`;
+    const statusId = `stat-${stvDistrict.districtName}`;
+    let progress = 'Running';
+
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
         <article>
             <details>
-                <summary>${stvDistrict.districtName}</summary>
-                <section class="details-body" id="stv-${stvDistrict.districtName}">
+                <summary>${stvDistrict.districtName} <span id="${statusId}"></span></summary>
+                <section class="details-body" id="${detailsId}">
                 </section>
             </details>
         </article>
     `);
     stv.doElection(stvDistrict, rpt => {
-        document.getElementById('stv-' + stvDistrict.districtName).insertAdjacentHTML('beforeend', `
-            <details>
-                <summary>${rpt.heading}</summary>
-                <section class="details-body">
-                    ${rpt.quota ?
-                        makeVoteLine({
-                            heading: 'Quota',
-                            votes: rpt.quota,
-                            voteTotal: stvDistrict.validVotes,
-                            color: '#333'
-                        })
-                        : ''
-                    }
-                    ${rpt.candidates ?
-                        concat([...rpt.candidates].sort(compareStvCandidates), c => 
+        if (rpt.progress) {
+            progress = rpt.progress;
+            window.requestAnimationFrame(() => {
+                document.getElementById(statusId).textContent = progress;
+            });
+        } else {
+            document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
+                <details>
+                    <summary>${rpt.heading}</summary>
+                    <section class="details-body">
+                        ${rpt.quota ?
                             makeVoteLine({
-                                heading:
-                                    `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
-                                    ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                votes: c.stv.vote,
+                                heading: 'Quota',
+                                votes: rpt.quota,
                                 voteTotal: stvDistrict.validVotes,
-                                color: c.color
+                                color: '#333'
                             })
-                        )
-                        : ''
-                    }
-                    ${rpt.exhausted ?
-                        makeVoteLine({
-                            heading: 'Exhausted Ballots',
-                            votes: rpt.exhausted,
-                            voteTotal: stvDistrict.validVotes,
-                            color: '#888'
-                        })
-                        : ''
-                    }
-                </section>
-            </details>
-        `);
+                            : ''
+                        }
+                        ${rpt.candidates ?
+                            concat([...rpt.candidates].sort(compareStvCandidates), c => 
+                                makeVoteLine({
+                                    heading:
+                                        `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
+                                        ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                    votes: c.stv.vote,
+                                    voteTotal: stvDistrict.validVotes,
+                                    color: c.color
+                                })
+                            )
+                            : ''
+                        }
+                        ${rpt.exhausted ?
+                            makeVoteLine({
+                                heading: 'Exhausted Ballots',
+                                votes: rpt.exhausted,
+                                voteTotal: stvDistrict.validVotes,
+                                color: '#888'
+                            })
+                            : ''
+                        }
+                    </section>
+                </details>
+            `);
+        }
     });
 }
 

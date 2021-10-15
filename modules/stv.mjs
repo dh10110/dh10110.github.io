@@ -55,10 +55,12 @@ export function doElection(stvDistrict, fnReport) {
     let roundNum = 0;
     const fnRound = function () {
         roundNum += 1;
+        fnReport({progress: `Round ${roundNum}`});
 
         //Ref B.1 Test if Count Complete
-        if (winners.length + hopeful.size <= stvDistrict.seats) {
-            return false;
+        if (winners.length === stvDistrict.seats ||
+            winners.length + hopeful.size <= stvDistrict.seats) {
+            return false; //break, continue with C
         }
 
         //Ref B.2 Iterate
@@ -66,6 +68,7 @@ export function doElection(stvDistrict, fnReport) {
         let prevSurplus = Number.MAX_SAFE_INTEGER;
         const fnIterate = function () {
             iterationNum += 1;
+            fnReport({progress: `Round ${roundNum}-${iterationNum}`});
 
             //Ref B.2.a Distribute
             for (const candidate of stvDistrict.candidates) {
@@ -178,6 +181,7 @@ export function doElection(stvDistrict, fnReport) {
     }
 
     //Report
+    fnReport({progress: 'ready'});
     fnReport({heading: 'Final Winners', exhausted: totalExhausted, candidates: winners});
 }
 
