@@ -125,13 +125,23 @@ function runElection(stvDistrict) {
                     ${rpt.candidates ?
                         concat([...rpt.candidates].sort(compareStvCandidates), c => 
                             makeVoteLine({
-                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}
-                                    ${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}`,
+                                heading:
+                                    `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
+                                    ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.stv.vote,
                                 voteTotal: stvDistrict.validVotes,
                                 color: c.color
                             })
                         )
+                        : ''
+                    }
+                    ${rpt.exhausted ?
+                        makeVoteLine({
+                            heading: 'Exhausted',
+                            votes: rpt.exhausted,
+                            voteTotal: stvDistrict.validVotes,
+                            color: '#888'
+                        })
                         : ''
                     }
                 </section>
@@ -141,7 +151,9 @@ function runElection(stvDistrict) {
 }
 
 function compareStvCandidates(a, b) {
-    return (a.stv.winnerOrder - b.stv.winnerOrder) || compareCandidates(a, b);
+    return ( (a.stv.winnerOrder||0) - (b.stv.winnerOrder||0) ) ||
+        ( (b.stv.vote||0) - (a.stv.vote||0) ) || //reversed a/b for desc
+        compareCandidates(a, b);
 }
 
 function colorDot(color) {

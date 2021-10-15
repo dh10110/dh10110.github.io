@@ -170,7 +170,15 @@ export function doElection(stvDistrict, fnReport) {
             candidate.stv.state = DEFEATED;
         }
     }
-    fnReport({heading: 'Final Winners', candidates: winners});
+    //Count exhausted ballots
+    let totalExhausted = 0;
+    for (const ballot of ballots) {
+        const isExhausted = ballot.candidates.every(c => c.stv.state === DEFEATED);
+        if (isExhausted) totalExhausted += 1;
+    }
+
+    //Report
+    fnReport({heading: 'Final Winners', exhausted: totalExhausted, candidates: winners});
 }
 
 function ceil(value, decimalPlaces = 0) {
