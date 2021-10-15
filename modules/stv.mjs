@@ -63,18 +63,21 @@ export function doElection(stvDistrict, fnReport) {
                 if (ballot.weight <= 0) break;
             }
         }
+
         //Ref B.2.b Update Quota
         let totalVote = 0;
         for (const candidate of stvDistrict.candidates) {
             totalVote += candidate.stv.vote;
         }
         const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
+        
         //Ref B.2.c Find winners
         //Ref B.2.d Calculate total surplus
         //Ref B.2.e Test for Iteration finished
         //Ref B.2.f Update keep factors
 
-        fnReport({header: 'Initial Count', candidates: stvDistrict.candidates})
+        fnReport({heading: 'Initial Count', quota, candidates: stvDistrict.candidates});
+
         return false; //temp: stop iterating right away
     }
     while(fnIterate());

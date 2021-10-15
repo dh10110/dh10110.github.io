@@ -95,7 +95,7 @@ async function showResults() {
 
     {
         let stvDistrict = stvDistricts[1];
-        document.getElementById('vote-initial').insertAdjacentHTML('beforeend', `
+        document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
             <article>
                 <details>
                     <summary>${stvDistrict.districtName}</summary>
@@ -109,7 +109,13 @@ async function showResults() {
                 <details>
                     <summary>${rpt.heading}</summary>
                     <section class="details-body">
-                        ${concat(rpt.candidates, c => 
+                        ${makeVoteLine({
+                            heading: 'Quota',
+                            votes: rpt.quota,
+                            voteTotal: stvDistrict.validVotes,
+                            color: '#333'
+                        })}
+                        ${concat([...rpt.candidates].sort(compareCandidates), c => 
                             makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.stv.vote,
