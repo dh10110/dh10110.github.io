@@ -44,7 +44,7 @@ export function doElection(stvDistrict, fnReport) {
     const ballots = [];
     for (const ballotDef of ballotDefs) {
         for (let i = 0; i < ballotDef.count; i += 1) {
-            ballots.push({ candidates: ballotDef.candidates });
+            ballots.push({ candidates: ballotDef.ordered });
         }
     }
 
