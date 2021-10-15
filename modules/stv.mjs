@@ -89,8 +89,8 @@ export function doElection(stvDistrict, fnReport) {
 
             //Ref B.2.c Find winners
             let newWinners = [];
-            for (const candidate of stvDistrict.candidates) {
-                if (candidate.stv.state === HOPEFUL && candidate.stv.vote >= quota) {
+            for (const candidate of hopeful.values()) {
+                if (candidate.stv.vote >= quota) {
                     candidate.stv.state = ELECTED;
                     winners.push(candidate);
                     newWinners.push(candidate);
@@ -112,9 +112,9 @@ export function doElection(stvDistrict, fnReport) {
 
             //Ref B.2.e Test for Iteration finished
             if (newWinners.length > 0) {
-                fnReport({heading: `Round ${roundNum} - Elected: ${newWinners.map(w =>
+                fnReport({heading: `Round ${roundNum}-${iterationNum} - Elected: ${newWinners.map(w =>
                     `<span style="color: ${w.color};">⬤</span>${w.surname}`
-                ).join(', ')}`, candidates: [...hopeful.values()]});
+                ).join(', ')}`, quota, candidates: [...winners, ...hopeful.values()]});
                 return 2; //break, continue at B.1
             } else if (totalSurplus < omega || totalSurplus >= prevSurplus) {
                 return false; //stop iterating
@@ -147,7 +147,10 @@ export function doElection(stvDistrict, fnReport) {
         lowest.stv.state = DEFEATED;
         lowest.stv.kf = 0;
         hopeful.delete(lowest);
-        fnReport({heading: `Round ${roundNum} - Defeated: <span style="color: ${lowest.color};">⬤</span>${lowest.surname}`, candidates: [lowest, ...hopeful.values()]});
+        fnReport({
+            heading: `Round ${roundNum} - Defeated: <span style="color: ${lowest.color};">⬤</span>${lowest.surname}`,
+            candidates: [lowest, ...winners, ...hopeful.values()]
+        });
 
         //Ref B.4 Continue (B.1)
         return true;
