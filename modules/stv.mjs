@@ -65,7 +65,7 @@ export function doElection(stvDistrict, fnReport) {
         }
         //Ref B.2.b Update Quota
         let totalVote = 0;
-        for (const candidate in stvDistrict.candidates) {
+        for (const candidate of stvDistrict.candidates) {
             totalVote += candidate.stv.vote;
         }
         const quota = floor(totalVote / (stvDistrict.seats + 1), 9) + 10E-9;
