@@ -95,7 +95,7 @@ async function showResults() {
 
     //setTimeout(() => runElection(stvDistricts[2]), 1000);
     runElectionWorker(stvDistricts[2]);
-    
+
 }
 
 function runElectionWorker(stvDistrict) {
@@ -126,8 +126,8 @@ function runElectionWorker(stvDistrict) {
 
     //Start Worker
     window.requestAnimationFrame(showProgress);
-    const worker = new Worker('./stv-worker.mjs', {module:true});
-    worker.addEventListener(e => {
+    const worker = new Worker('/modules/stv-worker.mjs', {module:true});
+    worker.addEventListener('message', e => {
         if (e.progress) {
             progress = e.progress;
         } else {
