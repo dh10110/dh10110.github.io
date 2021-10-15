@@ -134,9 +134,10 @@ export function doElection(stvDistrict, fnReport) {
             return true;
         }
         let iterationResult = false;
-        while(iterationResult = fnIterate());
-        if (iterationResult === 2) {
-            return true; //continue at B.1 after winner declared
+        while(iterationResult = fnIterate()) {
+            if (iterationResult === 2) {
+                return true; //continue at B.1 after winner declared
+            }
         }
 
         //Ref B.3 Defeat low candidate
