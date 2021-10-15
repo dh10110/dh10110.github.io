@@ -93,87 +93,8 @@ async function showResults() {
        //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    setTimeout(() => runElection(stvDistricts[1]), 5000);
+    setTimeout(() => runElection(stvDistricts[0]), 5000);
 
-    /*
-    {
-        let stvDistrict = stvDistricts[1];
-        const ballots = stv.generateBallots(stvDistrict);
-        showData('ballots', ballots);
-    
-        document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
-<article>
-    <style>
-        .ballots {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4em;
-            align-items: flex-start;
-        }
-        .ballot {
-            border: 1px solid silver;
-            border-radius: 5px;
-        }
-        .ballot > ol {
-            list-style-position: inside;
-            padding: 0 0.2em;
-            margin: 0;
-        }
-        .ballot > hr {
-            margin: 0.3em 0;
-        }
-        .ballot > .count {
-            text-align: center;
-        }
-    </style>
-    <div class="ballots">
-        ${concat(ballots, ballot => `
-            <div class="ballot">
-                <ol>
-                    ${concat(ballot.ordered, c => 
-                        `<li>${colorDot(c.color)} <span title="${c.givenName} - ${c.partyName}">${c.surname}<span></li>`
-                    )}
-                </ol>
-                <hr>
-                <div class="count">× ${ballot.count}</div>
-            </div>
-        `)}
-    </div>
-</article>
-        `);
-    }
-    */
-
-    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', concat(stvDistricts, stvDistrict => {
-        return `
-<article>
-    <details>
-        <summary>${stvDistrict.districtName}</summary>
-        <section class="details-body">
-            <details>
-                <summary>First Choice Votes</summary>
-                <section class="details-body">
-                    ${makeVoteLine({
-                        heading: 'Quota',
-                        votes: stvDistrict.quota,
-                        voteTotal: stvDistrict.validVotes,
-                        color: '#333'
-                    })}
-                    ${concat(stvDistrict.candidates, c => {
-                        return makeVoteLine({
-                            heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                            votes: c.votes,
-                            voteTotal: stvDistrict.validVotes,
-                            color: c.color
-                        });
-                    })}
-                </section>
-            </details>
-        </section>
-    </details>
-</article>
-        `;
-    }))
 }
 
 
