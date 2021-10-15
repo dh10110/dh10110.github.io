@@ -151,7 +151,8 @@ function runElection(stvDistrict) {
 }
 
 function compareStvCandidates(a, b) {
-    return ( (a.stv.winnerOrder||0) - (b.stv.winnerOrder||0) ) ||
+    return ( Number(!a.stv.winnerOrder) - Number(!b.stv.winnerOrder) ) || //existence of winnerOrder first
+        ( (a.stv.winnerOrder||0) - (b.stv.winnerOrder||0) ) ||
         ( (b.stv.vote||0) - (a.stv.vote||0) ) || //reversed a/b for desc
         compareCandidates(a, b);
 }
