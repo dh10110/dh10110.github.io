@@ -93,7 +93,7 @@ async function showResults() {
        //stvDistrict.candidates.sort(compareCandidates);
     }
 
-    setInterval(() => runElection(stvDistrict), 5000);
+    setInterval(() => runElection(stvDistricts[1]), 5000);
 
     /*
     {
