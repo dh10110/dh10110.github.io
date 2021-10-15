@@ -192,8 +192,7 @@ function doElection(stvDistrict) {
     }
 
     //Report
-    postMessage({progress: 'done'});
-    postMessage({heading: 'Final Winners', final: true, exhausted: totalExhausted, candidates: winners});
+    postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: totalExhausted, candidates: winners});
 }
 
 function ceil(value, decimalPlaces = 0) {

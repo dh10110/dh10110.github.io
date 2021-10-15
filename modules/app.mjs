@@ -99,13 +99,14 @@ async function showResults() {
 function runElectionWorker(stvDistrict) {
     const detailsId = `stv-${stvDistrict.districtName}`;
     const statusId = `stat-${stvDistrict.districtName}`;
+    const dotsId = `dots-${stvDistrict.districtName}`;
     let progress = 'Starting...';
     let lastProgress = null;
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
         <article>
             <details>
-                <summary>${stvDistrict.districtName} <span id="${statusId}"></span></summary>
+                <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
                 <section class="details-body" id="${detailsId}">
                 </section>
             </details>
@@ -131,7 +132,7 @@ function runElectionWorker(stvDistrict) {
             progress = rpt.progress;
         }
         if (rpt.final) {
-            document.getElementById(statusId).insertAdjacentHTML('beforeend', `
+            document.getElementById(dotsId).insertAdjacentHTML('beforeend', `
                 ${concat([...rpt.candidates].sort(compareStvCandidates), c =>
                     `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`
                 )}
