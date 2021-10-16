@@ -155,8 +155,19 @@ function doElection(stvDistrict) {
             if (lowest === null || candidate.stv.vote < lowest.stv.vote) {
                 lowest = candidate;
             }
-            //TODO: use equality for lowest includes surplus, tiebreaks
         }
+        //check for ties
+        let lowThreshold = lowest.stv.vote + totalSurplus;
+        const tiedForLowest = new Set();
+        for (const candidate of hopeful.values()) {
+            if (candidate.stv.vote < lowThreshold) {
+                tiedForLowest.add(candidate);
+            }
+        }
+        if (tiedForLowest.size > 1) {
+            let figureItOut = 1;
+        }
+        //defeat the lowest
         lowest.stv.state = DEFEATED;
         lowest.stv.kf = 0;
         hopeful.delete(lowest);
