@@ -77,6 +77,7 @@ function doElection(stvDistrict) {
         //Ref B.2 Iterate
         let iterationNum = 0;
         let prevSurplus = Number.MAX_SAFE_INTEGER;
+        let totalSurplus = 0;
         const fnIterate = function () {
             iterationNum += 1;
             postMessage({progress: `Round ${roundNum}-${iterationNum}`});
@@ -115,7 +116,7 @@ function doElection(stvDistrict) {
             }
 
             //Ref B.2.d Calculate total surplus
-            let totalSurplus = 0;
+            totalSurplus = 0;
             for (const winner of winners) {
                 const surplus = winner.stv.vote - quota;
                 if (surplus > 0) {
