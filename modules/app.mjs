@@ -271,13 +271,20 @@ function runElection(stvDistrict) {
         progress = null;
     }
 }
-
+/*
 function compareStvCandidates(a, b) {
     return ( Number(!a.stv.winnerOrder) - Number(!b.stv.winnerOrder) ) || //existence of winnerOrder first
         ( (a.stv.winnerOrder||0) - (b.stv.winnerOrder||0) ) ||
         ( (b.stv.vote||0) - (a.stv.vote||0) ) || //reversed a/b for desc
         compareCandidates(a, b);
 }
+*/
+const compareStvCandidates = orderCriteria(
+    c => Number(!c.stv.winnerOrder),
+    c => c.stv.winnerOrder,
+    desc(c => c.stv.vote),
+    compareCandidates
+);
 
 function colorDot(color) {
     return `<span style="color: ${color};">⬤</span>`
