@@ -169,6 +169,7 @@ function doElection(stvDistrict) {
         }
         //defeat the lowest
         lowest.stv.state = DEFEATED;
+        lowest.stv.vote = 0;
         lowest.stv.kf = 0;
         hopeful.delete(lowest);
         postMessage({
@@ -193,6 +194,8 @@ function doElection(stvDistrict) {
         //Ref C.2 Defeat remaining
         for (const candidate of hopeful.values()) {
             candidate.stv.state = DEFEATED;
+            candidate.stv.vote = 0;
+            candidate.stv.kf = 0;
         }
     }
     //Count exhausted ballots
