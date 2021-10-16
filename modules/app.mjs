@@ -130,7 +130,8 @@ function runElectionWorker(stvDistrict) {
 
     //Start Worker
     window.requestAnimationFrame(showProgress);
-    const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
+    //const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
+    const worker = new Worker('/modules/stv-worker.mjs?v=1', {type:'module'});
     worker.addEventListener('message', e => {
         const rpt = e.data;
         if (typeof rpt.progress !== 'undefined') {
