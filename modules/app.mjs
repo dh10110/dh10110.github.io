@@ -2,7 +2,10 @@ import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
 import * as stv from './stv.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
+import { orderBy, desc } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
+
+const ver = '1.1';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -24,10 +27,12 @@ function showData(heading, data, open = false) {
 function showStatus(text) {
     $('#status').text(text);
 }
-
+/*
 function compareCandidates(a, b) {
     return (b.votes - a.votes); //desc
 }
+*/
+const compareCandidates = desc('votes');
 
 async function showResults() {
     let dataCount = 0;
@@ -70,8 +75,9 @@ async function showResults() {
 
             oldDistrict.candidates.sort(compareCandidates);
         }
-        stvDistrict.byParty = Array.from(mapByParty.values());
-        stvDistrict.byParty.sort(compareCandidates);
+        stvDistrict.byParty = orderBy(mapByParty.values(), compareCandidates);
+        //stvDistrict.byParty = Array.from(mapByParty.values());
+        //stvDistrict.byParty.sort(compareCandidates);
         for (const partyTotal of stvDistrict.byParty) {
             partyTotal.candidates.sort(compareCandidates);
         }
@@ -131,7 +137,7 @@ function runElectionWorker(stvDistrict) {
     //Start Worker
     window.requestAnimationFrame(showProgress);
     //const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
-    const worker = new Worker('/modules/stv-worker.mjs?v=1', {type:'module'});
+    const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
         const rpt = e.data;
         if (typeof rpt.progress !== 'undefined') {

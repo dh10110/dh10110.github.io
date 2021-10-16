@@ -1,4 +1,5 @@
 import { getOrAdd } from './mapUtil.mjs';
+import { withoutIndex } from './arrayUtil.mjs';
 import { CandidateGroup } from './classes.mjs';
 
 addEventListener('message', e => {
@@ -151,6 +152,7 @@ function doElection(stvDistrict) {
         }
 
         //Ref B.3 Defeat low candidate
+        let defeatReason = 'lowest';
         let lowest = null;
         for (const candidate of hopeful.values()) {
             if (lowest === null || candidate.stv.vote < lowest.stv.vote) {
@@ -166,7 +168,9 @@ function doElection(stvDistrict) {
             }
         }
         if (tiedForLowest.size > 1) {
-            let figureItOut = 1;
+            for (const candidate of tiedForLowest.values()) {
+
+            }
         }
         //defeat the lowest
         lowest.stv.state = DEFEATED;
@@ -210,6 +214,8 @@ function doElection(stvDistrict) {
     postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: totalExhausted, candidates: winners});
 }
 
+
+//#region math util
 function ceil(value, decimalPlaces = 0) {
     return Number(Math.ceil(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
 }
@@ -217,15 +223,8 @@ function ceil(value, decimalPlaces = 0) {
 function floor(value, decimalPlaces = 0) {
     return Number(Math.floor(value + 'e' + decimalPlaces) + 'e-' + decimalPlaces);
 }
+//#endregion
 
-
-function withoutIndex(array, i) {
-    const arrayWithoutIndex = [
-        ...array.slice(0, i),
-        ...array.slice(i + 1, array.length)
-    ];
-    return arrayWithoutIndex;
-}
 
 function* getBallots(unordered, ordered = [], orderedWeight = 0) {
     if (unordered.length === 0) {
