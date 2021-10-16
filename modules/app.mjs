@@ -2,7 +2,7 @@ import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
 import * as stv from './stv.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
-import { orderBy, desc } from './arrayUtil.mjs';
+import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
 const ver = '1.1';
@@ -76,8 +76,6 @@ async function showResults() {
             oldDistrict.candidates.sort(compareCandidates);
         }
         stvDistrict.byParty = orderBy(mapByParty.values(), compareCandidates);
-        //stvDistrict.byParty = Array.from(mapByParty.values());
-        //stvDistrict.byParty.sort(compareCandidates);
         for (const partyTotal of stvDistrict.byParty) {
             partyTotal.candidates.sort(compareCandidates);
         }

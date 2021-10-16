@@ -4,11 +4,31 @@ export function defaultCompare(a, b) {
     return 0;
 }
 
-function makeComparer(comparison) {
-    if (typeof(comparison) === 'function') return comparison;
+export function makeComparer(comparison) {
+    if (comparison == null) return defaultCompare;
+    if (typeof(comparison) === 'function') return (a, b) => defaultCompare(comparison(a), comparison(b));
     if (typeof(comparison) === 'string') return (a, b) => defaultCompare(a[comparison], b[comparison]);
+    if (typeof comparison[Symbol.iterator] === 'function') return orderCriteria(comparison);
     //default
     return defaultCompare;
+}
+
+export function orderCriteria(...comparisons) {
+    //define all the comparers
+    const comparers = [];
+    for (const comparison of comparisons) {
+        comparers.push(makeComparer(comparison));
+    }
+    return (a, b) => {
+        //Evaluate each comparer in turn
+        for (const comparer of comparers) {
+            const compareResult = comparer(a, b);
+            //if comparing gives a non-zero (non-equal) result, return it
+            if (compareResult) return compareResult;
+        }
+        //All comparers evaluated, items are equal for all comparisons
+        return 0;
+    }
 }
 
 export function desc(comparison) {
@@ -17,13 +37,7 @@ export function desc(comparison) {
 }
 
 export function orderBy(iterable, ...comparisons) {
-    return [...iterable].sort((a, b) => {
-        for (const comparison of comparisons) {
-            const comparer = makeComparer(comparison);
-            const compareResult = comparer(a, b);
-            if (compareResult) return compareResult;
-        }
-    });
+    return [...iterable].sort(orderCriteria(...comparisons));
 }
 
 export function withoutIndex(array, i) {
