@@ -143,7 +143,7 @@ function runElectionWorker(stvDistrict) {
         }
         if (rpt.final) {
             document.getElementById(dotsId).insertAdjacentHTML('beforeend', `
-                ${concat([...rpt.candidates].sort(compareStvCandidates), c =>
+                ${concat(orderBy(rpt.candidates, compareStvCandidates), c =>
                     `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`
                 )}
             `);
@@ -163,7 +163,7 @@ function runElectionWorker(stvDistrict) {
                             : ''
                         }
                         ${rpt.candidates ?
-                            concat([...rpt.candidates].sort(compareStvCandidates), c => 
+                            concat(orderBy(rpt.candidates, compareStvCandidates), c => 
                                 makeVoteLine({
                                     heading:
                                         `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
