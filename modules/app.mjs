@@ -271,19 +271,12 @@ function runElection(stvDistrict) {
         progress = null;
     }
 }
-/*
-function compareStvCandidates(a, b) {
-    return ( Number(!a.stv.winnerOrder) - Number(!b.stv.winnerOrder) ) || //existence of winnerOrder first
-        ( (a.stv.winnerOrder||0) - (b.stv.winnerOrder||0) ) ||
-        ( (b.stv.vote||0) - (a.stv.vote||0) ) || //reversed a/b for desc
-        compareCandidates(a, b);
-}
-*/
+
 const compareStvCandidates = orderCriteria(
-    c => Number(!c.stv.winnerOrder),
-    c => c.stv.winnerOrder,
-    desc(c => c.stv.vote),
-    compareCandidates
+    c => Number(!c.stv.winnerOrder), //winner order existence
+    c => c.stv.winnerOrder, //winner order
+    desc(c => c.stv.vote), //most votes
+    compareCandidates //most votes in original election
 );
 
 function colorDot(color) {
