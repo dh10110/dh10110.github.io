@@ -7,7 +7,7 @@ export function defaultCompare(a, b) {
 export function makeComparer(comparison) {
     if (comparison == null) return defaultCompare;
     if (typeof(comparison) === 'function') {
-        if (comparison.length === 1) return defaultCompare(comparison(a), comparison(b));
+        if (comparison.length === 1) return (a, b) => defaultCompare(comparison(a), comparison(b));
         else return comparison;
     }
     if (typeof(comparison) === 'string') return (a, b) => defaultCompare(a[comparison], b[comparison]);
