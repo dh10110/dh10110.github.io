@@ -27,11 +27,7 @@ function showData(heading, data, open = false) {
 function showStatus(text) {
     $('#status').text(text);
 }
-/*
-function compareCandidates(a, b) {
-    return (b.votes - a.votes); //desc
-}
-*/
+
 const compareCandidates = desc('votes');
 
 async function showResults() {
