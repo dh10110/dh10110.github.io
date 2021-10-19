@@ -70,7 +70,7 @@ export class ElectWigm {
     //Ref A - Initialize Election
     initialize() {
         //Ref A.1 - Set the Quota
-        this.quota = trunc(ballots.length / (this.seats + 1)) + 10e-4;
+        this.quota = this.trunc(ballots.length / (this.seats + 1)) + 10e-4;
         //Ref A.2 - Set candidates to HOPEFUL
         this.hopeful.add(...this.candidates);
         for (const candidate of this.candidates) {
@@ -114,7 +114,7 @@ export class ElectWigm {
             highCandidate.wigm.state = candidateStatus.ELECTED;
             this.elected.add(highCandidate);
             for (const ballot of highCandidate.assignedBallots.values()) {
-                ballot.weight = trunc(ballot.weight * highCandidate.wigm.surplus / highCandidate.wigm.vote);
+                ballot.weight = this.trunc(ballot.weight * highCandidate.wigm.surplus / highCandidate.wigm.vote);
             }
             this.transferBallots(highCandidate);
             highCandidate.wigm.vote = this.quota;
