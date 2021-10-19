@@ -45,7 +45,7 @@ export class ElectWigm {
         //Ref B - Round
         while (shouldContinue) {
             this.roundNum += 1;
-            shouldContinue = round();
+            shouldContinue = this.round();
         }
         //Ref C - Finish Count
         this.finishCount();
