@@ -70,11 +70,11 @@ export class ElectWigm {
     //Ref A - Initialize Election
     initialize() {
         //Ref A.1 - Set the Quota
-        this.quota = this.trunc(ballots.length / (this.seats + 1)) + 10e-4;
+        this.quota = this.trunc(this.ballots.length / (this.seats + 1)) + 10e-4;
         //Ref A.2 - Set candidates to HOPEFUL
-        this.hopeful.add(...this.candidates);
         for (const candidate of this.candidates) {
             candidate.wigm.state = candidateStatus.HOPEFUL;
+            this.hopeful.add(candidate);
         }
         //Ref A.3 - Test count complete (D.3)
         if (this.testCountComplete()) return false;
