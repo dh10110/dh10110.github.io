@@ -5,7 +5,8 @@ import { getOrAdd, concat } from './mapUtil.mjs';
 import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
-const ver = '1.2.1';
+//const ver = '1.2.1';
+const ver = new Date().getTime();
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -129,7 +130,6 @@ function runElectionWorker(stvDistrict) {
     }
 
     //Start Worker
-    //const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
     //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
