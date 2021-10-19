@@ -2,6 +2,7 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
 addEventListener('message', e => {
+    postMessage({progress: 'tesst'});
     console.log(e.data);
     const { method, stvDistrict } = e.data;
 
@@ -19,3 +20,7 @@ addEventListener('message', e => {
         throw new Error('Unsupported counting method');
     }
 });
+
+setTimeout(x => {
+    debugger;
+}, 5000);
