@@ -1,5 +1,5 @@
 //import { ElectWigm } from "./wigm.mjs";
-import { generateBallots } from './ballotMaker.mjs';
+//import { generateBallots } from './ballotMaker.mjs';
 
 debugger;
 
@@ -15,7 +15,7 @@ addEventListener('message', e => {
     if (method === 'wigm') {
 
         postMessage({progress: 'Generating Ballots'});
-        const ballots = generateBallots(stvDistrict);
+        //const ballots = generateBallots(stvDistrict);
 
         postMessage({progress: 'Initiating Count'});
         //const counter = new ElectWigm(stvDistrict, ballots, postMessage);
