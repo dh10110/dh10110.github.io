@@ -57,7 +57,7 @@ export class ElectWigm {
     //Prep data structure
     prep() {
         for (const candidate of this.candidates) {
-            candidate.wigm = { vote: 0, surplus: 0, assignedBallots: new Set() };
+            candidate.stv = { vote: 0, surplus: 0, assignedBallots: new Set() };
         }
         //TODO: move tieOrder definition outside counting classes
         let tieOrder = 0;
@@ -72,7 +72,7 @@ export class ElectWigm {
         this.quota = this.trunc(this.ballots.length / (this.seats + 1)) + 10e-4;
         //Ref A.2 - Set candidates to HOPEFUL
         for (const candidate of this.candidates) {
-            candidate.wigm.state = candidateStatus.HOPEFUL;
+            candidate.stv.state = candidateStatus.HOPEFUL;
             this.hopeful.add(candidate);
         }
         //Ref A.3 - Test count complete (D.3)
@@ -81,8 +81,8 @@ export class ElectWigm {
         //+ Ref A.5 - Set candidate vote
         for (const ballot of this.ballots) {
             ballot.weight = 1;
-            ballot.candidates[0].wigm.assignedBallots.add(ballot);
-            ballot.candidates[0].wigm.vote += 1;
+            ballot.candidates[0].stv.assignedBallots.add(ballot);
+            ballot.candidates[0].stv.vote += 1;
         }
         //Continue
         return true;
@@ -94,11 +94,11 @@ export class ElectWigm {
 
         //Ref B.1 - Elect Winners
         for (const candidate of this.hopeful) {
-            if (candidate.wigm.vote >= this.quota) {
+            if (candidate.stv.vote >= this.quota) {
                 this.hopeful.delete(candidate);
-                candidate.wigm.state == candidateStatus.PENDING;
+                candidate.stv.state == candidateStatus.PENDING;
                 this.pending.add(candidate);
-                candidate.wigm.surplus = candidate.wigm.vote - this.quota;
+                candidate.stv.surplus = candidate.stv.vote - this.quota;
             }
         }
         if (this.testCountComplete()) return false; //D.3
@@ -107,16 +107,17 @@ export class ElectWigm {
             //TODO
         }
         //Ref B.3 - Transfer high surplus
-        const highCandidate = first(this.pending, desc(c => c.wigm.surplus), c => c.tieOrder)
+        const highCandidate = first(this.pending, desc(c => c.stv.surplus), c => c.tieOrder)
         if (highCandidate) {
             this.pending.delete(highCandidate);
-            highCandidate.wigm.state = candidateStatus.ELECTED;
+            highCandidate.stv.state = candidateStatus.ELECTED;
             this.elected.add(highCandidate);
-            for (const ballot of highCandidate.wigm.assignedBallots.values()) {
-                ballot.weight = this.trunc(ballot.weight * highCandidate.wigm.surplus / highCandidate.wigm.vote);
+            highCandidate.stv.winnerOrder = this.elected.size;
+            for (const ballot of highCandidate.stv.assignedBallots.values()) {
+                ballot.weight = this.trunc(ballot.weight * highCandidate.stv.surplus / highCandidate.stv.vote);
             }
             this.transferBallots(highCandidate);
-            highCandidate.wigm.vote = this.quota;
+            highCandidate.stv.vote = this.quota;
 
             this.postMessage({
                 heading: `Round ${this.roundNum} - Elected: ${tplCandidate(highCandidate)}`,
@@ -126,11 +127,11 @@ export class ElectWigm {
             return true; //continue at B.1
         }
         //Ref B.4 - Defeat low candidiate
-        const lowCandidate = first(this.hopeful, c => c.wigm.vote, c => c.tieOrder);
+        const lowCandidate = first(this.hopeful, c => c.stv.vote, c => c.tieOrder);
         this.hopeful.delete(lowCandidate);
-        lowCandidate.wigm.state = candidateStatus.DEFEATED;
+        lowCandidate.stv.state = candidateStatus.DEFEATED;
         this.defeated.add(lowCandidate);
-        lowCandidate.wigm.vote = 0;
+        lowCandidate.stv.vote = 0;
         if (this.testCountComplete()) return false; //D.3
         this.transferBallots(lowCandidate);
         this.postMessage({
@@ -151,15 +152,16 @@ export class ElectWigm {
             });
         }
         for (const candidate of this.pending) {
-            candidate.wigm.state = candidateStatus.ELECTED;
+            candidate.stv.state = candidateStatus.ELECTED;
             this.elected.add(candidate);
+            candidate.stv.winnerOrder = this.elected.size;
         }
         this.pending.clear();
         //All seats filled?
         if (this.pending.size === this.seats) {
             //defeat all remaining hopeful candidates
             for (const candidate of this.hopeful) {
-                candidate.wigm.state = candidateStatus.DEFEATED;
+                candidate.stv.state = candidateStatus.DEFEATED;
                 this.defeated.add(candidate);
             }
             this.hopeful.clear();
@@ -170,7 +172,7 @@ export class ElectWigm {
                 candidates: [...this.elected.values(), ...this.hopeful.values()]
             });
             for (const candidate of this.hopeful) {
-                candidate.wigm.state = candidateStatus.DEFEATED;
+                candidate.stv.state = candidateStatus.DEFEATED;
                 this.elected.add(candidate);
             }
             this.hopeful.clear();
@@ -179,11 +181,11 @@ export class ElectWigm {
 
     //Ref D.2
     transferBallots(candidate) {
-        for (const ballot of candidate.wigm.assignedBallots.values()) {
+        for (const ballot of candidate.stv.assignedBallots.values()) {
             const newCandidate = nextCandidate(ballot.candidates, candidate);
-            candidate.wigm.assignedBallots.delete(ballot);
+            candidate.stv.assignedBallots.delete(ballot);
             if (newCandidate && ballot.weight) {
-                newCandidate.wigm.assignedBallots.add(ballot);
+                newCandidate.stv.assignedBallots.add(ballot);
                 newCandidate.vote += ballot.weight;
             } else {
                 this.exhaustedBallots += 1;
@@ -208,7 +210,7 @@ export class ElectWigm {
 function nextCandidate(candidates, curCandidate) {
     let nextCandidate = null;
     for (const candidate of candidates) {
-        if (candidate !== curCandidate && candidate.wigm.state.canTransferTo) {
+        if (candidate !== curCandidate && candidate.stv.state.canTransferTo) {
             return candidate;
         }
     }
