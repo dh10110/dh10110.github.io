@@ -61,7 +61,7 @@ function* getBallotDefs(unordered, ordered = [], orderedWeight = 0) {
                 if (unassignedBallotDefs < 0 || unassignedBallotDefs >= ballotDefs.length) {
                     throw new Error('Ballot calculation error');
                 }
-                if (unassignedBallots > 0) {
+                if (unassignedBallotDefs > 0) {
                     defaultBallotDef.count += unassignedBallotDefs;
                 }
                 yield* ballotDefs;
