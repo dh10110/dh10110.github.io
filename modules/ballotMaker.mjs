@@ -17,7 +17,11 @@ export function generateBallots(stvDistrict) {
     const ballots = [];
     for (const [key, party] of partyMap) {
         const ballotDefs = getBallotDefs(party.candidates);
-        ballots.push(...ballotDefs);
+        for (const ballotDef of ballotDefs) {
+            for (let i = 0; i < ballotDef.count; i += 1) {
+                ballots.push({ candidates: ballotDef.ordered });
+            }
+        }
     }
     
     return ballots;
