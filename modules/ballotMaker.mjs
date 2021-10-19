@@ -54,7 +54,7 @@ function* getBallotDefs(unordered, ordered = [], orderedWeight = 0) {
                 for (const ballotDef of ballotDefs) {
                     ballotDef.count = Math.floor(item.votes * ballotDef.weight);
                     unassignedBallotDefs -= ballotDef.count;
-                    if (ballotDef.weight > defaultBallot.weight) {
+                    if (ballotDef.weight > defaultBallotDef.weight) {
                         defaultBallotDef = ballotDef;
                     }
                 }
