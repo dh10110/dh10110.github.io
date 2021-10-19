@@ -5,7 +5,7 @@ import { getOrAdd, concat } from './mapUtil.mjs';
 import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
-const ver = '1.1';
+const ver = '1.2';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
