@@ -4,11 +4,11 @@ import { orderBy } from './arrayUtil.mjs';
 
 //TODO: shared with other count classes
 export const candidateStatus = {
-    WITHDRAWN = { text: 'Withdrawn', level: 0 },
-    HOPEFUL = { text: 'Hopeful', level: 1, canTransferTo: true },
-    DEFEATED = { text: 'Defeated', level: 0 },
-    PENDING = { text: 'Pending', level: 2 },
-    ELECTED = { text: 'Elected', level: 3 }
+    WITHDRAWN: { text: 'Withdrawn', level: 0 },
+    HOPEFUL: { text: 'Hopeful', level: 1, canTransferTo: true },
+    DEFEATED: { text: 'Defeated', level: 0 },
+    PENDING: { text: 'Pending', level: 2 },
+    ELECTED: { text: 'Elected', level: 3 }
 };
 
 function tplCandidate(candidate) {
