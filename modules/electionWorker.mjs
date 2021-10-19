@@ -2,9 +2,6 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
 addEventListener('message', e => {
-    debugger;
-    postMessage({progress: 'tesst'});
-    console.log(e.data);
     const { method, stvDistrict } = e.data;
 
     if (method === 'wigm') {
@@ -18,5 +15,6 @@ addEventListener('message', e => {
 
     } else {
         console.warn('Unsupported counting method');
+        postMessage({progress: 'Unsupported counting method'});
     }
 });
