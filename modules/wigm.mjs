@@ -82,7 +82,7 @@ export class ElectWigm {
         //+ Ref A.5 - Set candidate vote
         for (const ballot of this.ballots) {
             ballot.weight = 1;
-            ballot.ordered[0].assignedBallots.add(ballot);
+            ballot.ordered[0].wigm.assignedBallots.add(ballot);
             ballot.ordered[0].wigm.vote += 1;
         }
         //Continue
@@ -113,7 +113,7 @@ export class ElectWigm {
             this.pending.delete(highCandidate);
             highCandidate.wigm.state = candidateStatus.ELECTED;
             this.elected.add(highCandidate);
-            for (const ballot of highCandidate.assignedBallots.values()) {
+            for (const ballot of highCandidate.wigm.assignedBallots.values()) {
                 ballot.weight = this.trunc(ballot.weight * highCandidate.wigm.surplus / highCandidate.wigm.vote);
             }
             this.transferBallots(highCandidate);
@@ -180,11 +180,11 @@ export class ElectWigm {
 
     //Ref D.2
     transferBallots(candidate) {
-        for (const ballot of candidate.assignedBallots.values()) {
+        for (const ballot of candidate.wigm.assignedBallots.values()) {
             const newCandidate = first(ballot.ordered, c => c.wigm.state.canTransferTo);
-            candidate.assignedBallots.delete(ballot);
+            candidate.wigm.assignedBallots.delete(ballot);
             if (newCandidate && ballot.weight) {
-                newCandidate.assignedBallots.add(ballot);
+                newCandidate.wigm.assignedBallots.add(ballot);
                 newCandidate.vote += ballot.weight;
             } else {
                 this.exhaustedBallots += 1;
