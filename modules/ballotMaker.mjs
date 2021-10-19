@@ -2,7 +2,7 @@ import { CandidateGroup } from './classes.mjs';
 import { getOrAdd } from './mapUtil.mjs';
 import { withoutIndex } from './arrayUtil.mjs';
 
-function generateBallots(stvDistrict) {
+export function generateBallots(stvDistrict) {
     //Group all the candidates by party
     const partyMap = new Map();
     for (const candidate of stvDistrict.candidates) {
