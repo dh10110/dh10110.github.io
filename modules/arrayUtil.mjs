@@ -43,6 +43,19 @@ export function orderBy(iterable, ...comparisons) {
     return [...iterable].sort(orderCriteria(...comparisons));
 }
 
+export function first(iterable, ...comparisons) {
+    const comparer = orderCriteria(...comparisons);
+    const firstItem = null;
+    for (const item of iterable) {
+        if (firstItem === null) {
+            firstItem = item;
+        } else if (comparer(item, firstItem) < 0) {
+            firstItem = item;
+        }
+    }
+    return firstItem;
+}
+
 export function withoutIndex(array, i) {
     const arrayWithoutIndex = [
         ...array.slice(0, i),
