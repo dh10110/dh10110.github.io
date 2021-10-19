@@ -9,8 +9,8 @@ addEventListener('message', e => {
     console.log(e.data);
     const { method, stvDistrict } = e.data;
 
-    if (!method) throw new Error('"method" is required');
-    if (!stvDistrict) throw new Error('"stvDistrict is required');
+    //if (!method) throw new Error('"method" is required');
+    //if (!stvDistrict) throw new Error('"stvDistrict is required');
 
     if (method === 'wigm') {
 
@@ -22,6 +22,7 @@ addEventListener('message', e => {
         counter.count();
 
     } else {
-        throw new Error('Unsupported counting method');
+        console.error('Unsupported counting method');
+        //throw new Error('Unsupported counting method');
     }
 });
