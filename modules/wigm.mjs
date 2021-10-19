@@ -82,8 +82,8 @@ export class ElectWigm {
         //+ Ref A.5 - Set candidate vote
         for (const ballot of this.ballots) {
             ballot.weight = 1;
-            ballot.candidates[0].assignedBallots.add(ballot);
-            ballot.candidates[0].wigm.vote += 1;
+            ballot.ordered[0].assignedBallots.add(ballot);
+            ballot.ordered[0].wigm.vote += 1;
         }
         //Continue
         return true;
@@ -181,7 +181,7 @@ export class ElectWigm {
     //Ref D.2
     transferBallots(candidate) {
         for (const ballot of candidate.assignedBallots.values()) {
-            const newCandidate = first(ballot.candidates, c => c.wigm.state.canTransferTo);
+            const newCandidate = first(ballot.ordered, c => c.wigm.state.canTransferTo);
             candidate.assignedBallots.delete(ballot);
             if (newCandidate && ballot.weight) {
                 newCandidate.assignedBallots.add(ballot);
