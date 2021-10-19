@@ -5,7 +5,7 @@ import { getOrAdd, concat } from './mapUtil.mjs';
 import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 
-const ver = '1.2';
+const ver = '1.2.1';
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
@@ -129,7 +129,6 @@ function runElectionWorker(stvDistrict) {
     }
 
     //Start Worker
-    window.requestAnimationFrame(showProgress);
     //const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
     //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
@@ -186,6 +185,7 @@ function runElectionWorker(stvDistrict) {
             `);
         }
     });
+    window.requestAnimationFrame(showProgress);
     worker.postMessage({ stvDistrict, method: 'wigm' });
 }
 

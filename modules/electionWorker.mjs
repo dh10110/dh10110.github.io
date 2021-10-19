@@ -2,6 +2,7 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
 addEventListener('message', e => {
+    console.log(e.data);
     const { method, stvDistrict } = e.data;
 
     if (!method) throw new Error('"method" is required');
