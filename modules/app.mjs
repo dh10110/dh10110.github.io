@@ -4,6 +4,7 @@ import * as stv from './stv.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
 import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
+//adding imports used by workers here, so that syntax errors are reported
 import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
