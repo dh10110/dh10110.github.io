@@ -131,7 +131,8 @@ function runElectionWorker(stvDistrict) {
     //Start Worker
     window.requestAnimationFrame(showProgress);
     //const worker = new Worker('/modules/stv-worker.mjs?t=' + new Date().getTime(), {type:'module'});
-    const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
+    //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
+    const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
         const rpt = e.data;
         if (typeof rpt.progress !== 'undefined') {
@@ -185,7 +186,7 @@ function runElectionWorker(stvDistrict) {
             `);
         }
     });
-    worker.postMessage({stvDistrict});
+    worker.postMessage({ stvDistrict, method: 'wigm' });
 }
 
 function runElection(stvDistrict) {
