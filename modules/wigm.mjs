@@ -1,6 +1,5 @@
 import { floor } from './mathUtil.mjs';
-import { first } from './arrayUtil.mjs';
-import { orderBy, desc } from './arrayUtil.mjs';
+import { first, orderBy, desc } from './arrayUtil.mjs';
 
 //TODO: shared with other count classes
 export const candidateStatus = {

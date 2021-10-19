@@ -45,7 +45,7 @@ export function orderBy(iterable, ...comparisons) {
 
 export function first(iterable, ...comparisons) {
     const comparer = orderCriteria(...comparisons);
-    const firstItem = null;
+    let firstItem = null;
     for (const item of iterable) {
         if (firstItem === null) {
             firstItem = item;
