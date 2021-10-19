@@ -51,7 +51,7 @@ export class ElectWigm {
         this.finishCount();
 
         //Report
-        postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
+        this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
 
     }
 
@@ -91,7 +91,7 @@ export class ElectWigm {
 
     //Ref B - Round
     round() {
-        postMessage({progress: `Round ${this.roundNum}`});
+        this.postMessage({progress: `Round ${this.roundNum}`});
 
         //Ref B.1 - Elect Winners
         for (const candidate of this.hopeful) {
@@ -119,7 +119,7 @@ export class ElectWigm {
             this.transferBallots(highCandidate);
             highCandidate.wigm.vote = this.quota;
 
-            postMessage({
+            this.postMessage({
                 heading: `Round ${this.roundNum} - Elected: ${tplCandidate(highCandidate)}`,
                 quota: this.quota,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
@@ -134,7 +134,7 @@ export class ElectWigm {
         lowCandidate.wigm.vote = 0;
         if (this.testCountComplete()) return false; //D.3
         this.transferBallots(lowCandidate);
-        postMessage({
+        this.postMessage({
             heading: `Round ${this.roundNum} - Defeated: ${tplCandidate(lowCandidate)}`,
             candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values(), lowCandidate]
         });
@@ -146,7 +146,7 @@ export class ElectWigm {
     finishCount() {
         //Elect all pending candidates
         if (this.pending.size > 0) {
-            postMessage({
+            this.postMessage({
                 heading: `Finish Count - Elected Pending: ${concat(this.pending, c => tplCandidate(c))}`,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
@@ -166,7 +166,7 @@ export class ElectWigm {
             this.hopeful.clear();
         } else {
             //Elect all remaining hopeful candidate
-            postMessage({
+            this.postMessage({
                 heading: `Finish Count - Elected Hopeful: ${concat(this.hopeful, c => tplCandidate(c))}`,
                 candidates: [...this.elected.values(), ...this.hopeful.values()]
             });
