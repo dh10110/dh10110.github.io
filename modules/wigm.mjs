@@ -17,6 +17,7 @@ function tplCandidate(candidate) {
 
 export class ElectWigm {
     constructor(stvDistrict, ballots, postMessage) {
+        this.districtName = stvDistrict.districtName;
         this.seats = stvDistrict.seats;
         this.candidates = stvDistrict.candidates;
         this.precision = 4;
@@ -56,7 +57,7 @@ export class ElectWigm {
         this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
 
         const endTime = performance.now();
-        console.log(`Runtime for 'wigm' ${this.stvDistrict.districtName} - ${endTime - startTime}ms`)
+        console.log(`Runtime for 'wigm' ${this.districtName} - ${endTime - startTime}ms`)
     }
 
     //Prep data structure
@@ -96,9 +97,6 @@ export class ElectWigm {
     //Ref B - Round
     round() {
         this.postMessage({progress: `Round ${this.roundNum}`});
-        if (this.roundNum === 20) {
-            debugger;
-        }
 
         //Ref B.1 - Elect Winners
         for (const candidate of this.hopeful) {
@@ -137,7 +135,7 @@ export class ElectWigm {
         //Ref B.4 - Defeat low candidiate
         const lowCandidate = first(this.hopeful, c => c.stv.vote, c => c.tieOrder);
         if (lowCandidate == null) {
-            debugger;
+            console.error('No low candidate');
         }
         this.hopeful.delete(lowCandidate);
         lowCandidate.stv.state = candidateStatus.DEFEATED;
