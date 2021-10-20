@@ -1,4 +1,5 @@
 import { floor } from './mathUtil.mjs';
+import { concat } from './mapUtil.mjs';
 import { first, orderBy, desc } from './arrayUtil.mjs';
 
 //TODO: shared with other count classes
@@ -128,6 +129,9 @@ export class ElectWigm {
         }
         //Ref B.4 - Defeat low candidiate
         const lowCandidate = first(this.hopeful, c => c.stv.vote, c => c.tieOrder);
+        if (lowCandidate == null) {
+            debugger;
+        }
         this.hopeful.delete(lowCandidate);
         lowCandidate.stv.state = candidateStatus.DEFEATED;
         this.defeated.add(lowCandidate);

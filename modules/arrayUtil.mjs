@@ -1,9 +1,25 @@
+/**
+ * Default Comparison Function
+ * @param a First item to compare
+ * @param b Second item to compare
+ * @returns -1 if a < b, 1 if a > b, 0 otherwise (equal)
+ */
 export function defaultCompare(a, b) {
     if (a > b) return 1;
     if (a < b) return -1;
     return 0;
 }
 
+/**
+ * Makes an a/b comparer function from comparison criteria, usable for sorting.
+ * 
+ * Strings are treated as property names of the a,b items
+ * Single parameter functions are evaluated for each item, like property names
+ * Multi-parameter functions are treated as a/b comparers
+ * If comparison is iterable (like an array), the comparer made will apply all the iterated comparisons in sequence (i.e. secondary sort criteria)
+ * @param comparison Comparison to turn into an a/b comparer
+ * @returns {function} comparer(a, b)
+ */
 export function makeComparer(comparison) {
     if (comparison == null) return defaultCompare;
     if (typeof(comparison) === 'function') {
@@ -16,6 +32,12 @@ export function makeComparer(comparison) {
     return defaultCompare;
 }
 
+/**
+ * Turns a list of comparisons into a single a/b comparer, usable for sorting.
+ * The comparer will apply the comparisons in sequence (i.e. secondary sort criteria)
+ * @param comparisons parameter list of comparisons to turn into an a/b comparer
+ * @returns {function} comparer(a, b)
+ */
 export function orderCriteria(...comparisons) {
     //define all the comparers
     const comparers = [];
@@ -34,6 +56,11 @@ export function orderCriteria(...comparisons) {
     }
 }
 
+/**
+ * Turns th provided comparison into descending a/b comparer
+ * @param comparison a comparison to turn into a descending a/b comparer
+ * @returns {function} comparer(a, b)
+ */
 export function desc(comparison) {
     const comparer = makeComparer(comparison);
     return (a, b) => comparer(b, a);
