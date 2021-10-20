@@ -186,7 +186,7 @@ export class ElectWigm {
             candidate.stv.assignedBallots.delete(ballot);
             if (newCandidate && ballot.weight) {
                 newCandidate.stv.assignedBallots.add(ballot);
-                newCandidate.vote += ballot.weight;
+                newCandidate.stv.vote += ballot.weight;
             } else {
                 this.exhaustedBallots += 1;
             }
