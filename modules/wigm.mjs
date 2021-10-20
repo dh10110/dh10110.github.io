@@ -204,7 +204,7 @@ export class ElectWigm {
     testCountComplete() {
         //complete if all seats filled, or remaining candidate will fill them
         return this.elected.size + this.pending.size === this.seats ||
-            this.elected.seats + this.pending.size + this.hopeful.size <= this.seats;
+            this.elected.size + this.pending.size + this.hopeful.size <= this.seats;
     }
 
     //Ref D.4
