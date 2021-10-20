@@ -57,7 +57,7 @@ export function orderCriteria(...comparisons) {
 }
 
 /**
- * Turns th provided comparison into descending a/b comparer
+ * Turns the provided comparison into descending a/b comparer
  * @param comparison a comparison to turn into a descending a/b comparer
  * @returns {function} comparer(a, b)
  */
@@ -66,10 +66,23 @@ export function desc(comparison) {
     return (a, b) => comparer(b, a);
 }
 
+/**
+ * Get a sorted array from iterable, based on the provided comparisons.
+ * Does not change the original array.
+ * @param {Iterable} iterable items to sort
+ * @param comparisons sort criteria
+ * @returns {Array} array of elements from iterable, sorted by comparisons
+ */
 export function orderBy(iterable, ...comparisons) {
     return [...iterable].sort(orderCriteria(...comparisons));
 }
 
+/**
+ * Gets the first item from iterable when sorted by provided criteria
+ * @param iterable items to check
+ * @param comparisons sort criteria
+ * @returns first item from iterable if sorted by provided criteria. Null if no items.
+ */
 export function first(iterable, ...comparisons) {
     const comparer = orderCriteria(...comparisons);
     let firstItem = null;
@@ -83,6 +96,12 @@ export function first(iterable, ...comparisons) {
     return firstItem;
 }
 
+/**
+ * Create a new array with the items from a array, excluding the item at index i.
+ * @param {Array} array 
+ * @param {Number} i 
+ * @returns {Array} array, without the item at index i
+ */
 export function withoutIndex(array, i) {
     const arrayWithoutIndex = [
         ...array.slice(0, i),

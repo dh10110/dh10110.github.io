@@ -92,6 +92,9 @@ export class ElectWigm {
     //Ref B - Round
     round() {
         this.postMessage({progress: `Round ${this.roundNum}`});
+        if (this.roundNum === 20) {
+            debugger;
+        }
 
         //Ref B.1 - Elect Winners
         for (const candidate of this.hopeful) {
