@@ -38,6 +38,8 @@ export class ElectWigm {
     }
 
     count() {
+        const startTime = performance.now();
+
         this.prep();
         //https://prfound.org/resources/reference/reference-wigm-rule/
         //Ref A - Initialize Election
@@ -53,6 +55,8 @@ export class ElectWigm {
         //Report
         this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
 
+        const endTime = performance.now();
+        console.log(`Runtime for 'wigm' ${this.stvDistrict.districtName} - ${endTime - startTime}ms`)
     }
 
     //Prep data structure
