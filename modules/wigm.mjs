@@ -90,6 +90,12 @@ export class ElectWigm {
             ballot.candidates[0].stv.assignedBallots.add(ballot);
             ballot.candidates[0].stv.vote += 1;
         }
+        //show initial count
+        this.postMessage({
+            heading: `Initial Count`,
+            candidates: [...this.hopeful.values()]
+        });
+
         //Continue
         return true;
     }
@@ -122,14 +128,16 @@ export class ElectWigm {
             for (const ballot of highCandidate.stv.assignedBallots.values()) {
                 ballot.weight = this.trunc(ballot.weight * highCandidate.stv.surplus / highCandidate.stv.vote);
             }
-            this.transferBallots(highCandidate);
-            highCandidate.stv.vote = this.quota;
 
             this.postMessage({
                 heading: `Round ${this.roundNum} - Elected: ${tplCandidate(highCandidate)}`,
                 quota: this.quota,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
+
+            this.transferBallots(highCandidate);
+            highCandidate.stv.vote = this.quota;
+
             return true; //continue at B.1
         }
         //Ref B.4 - Defeat low candidiate
@@ -140,13 +148,15 @@ export class ElectWigm {
         this.hopeful.delete(lowCandidate);
         lowCandidate.stv.state = candidateStatus.DEFEATED;
         this.defeated.add(lowCandidate);
-        lowCandidate.stv.vote = 0;
-        if (this.testCountComplete()) return false; //D.3
-        this.transferBallots(lowCandidate);
+
         this.postMessage({
             heading: `Round ${this.roundNum} - Defeated: ${tplCandidate(lowCandidate)}`,
             candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values(), lowCandidate]
         });
+
+        lowCandidate.stv.vote = 0;
+        if (this.testCountComplete()) return false; //D.3
+        this.transferBallots(lowCandidate);
     
         return true; //Continue at B.1
     }
