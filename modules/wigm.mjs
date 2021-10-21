@@ -57,7 +57,7 @@ export class ElectWigm {
         this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
 
         const endTime = performance.now();
-        console.log(`Runtime for 'wigm' ${this.districtName} - ${endTime - startTime}ms`)
+        console.log(`Runtime for 'wigm' ${this.districtName} - ${(endTime - startTime).toFixed(0)}ms`);
     }
 
     //Prep data structure
