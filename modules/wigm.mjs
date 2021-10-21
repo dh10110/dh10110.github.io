@@ -65,11 +65,6 @@ export class ElectWigm {
         for (const candidate of this.candidates) {
             candidate.stv = { vote: 0, surplus: 0, assignedBallots: new Set() };
         }
-        //TODO: move tieOrder definition outside counting classes
-        let tieOrder = 0;
-        for (const candidate of orderBy(this.candidates, c => c.surname, c => c.givenName, c => c.partyName)) {
-            candidate.tieOrder = tieOrder++;
-        }
     }
 
     //Ref A - Initialize Election

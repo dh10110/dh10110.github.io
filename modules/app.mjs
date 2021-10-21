@@ -69,6 +69,7 @@ async function showResults() {
                 }));
                 partyTotal.votes += candidate.votes;
                 partyTotal.candidates.push(candidate);
+                stvDistrict.candidates.push(candidate);
             }
             stvDistrict.totalBallots += oldDistrict.totalBallots;
             stvDistrict.rejectedBallots += oldDistrict.rejectedBallots;
@@ -79,6 +80,13 @@ async function showResults() {
         for (const partyTotal of stvDistrict.byParty) {
             partyTotal.candidates.sort(compareCandidates);
         }
+        //Assign candidate id in alphabetical order; can be used for tiebreaks
+        stvDistrict.candidateById = new Map();
+        let candidateId = 1;
+        for (const candidate of orderBy(this.candidates, c => c.surname, c => c.givenName, c => c.partyName)) {
+            candidate.id = candidateId++;
+            stvDistrict.candidateById.add(candidate.id, candidate);
+        }
 
         stvDistricts.push(stvDistrict);
     }
@@ -87,18 +95,9 @@ async function showResults() {
 
     document.getElementById('vote-initial').insertAdjacentHTML('beforeend', concat(stvDistricts, d => makeInitialHtml(d)));
 
-    for (const stvDistrict of stvDistricts) {
-       for (const d of stvDistrict.districts) {
-           for (const c of d.candidates) {
-               stvDistrict.addCandidate(c);
-           }
-       }
-       stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
-    }
-
     setTimeout(_ => {
         for (const stvDistrict of stvDistricts) {
-            runElectionWorker(stvDistrict);
+            //runElectionWorker(stvDistrict);
         }
     }, 5000);
 }
@@ -146,7 +145,7 @@ function runElectionWorker(stvDistrict) {
     //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
-        const rpt = e.data;
+        const rpt = e.data; //we're passing large objects around; deserialize is slow
         if (typeof rpt.progress !== 'undefined') {
             progress = rpt.progress;
         }
@@ -201,6 +200,20 @@ function runElectionWorker(stvDistrict) {
     });
     window.requestAnimationFrame(showProgress);
     worker.postMessage({ stvDistrict, method: 'wigm' });
+    /* TODO:
+        serialize and deserialize for postMessage is slow for large objects 
+        was seeing run times of 90s, even though count finished in 15s
+
+        Idea custom serialization for postMessage
+        →worker
+        options: [countMethod, ballotMethod]
+        district: [districtId:#, [candidates]]
+        candiate: [candidateId:#, partyId:#, originalVote:#, originalDistrictId:#]
+
+        →return
+        root: [round:@, action:@, quota:#, exhausted:#, [candidates]]
+        candidate: [candidateId:#, state:#, vote:#]
+    */
 }
 
 function runElection(stvDistrict) {
