@@ -96,9 +96,11 @@ async function showResults() {
        stvDistrict.quota = Math.floor(stvDistrict.validVotes / (stvDistrict.seats + 1)) + 1; //droop
     }
 
-    for (const stvDistrict of stvDistricts) {
-        runElectionWorker(stvDistrict);
-    }
+    setTimeout(_ => {
+        for (const stvDistrict of stvDistricts) {
+            runElectionWorker(stvDistrict);
+        }
+    }, 5000);
 }
 
 function runElectionWorker(stvDistrict) {
