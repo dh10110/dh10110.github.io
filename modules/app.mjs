@@ -107,6 +107,7 @@ function runElectionWorker(stvDistrict) {
     const dotsId = `dots-${stvDistrict.districtName}`;
     let progress = 'Starting...';
     let lastProgress = null;
+    let roundQueue = [];
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
         <article>
@@ -120,12 +121,19 @@ function runElectionWorker(stvDistrict) {
 
     const showProgress = function () {
         if (progress !== lastProgress) {
+            //Progress text
             if (!progress) {
                 document.getElementById(statusId).textContent = '';
             }else {
                 document.getElementById(statusId).textContent = `(${progress})`;
             }
             lastProgress = progress;
+            //roundQueue
+            let localQueue = [];
+            while (roundQueue.length) {
+                localQueue.push(roundQueue.shift());
+            }
+            document.getElementById(detailsId).insertAdjacentHTML('beforeend', concat(localQueue));
         }
         if (progress) {
             window.requestAnimationFrame(showProgress);
@@ -148,7 +156,8 @@ function runElectionWorker(stvDistrict) {
             `);
         }
         if (rpt.heading) {
-            document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
+            //document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
+            roundQueue.push(`
                 <details>
                     <summary>${rpt.heading}</summary>
                     <section class="details-body">
