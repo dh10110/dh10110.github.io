@@ -132,6 +132,7 @@ export class ElectWigm {
             this.postMessage({
                 heading: `Round ${this.roundNum} - Elected: ${tplCandidate(highCandidate)}`,
                 quota: this.quota,
+                exhausted: this.exhaustedBallots,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
 
@@ -151,6 +152,7 @@ export class ElectWigm {
 
         this.postMessage({
             heading: `Round ${this.roundNum} - Defeated: ${tplCandidate(lowCandidate)}`,
+            quota: this.quota, exhausted: this.exhaustedBallots,
             candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values(), lowCandidate]
         });
 
@@ -166,7 +168,7 @@ export class ElectWigm {
         //Elect all pending candidates
         if (this.pending.size > 0) {
             this.postMessage({
-                heading: `Finish Count - Elected Pending: ${concat(this.pending, c => tplCandidate(c))}`,
+                heading: `Finish Count - Elected Pending: ${concat(this.pending, c => tplCandidate(c), ', ')}`,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
         }
@@ -187,12 +189,13 @@ export class ElectWigm {
         } else {
             //Elect all remaining hopeful candidate
             this.postMessage({
-                heading: `Finish Count - Elected Hopeful: ${concat(this.hopeful, c => tplCandidate(c))}`,
+                heading: `Finish Count - Elected Hopeful: ${concat(this.hopeful, c => tplCandidate(c), ', ')}`,
                 candidates: [...this.elected.values(), ...this.hopeful.values()]
             });
             for (const candidate of this.hopeful) {
-                candidate.stv.state = candidateStatus.DEFEATED;
+                candidate.stv.state = candidateStatus.ELECTED;
                 this.elected.add(candidate);
+                candidate.stv.winnerOrder = this.elected.size;
             }
             this.hopeful.clear();
         }
