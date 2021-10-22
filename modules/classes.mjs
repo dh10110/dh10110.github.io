@@ -20,9 +20,9 @@ export const stvCandidateState = {
 };
 
 export class StvCandidate {
-    constructor({ candidateId, vote } = {}) {
+    constructor({ candidateId, partyName, vote = 0, originalVotePct, originalVotes, originalDistrict} = {}) {
         vote = Number(vote);
-        Object.assign(this, { candidateId, vote });
+        Object.assign(this, { candidateId, partyName, vote, originalVotePct, originalVotes, originalDistrict });
         this.state = stvCandidateState.INITIAL;
         this.surplus = 0;
         this.assignedBallots = new Set();

@@ -20,8 +20,8 @@ function deserializeDistrict(d) {
     const stvDistrict = new StvDistrict({ districtName, seats });
 
     for (const compressedCandidate of compressedCandidates) {
-        const [candidateId, partyName, votes, votePct, originalDistrict] = compressedCandidate;
-        stvDistrict.addCandidate(new StvCandidate({ candidateId, partyName, votes, votePct, originalDistrict }));
+        const [candidateId, partyName, originalVotes, originalVotePct, originalDistrict] = compressedCandidate;
+        stvDistrict.addCandidate(new StvCandidate({ candidateId, partyName, originalVotes, originalVotePct, originalDistrict }));
     }
     
     return stvDistrict;
