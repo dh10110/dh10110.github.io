@@ -158,7 +158,7 @@ function runElectionWorker(stvDistrict) {
             `);
         }
         if (rpt.h) {
-            const candidates = rpt.c.map(cc => {
+            const candidates = (rpt.c || []).map(cc => {
                 const [cid, state, vote] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
