@@ -1,16 +1,31 @@
 import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
+import { StvDistrict, StvCandidate } from "./classes.mjs";
 
 addEventListener('message', e => {
     const { b, c, d } = e.data;
 
+    const stvDistrict = deserializeDistrict(d);
+
     postMessage(['Generating Ballots']);
-    const ballots = getBallotGenerator(b)(d);
+    const ballots = getBallotGenerator(b)(stvDistrict);
 
     postMessage(['Initiating Count']);
     const counter = getElectionCounter(c, d, ballots);
     counter.count();
 });
+
+function deserializeDistrict(d) {
+    const [districtName, seats, compressedCandidates] = d;
+    const stvDistrict = new StvDistrict({ districtName, seats });
+
+    for (const compressedCandidate of compressedCandidates) {
+        const [candidateId, partyName, votes, votePct, originalDistrict] = compressedCandidate;
+        stvDistrict.addCandidate(new StvCandidate({ candidateId, partyName, votes, votePct, originalDistrict }));
+    }
+    
+    return stvDistrict;
+}
 
 function getBallotGenerator(ballotMethod) {
     if (ballotMethod === 'party-vote') return generateBallots;

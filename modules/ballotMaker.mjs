@@ -2,7 +2,7 @@ import { CandidateGroup } from './classes.mjs';
 import { getOrAdd } from './mapUtil.mjs';
 import { withoutIndex } from './arrayUtil.mjs';
 
-export function generateBallots(districtCompressed) {
+export function generateBallotsV2(districtCompressed) {
     const [,, candidatesCompressed] = districtCompressed;
 
     const partyMap = new Map();
@@ -17,7 +17,7 @@ export function generateBallots(districtCompressed) {
 
     const ballots = [];
     for (const [key, party] of partyMap) {
-        const ballotDefs = getBallotDefs(party.candidates);
+        const ballotDefs = getBallotDefsV2(party.candidates);
         for (const ballotDef of ballotDefs) {
             for (let i = 0; i < ballotDef.count; i += 1) {
                 ballots.push({ candidates: ballotDef.ordered });
@@ -28,7 +28,7 @@ export function generateBallots(districtCompressed) {
     return ballots;
 }
 
-function* getBallotDefs(unordered, ordered = [], orderedWeight = 0) {
+function* getBallotDefsV2(unordered, ordered = [], orderedWeight = 0) {
     if (unordered.length === 0) {
         yield { ordered: ordered, weight: orderedWeight };
         
@@ -86,7 +86,7 @@ function* getBallotDefs(unordered, ordered = [], orderedWeight = 0) {
 }
 
 
-function generateBallotsV1(stvDistrict) {
+function generateBallots(stvDistrict) {
     //Group all the candidates by party
     const partyMap = new Map();
     for (const candidate of stvDistrict.candidates) {
@@ -100,7 +100,7 @@ function generateBallotsV1(stvDistrict) {
 
     const ballots = [];
     for (const [key, party] of partyMap) {
-        const ballotDefs = getBallotDefsV1(party.candidates);
+        const ballotDefs = getBallotDefs(party.candidates);
         for (const ballotDef of ballotDefs) {
             for (let i = 0; i < ballotDef.count; i += 1) {
                 ballots.push({ candidates: ballotDef.ordered });
@@ -111,7 +111,7 @@ function generateBallotsV1(stvDistrict) {
     return ballots;
 }
 
-function* getBallotDefsV1(unordered, ordered = [], orderedWeight = 0) {
+function* getBallotDefs(unordered, ordered = [], orderedWeight = 0) {
     if (unordered.length === 0) {
         yield { ordered: ordered, weight: orderedWeight };
         
