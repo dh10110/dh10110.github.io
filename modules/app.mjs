@@ -172,6 +172,7 @@ function runElectionWorker(stvDistrict) {
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
                     }, ', ')}</summary>
                     <section class="details-body">
+                        ${rpt.q ? makeVoteLine({ heading: 'Quota', votes: rpt.q, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
                         ${concat(orderBy(candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
@@ -180,6 +181,7 @@ function runElectionWorker(stvDistrict) {
                                 color: c.color
                             });
                         })}
+                        ${rpt.x ? makeVoteLine({ heading: 'Exhausted Ballots', votes: rpt.x, voteTotal: stvDistrict.validVotes, color: '#888' }) : ''}
                     </section>
                 </details>
             `);
