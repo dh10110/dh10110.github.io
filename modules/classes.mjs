@@ -24,6 +24,8 @@ export class StvCandidate {
         vote = Number(vote);
         Object.assign(this, { candidateId, vote });
         this.state = stvCandidateState.INITIAL;
+        this.surplus = 0;
+        this.assignedBallots = new Set();
     }
 
 

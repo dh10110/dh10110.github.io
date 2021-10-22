@@ -145,6 +145,34 @@ function runElectionWorker(stvDistrict) {
     //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
+        const rpt = e.data;
+        if (typeof(rpt.p) !== 'undefined') {
+            progress = rpt.p;
+        }
+        if (rpt.f) {
+            document.getElementById(dotsId).insertAdjacentHTML('beforeend', `
+                ${concat(r.candidates, cid => {
+                    const c = stvDistrict.candidateById.get(cid);
+                    return `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`;
+                })}
+            `);
+        }
+        if (rpt.h) {
+            document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
+                <deatils>
+                    <summary>${rpt.h} ${concat(rpt.a, cid => {
+                        const c = stvDistrict.candidateById.get(cid);
+                        return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
+                    })}</summary>
+                    <section class="details-body">
+                        TBD
+                    </section>
+                </details>
+            `);
+        }
+    });
+    /*
+    worker.addEventListener('message', e => {
         const rpt = e.data; //we're passing large objects around; deserialize is slow
         if (typeof rpt.progress !== 'undefined') {
             progress = rpt.progress;
@@ -198,6 +226,7 @@ function runElectionWorker(stvDistrict) {
             `);
         }
     });
+    */
     window.requestAnimationFrame(showProgress);
     //worker.postMessage({ stvDistrict, method: 'wigm' });
     /* TODO:

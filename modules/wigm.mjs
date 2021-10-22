@@ -2,6 +2,7 @@ import { floor } from './mathUtil.mjs';
 import { concat } from './mapUtil.mjs';
 import { first, orderBy, desc } from './arrayUtil.mjs';
 import { StvCandidate, stvCandidateState } from './classes.mjs';
+import { map } from './arrayUtil.mjs';
 /*
 //TODO: shared with other count classes
 export const candidateStatus = {
@@ -16,6 +17,22 @@ function tplCandidate(candidate) {
     return `<span style="color: ${candidate.color};" title="${candidate.partyName}">⬤</span>${candidate.surname}`
 }
 */
+
+function candidateToPost(stvCandidate) {
+    const arr = [stvCandidate.candidateId, stvCandidate.state, stvCandidate.vote];
+    return arr;
+}
+
+function candidatesToPost(...candidateSets) {
+    const arr = [];
+    for (const candidateSet of candidateSets) {
+        for (const candidate of candidateSet.values()) {
+            arr.push(candidate);
+        }
+    }
+    return arr;
+}
+
 export class ElectWigm {
     constructor(stvDistrict, ballots, postMessage) {
         const [name, seats, candidates] = stvDistrict;
@@ -40,14 +57,14 @@ export class ElectWigm {
         this.exhaustedBallots = 0;
 
         this.postMessage = (message) => {
-            if (postMessage) postMessage(message);
+            if (!postMessage) return;
+            postMessage(message);
         }
     }
 
     count() {
         const startTime = performance.now();
 
-        this.prep();
         //https://prfound.org/resources/reference/reference-wigm-rule/
         //Ref A - Initialize Election
         let shouldContinue = this.initialize();
@@ -60,17 +77,11 @@ export class ElectWigm {
         this.finishCount();
 
         //Report
-        this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
+        //this.postMessage({progress: null, heading: 'Final Winners', final: true, exhausted: this.exhaustedBallots, candidates: [...this.elected.values()] });
+        this.postMessage({ p: null, f: true, x: this.exhaustedBallots, c: candidatesToPost(this.elected) });
 
         const endTime = performance.now();
         console.log(`Runtime for 'wigm' ${this.districtName} - ${(endTime - startTime).toFixed(0)}ms`);
-    }
-
-    //Prep data structure
-    prep() {
-        for (const candidate of this.candidates) {
-            candidate.stv = { vote: 0, surplus: 0, assignedBallots: new Set() };
-        }
     }
 
     //Ref A - Initialize Election
@@ -92,10 +103,7 @@ export class ElectWigm {
             ballot.candidates[0].vote += 1;
         }
         //show initial count
-        this.postMessage({
-            heading: `Initial Count`,
-            candidates: [...this.hopeful.values()]
-        });
+        this.postMessage({ h: 'Initial Count', c: candidatesToPost(this.hopeful) });
 
         //Continue
         return true;
@@ -103,15 +111,15 @@ export class ElectWigm {
 
     //Ref B - Round
     round() {
-        this.postMessage({progress: `Round ${this.roundNum}`});
+        this.postMessage({p: `Round ${this.roundNum}`});
 
         //Ref B.1 - Elect Winners
         for (const candidate of this.hopeful) {
-            if (candidate.stv.vote >= this.quota) {
+            if (candidate.vote >= this.quota) {
                 this.hopeful.delete(candidate);
-                candidate.stv.state == candidateStatus.PENDING;
+                candidate.state == candidateStatus.PENDING;
+                candidate.surplus = candidate.vote - this.quota;
                 this.pending.add(candidate);
-                candidate.stv.surplus = candidate.stv.vote - this.quota;
             }
         }
         if (this.testCountComplete()) return false; //D.3
@@ -120,47 +128,52 @@ export class ElectWigm {
             //TODO
         }
         //Ref B.3 - Transfer high surplus
-        const highCandidate = first(this.pending, desc(c => c.stv.surplus), c => c.tieOrder)
+        const highCandidate = first(this.pending, desc(c => c.surplus), c => c.candidateId)
         if (highCandidate) {
             this.pending.delete(highCandidate);
-            highCandidate.stv.state = candidateStatus.ELECTED;
+            highCandidate.state = candidateStatus.ELECTED;
             this.elected.add(highCandidate);
-            highCandidate.stv.winnerOrder = this.elected.size;
-            for (const ballot of highCandidate.stv.assignedBallots.values()) {
-                ballot.weight = this.trunc(ballot.weight * highCandidate.stv.surplus / highCandidate.stv.vote);
+            highCandidate.winnerOrder = this.elected.size;
+            for (const ballot of highCandidate.assignedBallots.values()) {
+                ballot.weight = this.trunc(ballot.weight * highCandidate.surplus / highCandidate.vote);
             }
-
+            /*
             this.postMessage({
                 heading: `Round ${this.roundNum} - Elected: ${tplCandidate(highCandidate)}`,
                 quota: this.quota,
                 exhausted: this.exhaustedBallots,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
-
+            */
+            this.postMessage({ h: `Round ${this.roundNum} - Elected`, a: [highCandidate.candidateId], x: this.exhaustedBallots });
             this.transferBallots(highCandidate);
-            highCandidate.stv.vote = this.quota;
+            highCandidate.vote = this.quota;
+            //this.postMessage changes
 
             return true; //continue at B.1
         }
         //Ref B.4 - Defeat low candidiate
-        const lowCandidate = first(this.hopeful, c => c.stv.vote, c => c.tieOrder);
+        const lowCandidate = first(this.hopeful, c => c.vote, c => c.candidateId);
         if (lowCandidate == null) {
             console.error('No low candidate');
         }
         this.hopeful.delete(lowCandidate);
-        lowCandidate.stv.state = candidateStatus.DEFEATED;
+        lowCandidate.state = candidateStatus.DEFEATED;
         this.defeated.add(lowCandidate);
-
+        /*
         this.postMessage({
             heading: `Round ${this.roundNum} - Defeated: ${tplCandidate(lowCandidate)}`,
             quota: this.quota, exhausted: this.exhaustedBallots,
             candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values(), lowCandidate]
         });
-
-        lowCandidate.stv.vote = 0;
+        */
+        this.postMessage({ h: `Round ${this.roundNum} - Defeated`, a: [lowCandidate.candidateId], x: this.exhaustedBallots });
+        lowCandidate.vote = 0;
+        
         if (this.testCountComplete()) return false; //D.3
         this.transferBallots(lowCandidate);
-    
+        //this.postMessage changes
+
         return true; //Continue at B.1
     }
 
@@ -168,35 +181,40 @@ export class ElectWigm {
     finishCount() {
         //Elect all pending candidates
         if (this.pending.size > 0) {
+            /*
             this.postMessage({
                 heading: `Finish Count - Elected Pending: ${concat(this.pending, c => tplCandidate(c), ', ')}`,
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
+            */
+           this.postMessage({ h: 'Finish Count - Elect Pending', a: map(this.pending, c => c.candidateId) });
         }
         for (const candidate of this.pending) {
-            candidate.stv.state = candidateStatus.ELECTED;
+            candidate.state = candidateStatus.ELECTED;
             this.elected.add(candidate);
-            candidate.stv.winnerOrder = this.elected.size;
+            candidate.winnerOrder = this.elected.size;
         }
         this.pending.clear();
+        //pm changes
         //All seats filled?
         if (this.pending.size === this.seats) {
             //defeat all remaining hopeful candidates
             for (const candidate of this.hopeful) {
-                candidate.stv.state = candidateStatus.DEFEATED;
+                candidate.state = candidateStatus.DEFEATED;
                 this.defeated.add(candidate);
             }
             this.hopeful.clear();
         } else {
             //Elect all remaining hopeful candidate
-            this.postMessage({
+            /*this.postMessage({
                 heading: `Finish Count - Elected Hopeful: ${concat(this.hopeful, c => tplCandidate(c), ', ')}`,
                 candidates: [...this.elected.values(), ...this.hopeful.values()]
-            });
+            });*/
+            this.postMessage({ h: 'Finish Count - Elect Hopeful', a: map(this.hopeful, c => c.candidateId) });
             for (const candidate of this.hopeful) {
-                candidate.stv.state = candidateStatus.ELECTED;
+                candidate.state = candidateStatus.ELECTED;
                 this.elected.add(candidate);
-                candidate.stv.winnerOrder = this.elected.size;
+                candidate.winnerOrder = this.elected.size;
             }
             this.hopeful.clear();
         }
@@ -204,16 +222,19 @@ export class ElectWigm {
 
     //Ref D.2
     transferBallots(candidate) {
-        for (const ballot of candidate.stv.assignedBallots.values()) {
+        const changed = new Set(candidate);
+        for (const ballot of candidate.assignedBallots.values()) {
             const newCandidate = nextCandidate(ballot.candidates, candidate);
-            candidate.stv.assignedBallots.delete(ballot);
+            candidate.assignedBallots.delete(ballot);
             if (newCandidate && ballot.weight) {
-                newCandidate.stv.assignedBallots.add(ballot);
-                newCandidate.stv.vote += ballot.weight;
+                newCandidate.assignedBallots.add(ballot);
+                newCandidate.vote += ballot.weight;
+                changed.add(newCandidate);
             } else {
                 this.exhaustedBallots += 1;
             }
         }
+        return [...changed.values()];
     }
 
     //Ref D.3
@@ -231,10 +252,10 @@ export class ElectWigm {
 }
 
 function nextCandidate(candidates, curCandidate) {
-    let nextCandidate = null;
     for (const candidate of candidates) {
-        if (candidate !== curCandidate && candidate.stv.state.canTransferTo) {
+        if (candidate !== curCandidate && candidate.state === stvCandidateState.HOPEFUL) {
             return candidate;
         }
     }
+    return null; //exhausted ballot
 }

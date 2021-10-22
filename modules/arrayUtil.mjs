@@ -109,3 +109,17 @@ export function withoutIndex(array, i) {
     ];
     return arrayWithoutIndex;
 }
+
+/**
+ * Maps the items of an iterable to an array.
+ * @param {Iterable} iterable 
+ * @param {function(item)} fnMap Mapping function 
+ * @returns {Array} array of mapped items
+ */
+export function map(iterable, fnMap) {
+    const arr = [];
+    for (const item of iterable) {
+        arr.push(fnMap(item));
+    }
+    return arr;
+}
