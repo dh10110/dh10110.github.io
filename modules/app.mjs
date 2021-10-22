@@ -161,7 +161,7 @@ function runElectionWorker(stvDistrict) {
                 const [cid, state, vote] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
-                c.vote = vote;
+                c.vote += vote;
             }
         }
         if (rpt.q) {
