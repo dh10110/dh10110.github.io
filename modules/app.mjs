@@ -8,8 +8,8 @@ import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs'
 import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
-//const ver = '1.2.1';
-const ver = new Date().getTime();
+const ver = '1.3';
+//const ver = new Date().getTime();
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
