@@ -2,7 +2,7 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 import { StvDistrict, StvCandidate } from "./classes.mjs";
 
-export const ver = 1.4.1;
+export const ver = '1.4.1';
 
 addEventListener('message', e => {
     const { b, c, d } = e.data;
