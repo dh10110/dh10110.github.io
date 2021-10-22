@@ -3,20 +3,6 @@ import { concat } from './mapUtil.mjs';
 import { first, orderBy, desc } from './arrayUtil.mjs';
 import { StvCandidate, stvCandidateState } from './classes.mjs';
 import { map } from './arrayUtil.mjs';
-/*
-//TODO: shared with other count classes
-export const candidateStatus = {
-    WITHDRAWN: { text: 'Withdrawn', level: 0 },
-    HOPEFUL: { text: 'Hopeful', level: 1, canTransferTo: true },
-    DEFEATED: { text: 'Defeated', level: 0 },
-    PENDING: { text: 'Pending', level: 2 },
-    ELECTED: { text: 'Elected', level: 3 }
-};
-
-function tplCandidate(candidate) {
-    return `<span style="color: ${candidate.color};" title="${candidate.partyName}">⬤</span>${candidate.surname}`
-}
-*/
 
 function candidateToPost(stvCandidate) {
     const arr = [stvCandidate.candidateId, stvCandidate.state, stvCandidate.vote];
@@ -117,7 +103,7 @@ export class ElectWigm {
         for (const candidate of this.hopeful) {
             if (candidate.vote >= this.quota) {
                 this.hopeful.delete(candidate);
-                candidate.state == candidateStatus.PENDING;
+                candidate.state == stvCandidateState.PENDING;
                 candidate.surplus = candidate.vote - this.quota;
                 this.pending.add(candidate);
             }
@@ -131,7 +117,7 @@ export class ElectWigm {
         const highCandidate = first(this.pending, desc(c => c.surplus), c => c.candidateId)
         if (highCandidate) {
             this.pending.delete(highCandidate);
-            highCandidate.state = candidateStatus.ELECTED;
+            highCandidate.state = stvCandidateState.ELECTED;
             this.elected.add(highCandidate);
             highCandidate.winnerOrder = this.elected.size;
             for (const ballot of highCandidate.assignedBallots.values()) {
@@ -158,7 +144,7 @@ export class ElectWigm {
             console.error('No low candidate');
         }
         this.hopeful.delete(lowCandidate);
-        lowCandidate.state = candidateStatus.DEFEATED;
+        lowCandidate.state = stvCandidateState.DEFEATED;
         this.defeated.add(lowCandidate);
         /*
         this.postMessage({
@@ -190,7 +176,7 @@ export class ElectWigm {
            this.postMessage({ h: 'Finish Count - Elect Pending', a: map(this.pending, c => c.candidateId) });
         }
         for (const candidate of this.pending) {
-            candidate.state = candidateStatus.ELECTED;
+            candidate.state = stvCandidateState.ELECTED;
             this.elected.add(candidate);
             candidate.winnerOrder = this.elected.size;
         }
@@ -200,7 +186,7 @@ export class ElectWigm {
         if (this.pending.size === this.seats) {
             //defeat all remaining hopeful candidates
             for (const candidate of this.hopeful) {
-                candidate.state = candidateStatus.DEFEATED;
+                candidate.state = stvCandidateState.DEFEATED;
                 this.defeated.add(candidate);
             }
             this.hopeful.clear();
@@ -212,7 +198,7 @@ export class ElectWigm {
             });*/
             this.postMessage({ h: 'Finish Count - Elect Hopeful', a: map(this.hopeful, c => c.candidateId) });
             for (const candidate of this.hopeful) {
-                candidate.state = candidateStatus.ELECTED;
+                candidate.state = stvCandidateState.ELECTED;
                 this.elected.add(candidate);
                 candidate.winnerOrder = this.elected.size;
             }
