@@ -2,7 +2,7 @@ import { CandidateGroup } from './classes.mjs';
 import { getOrAdd } from './mapUtil.mjs';
 import { withoutIndex } from './arrayUtil.mjs';
 
-export function generateBallotsV2(districtCompressed) {
+function generateBallotsV2(districtCompressed) {
     const [,, candidatesCompressed] = districtCompressed;
 
     const partyMap = new Map();
@@ -86,7 +86,7 @@ function* getBallotDefsV2(unordered, ordered = [], orderedWeight = 0) {
 }
 
 
-function generateBallots(stvDistrict) {
+export function generateBallots(stvDistrict) {
     //Group all the candidates by party
     const partyMap = new Map();
     for (const candidate of stvDistrict.candidates) {
