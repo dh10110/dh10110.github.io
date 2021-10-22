@@ -83,7 +83,7 @@ async function showResults() {
         //Assign candidate id in alphabetical order; can be used for tiebreaks
         stvDistrict.candidateById = new Map();
         let candidateId = 1;
-        for (const candidate of orderBy(this.candidates, c => c.surname, c => c.givenName, c => c.partyName)) {
+        for (const candidate of orderBy(stvDistrict.candidates, c => c.surname, c => c.givenName, c => c.partyName)) {
             candidate.id = candidateId++;
             stvDistrict.candidateById.add(candidate.id, candidate);
         }
