@@ -260,7 +260,7 @@ function compressForPostMessage(stvDistrict) {
             c.id,
             c.partyName,
             c.votes,
-            c.originalVotePct,
+            c.votePct,
             c.originalDistrict
         ])
     ];
