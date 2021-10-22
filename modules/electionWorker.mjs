@@ -2,6 +2,8 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 import { StvDistrict, StvCandidate } from "./classes.mjs";
 
+export const ver = 1.4;
+
 addEventListener('message', e => {
     const { b, c, d } = e.data;
 
@@ -11,7 +13,7 @@ addEventListener('message', e => {
     const ballots = getBallotGenerator(b)(stvDistrict);
 
     postMessage(['Initiating Count']);
-    const counter = getElectionCounter(c, d, ballots);
+    const counter = getElectionCounter(c, stvDistrict, ballots);
     counter.count();
 });
 

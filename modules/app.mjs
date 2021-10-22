@@ -1,15 +1,12 @@
 import $ from './lib/jquery.mjs';
 import * as data from './data.mjs';
-import * as stv from './stv.mjs';
 import { getOrAdd, concat } from './mapUtil.mjs';
 import { orderBy, desc, orderCriteria } from './arrayUtil.mjs';
 import { District, StvDistrict, Candidate, CandidateGroup } from './classes.mjs';
 //adding imports used by workers here, so that syntax errors are reported
 import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
-
-const ver = '1.3';
-//const ver = new Date().getTime();
+import { ver } from './electionWorker.mjs'; //for cache busting
 
 const numFormat = new Intl.NumberFormat('en-CA').format;
 
