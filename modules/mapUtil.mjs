@@ -24,6 +24,8 @@ export function getOrAdd(map, key, fnAdd) {
  * @returns {string} iterable items converted to string.
  */
 export function concat(iterable, fnToString, separator = '') {
+    if (!iterable) return '';
+    
     const sb = [];
     for (const item of iterable) {
         if (sb.length > 0 && separator.length > 0) sb.push(separator);
