@@ -96,7 +96,7 @@ async function showResults() {
     setTimeout(_ => {
         for (const stvDistrict of stvDistricts) {
             runElectionWorker(stvDistrict);
-            break; //Only do one in testing
+            //break; //Only do one for testing
         }
     }, 5000);
 }
@@ -141,7 +141,6 @@ function runElectionWorker(stvDistrict) {
     }
 
     //Start Worker
-    //const worker = new Worker('/modules/stv-worker.mjs?v=' + ver, {type:'module'});
     const worker = new Worker('/modules/electionWorker.mjs?v=' + ver, {type:'module'});
     worker.addEventListener('message', e => {
         const rpt = e.data;
@@ -157,14 +156,21 @@ function runElectionWorker(stvDistrict) {
                 })}
             `);
         }
-        if (rpt.h) {
-            const candidates = (rpt.c || []).map(cc => {
+        if (rpt.c) {
+            for (const cc of rpt.c) {
                 const [cid, state, vote] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
                 c.vote = vote;
-                return c;
-            });
+            }
+        }
+        if (rpt.q) {
+            stvDistrict.quota = rpt.q;
+        }
+        if (rpt.x) {
+            stvDistrict.exhausted = rpt.x;
+        }
+        if (rpt.h) {
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
@@ -172,8 +178,8 @@ function runElectionWorker(stvDistrict) {
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
                     }, ', ')}</summary>
                     <section class="details-body">
-                        ${rpt.q ? makeVoteLine({ heading: 'Quota', votes: rpt.q, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
-                        ${concat(orderBy(candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
+                        ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
+                        ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.vote,
@@ -181,7 +187,7 @@ function runElectionWorker(stvDistrict) {
                                 color: c.color
                             });
                         })}
-                        ${rpt.x ? makeVoteLine({ heading: 'Exhausted Ballots', votes: rpt.x, voteTotal: stvDistrict.validVotes, color: '#888' }) : ''}
+                        ${stvDistrict.exhausted ? makeVoteLine({ heading: 'Exhausted Ballots', votes: stvDistrict.exhausted, voteTotal: stvDistrict.validVotes, color: '#888' }) : ''}
                     </section>
                 </details>
             `);
