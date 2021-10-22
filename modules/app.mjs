@@ -175,7 +175,7 @@ function runElectionWorker(stvDistrict) {
                         ${concat(orderBy(candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                votes: vote,
+                                votes: c.vote,
                                 voteTotal: stvDistrict.validVotes,
                                 color: c.color
                             });
