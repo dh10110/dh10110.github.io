@@ -158,13 +158,13 @@ function runElectionWorker(stvDistrict) {
             `);
         }
         if (rpt.h) {
-            const sortedCandidates = rpt.c.map(cc => {
+            const candidates = rpt.c.map(cc => {
                 const [cid, state, vote] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
                 c.vote = vote;
                 return c;
-            })
+            });
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
@@ -172,9 +172,7 @@ function runElectionWorker(stvDistrict) {
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
                     }, ', ')}</summary>
                     <section class="details-body">
-                        ${concat(sortedCandidates, cc => {
-                            const [cid, state, vote] = cc;
-                            const c = stvDistrict.candidateById.get(cid);
+                        ${concat(orderBy(candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: vote,
