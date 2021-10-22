@@ -15,7 +15,7 @@ function candidatesToPost(...candidateSets) {
         for (const candidate of candidateSet.values()) {
             arr.push([
                 candidate.candidateId,
-                candidate.state,
+                candidate.state.code,
                 candidate.vote
             ]);
         }
