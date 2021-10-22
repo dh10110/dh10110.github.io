@@ -158,14 +158,21 @@ function runElectionWorker(stvDistrict) {
             `);
         }
         if (rpt.h) {
+            const sortedCandidates = rpt.c.map(cc => {
+                const [cid, state, vote] = cc;
+                const c = stvDistrict.candidateById.get(cid);
+                c.state = state;
+                c.vote = vote;
+                return c;
+            })
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
                         const c = stvDistrict.candidateById.get(cid);
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
-                    })}</summary>
+                    }, ', ')}</summary>
                     <section class="details-body">
-                        ${concat(rpt.c, cc => {
+                        ${concat(sortedCandidates, cc => {
                             const [cid, state, vote] = cc;
                             const c = stvDistrict.candidateById.get(cid);
                             return makeVoteLine({

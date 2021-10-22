@@ -136,7 +136,7 @@ export class ElectWigm {
                 candidates: [...this.elected.values(), ...this.pending.values(), ...this.hopeful.values()]
             });
             */
-            this.postMessage({ h: `Round ${this.roundNum} - Elected`, a: [highCandidate.candidateId], x: this.exhaustedBallots });
+            this.postMessage({ h: `Round ${this.roundNum} - Elected`, a: [highCandidate.candidateId], q: this.quota, x: this.exhaustedBallots });
             this.transferBallots(highCandidate);
             highCandidate.vote = this.quota;
             //this.postMessage changes
