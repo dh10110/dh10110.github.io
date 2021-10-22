@@ -19,7 +19,8 @@ addEventListener('message', e => {
 
 function deserializeDistrict(d) {
     const [districtName, seats, compressedCandidates] = d;
-    const stvDistrict = new StvDistrict({ districtName, seats });
+    const stvDistrict = new StvDistrict({ districtName });
+    stvDistrict.seats = seats;
 
     for (const compressedCandidate of compressedCandidates) {
         const [candidateId, partyName, originalVotes, originalVotePct, originalDistrict] = compressedCandidate;
