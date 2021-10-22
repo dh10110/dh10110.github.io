@@ -97,7 +97,8 @@ async function showResults() {
 
     setTimeout(_ => {
         for (const stvDistrict of stvDistricts) {
-            //runElectionWorker(stvDistrict);
+            runElectionWorker(stvDistrict);
+            break;
         }
     }, 5000);
 }
