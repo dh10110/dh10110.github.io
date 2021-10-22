@@ -85,7 +85,7 @@ async function showResults() {
         let candidateId = 1;
         for (const candidate of orderBy(stvDistrict.candidates, c => c.surname, c => c.givenName, c => c.partyName)) {
             candidate.id = candidateId++;
-            stvDistrict.candidateById.add(candidate.id, candidate);
+            stvDistrict.candidateById.set(candidate.id, candidate);
         }
 
         stvDistricts.push(stvDistrict);
