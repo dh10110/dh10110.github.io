@@ -237,7 +237,7 @@ function runElectionWorker(stvDistrict) {
         →worker
         options: [countMethod, ballotMethod]
         district: [districtId:#, seats:#, [candidates]]
-        candiate: [candidateId:#, partyId:#, originalVote:#, originalDistrictId:#]
+        candidate: [candidateId:#, partyId:#, originalVote:#, originalDistrictId:#]
 
         →return
         root: [round:@, action:@, quota:#, exhausted:#, [candidates]]
