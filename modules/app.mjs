@@ -162,7 +162,7 @@ function runElectionWorker(stvDistrict) {
         }
         if (rpt.h) {
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
-                <deatils>
+                <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
                         const c = stvDistrict.candidateById.get(cid);
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
