@@ -212,7 +212,8 @@ export class ElectWigm {
 
     //Ref D.2
     transferBallots(candidate) {
-        const changed = new Set(candidate);
+        const changed = new Set();
+        changed.add(candidate);
         for (const ballot of candidate.assignedBallots.values()) {
             const newCandidate = nextCandidate(ballot.candidates, candidate);
             candidate.assignedBallots.delete(ballot);
