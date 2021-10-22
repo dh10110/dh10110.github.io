@@ -25,14 +25,15 @@ function candidatesToPost(...candidateSets) {
 
 export class ElectWigm {
     constructor(stvDistrict, ballots, postMessage) {
-        const [name, seats, candidates] = stvDistrict;
+        //const [name, seats, candidates] = stvDistrict;
 
-        this.districtName = name;
-        this.seats = seats;
-        this.candidates = candidates.map(c => {
+        this.districtName = stvDistrict.districtName;
+        this.seats = stvDistrict.seats;
+        /*this.candidates = candidates.map(c => {
             const [candidateId] = c;
             return new StvCandidate({ candidateId, vote: 0 });
-        });
+        });*/
+        this.candidates = stvDistrict.candidates;
         this.precision = 4;
         this.ballots = ballots;
         
