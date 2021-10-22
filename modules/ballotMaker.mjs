@@ -7,7 +7,7 @@ export function generateBallots(districtCompressed) {
 
     const partyMap = new Map();
     for (const candidateCompressed of candidatesCompressed) {
-        const [candidateId, partyName] = candidatesCompressed;
+        const [candidateId, partyName] = candidateCompressed;
         const key = partyName === 'Independent' ? 'Ind: ' + candidateId : partyName;
         const partyGroup = getOrAdd(partyMap, key, () => new CandidateGroup({
             groupName: partyName,
