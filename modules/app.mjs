@@ -153,7 +153,8 @@ function runElectionWorker(stvDistrict) {
         }
         if (rpt.f) {
             document.getElementById(dotsId).insertAdjacentHTML('beforeend', `
-                ${concat(r.candidates, cid => {
+                ${concat(rpt.c, cc => {
+                    const [cid, state, vote] = cc;
                     const c = stvDistrict.candidateById.get(cid);
                     return `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`;
                 })}
@@ -167,7 +168,16 @@ function runElectionWorker(stvDistrict) {
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
                     })}</summary>
                     <section class="details-body">
-                        TBD
+                        ${concat(rpt.c, cc => {
+                            const [cid, state, vote] = cc;
+                            const c = stvDistrict.candidateById.get(cid);
+                            return makeVoteLine({
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                votes: vote,
+                                voteTotal: stvDistrict.validVotes,
+                                color: c.color
+                            });
+                        })}
                     </section>
                 </details>
             `);
