@@ -1,7 +1,8 @@
 import { floor } from './mathUtil.mjs';
 import { concat } from './mapUtil.mjs';
 import { first, orderBy, desc } from './arrayUtil.mjs';
-
+import { StvCandidate, stvCandidateState } from './classes.mjs';
+/*
 //TODO: shared with other count classes
 export const candidateStatus = {
     WITHDRAWN: { text: 'Withdrawn', level: 0 },
@@ -14,12 +15,17 @@ export const candidateStatus = {
 function tplCandidate(candidate) {
     return `<span style="color: ${candidate.color};" title="${candidate.partyName}">⬤</span>${candidate.surname}`
 }
-
+*/
 export class ElectWigm {
     constructor(stvDistrict, ballots, postMessage) {
-        this.districtName = stvDistrict.districtName;
-        this.seats = stvDistrict.seats;
-        this.candidates = stvDistrict.candidates;
+        const [name, seats, candidates] = stvDistrict;
+
+        this.districtName = name;
+        this.seats = seats;
+        this.candidates = candidates.map(c => {
+            const [candidateId] = c;
+            return new StvCandidate({ candidateId, vote: 0 });
+        });
         this.precision = 4;
         this.ballots = ballots;
         
@@ -73,7 +79,7 @@ export class ElectWigm {
         this.quota = this.trunc(this.ballots.length / (this.seats + 1)) + 10e-4;
         //Ref A.2 - Set candidates to HOPEFUL
         for (const candidate of this.candidates) {
-            candidate.stv.state = candidateStatus.HOPEFUL;
+            candidate.state = stvCandidateState.HOPEFUL;
             this.hopeful.add(candidate);
         }
         //Ref A.3 - Test count complete (D.3)
@@ -82,8 +88,8 @@ export class ElectWigm {
         //+ Ref A.5 - Set candidate vote
         for (const ballot of this.ballots) {
             ballot.weight = 1;
-            ballot.candidates[0].stv.assignedBallots.add(ballot);
-            ballot.candidates[0].stv.vote += 1;
+            ballot.candidates[0].assignedBallots.add(ballot);
+            ballot.candidates[0].vote += 1;
         }
         //show initial count
         this.postMessage({

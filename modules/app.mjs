@@ -199,7 +199,7 @@ function runElectionWorker(stvDistrict) {
         }
     });
     window.requestAnimationFrame(showProgress);
-    worker.postMessage({ stvDistrict, method: 'wigm' });
+    //worker.postMessage({ stvDistrict, method: 'wigm' });
     /* TODO:
         serialize and deserialize for postMessage is slow for large objects 
         was seeing run times of 90s, even though count finished in 15s
@@ -207,13 +207,31 @@ function runElectionWorker(stvDistrict) {
         Idea custom serialization for postMessage
         →worker
         options: [countMethod, ballotMethod]
-        district: [districtId:#, [candidates]]
+        district: [districtId:#, seats:#, [candidates]]
         candiate: [candidateId:#, partyId:#, originalVote:#, originalDistrictId:#]
 
         →return
         root: [round:@, action:@, quota:#, exhausted:#, [candidates]]
         candidate: [candidateId:#, state:#, vote:#]
     */
+   worker.postMessage({
+       b: 'party-vote',
+       c: 'wigm',
+       d: compressForPostMessage(stvDistrict)
+   })
+}
+
+function compressForPostMessage(stvDistrict) {
+    return [
+        stvDistrict.districtName,
+        stvDistrict.seats,
+        stvDistrict.candidates.map(c => [
+            c.candidateId,
+            c.partyName,
+            c.votes,
+            c.originalDistrictId
+        ])
+    ];
 }
 
 function runElection(stvDistrict) {

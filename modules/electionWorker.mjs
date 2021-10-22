@@ -2,19 +2,22 @@ import { ElectWigm } from "./wigm.mjs";
 import { generateBallots } from './ballotMaker.mjs';
 
 addEventListener('message', e => {
-    const { method, stvDistrict } = e.data;
+    const { b, c, d } = e.data;
 
-    if (method === 'wigm') {
+    postMessage(['Generating Ballots']);
+    const ballots = getBallotGenerator(b)(d);
 
-        postMessage({progress: 'Generating Ballots'});
-        const ballots = generateBallots(stvDistrict);
-
-        postMessage({progress: 'Initiating Count'});
-        const counter = new ElectWigm(stvDistrict, ballots, postMessage);
-        counter.count();
-
-    } else {
-        console.warn('Unsupported counting method');
-        postMessage({progress: 'Unsupported counting method'});
-    }
+    postMessage(['Initiating Count']);
+    const counter = getElectionCounter(c, d, ballots);
+    counter.count();
 });
+
+function getBallotGenerator(ballotMethod) {
+    if (ballotMethod === 'party-vote') return generateBallots;
+    console.error(`Ballot generator '${ballotMethod}' not implemented.`);
+}
+
+function getElectionCounter(countMethod, district, ballots) {
+    if (countMethod === 'wigm') return new ElectWigm(district, ballots, postMessage);
+    console.error(`Counting method '${countMethod}' not implemented.`);
+}

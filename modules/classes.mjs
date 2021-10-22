@@ -10,6 +10,25 @@ export class Candidate {
     }
 }
 
+export const stvCandidateState = {
+    INITIAL: { code: 0 },
+    WITHDRAWN: { code: 1 },
+    DEFEATED: { code: 2 },
+    HOPEFUL: { code: 3, stillIn: true },
+    PENDING: { code: 4, stillIn: true },
+    ELECTED: { code: 5, stillIn: true }
+};
+
+export class StvCandidate {
+    constructor({ candidateId, vote } = {}) {
+        vote = Number(vote);
+        Object.assign(this, { candidateId, vote });
+        this.state = stvCandidateState.INITIAL;
+    }
+
+
+}
+
 export class CandidateGroup {
     constructor({ groupName, color, votes = 0 }) {
         votes = Number(votes);
