@@ -60,6 +60,7 @@ async function showResults() {
             const oldDistrict = voting.get(districtNumber);
             stvDistrict.addDistrict(oldDistrict);
             for (const candidate of oldDistrict.candidates) {
+                candidate.originalDistrict = oldDistrict.districtNumber;
                 const partyObj = parties[candidate.partyName] || parties.default;
                 candidate.color = partyObj.color;
                 const partyKey = partyObj.abbr === 'Other' ? 'Other' : candidate.partyName;
@@ -98,7 +99,7 @@ async function showResults() {
     setTimeout(_ => {
         for (const stvDistrict of stvDistricts) {
             runElectionWorker(stvDistrict);
-            break;
+            break; //Only do one in testing
         }
     }, 5000);
 }
@@ -256,10 +257,11 @@ function compressForPostMessage(stvDistrict) {
         stvDistrict.districtName,
         stvDistrict.seats,
         stvDistrict.candidates.map(c => [
-            c.candidateId,
+            c.id,
             c.partyName,
             c.votes,
-            c.originalDistrictId
+            c.votePct,
+            c.originalDistrict
         ])
     ];
 }
