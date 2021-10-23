@@ -436,7 +436,7 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const pctLow = curValue / denominator;
     const txtPctLow = (100 * pctLow).toFixed(1) + '%';
 
-    const pctDelta = delta / denominator;
+    const pctDelta = Math.abs(delta) / denominator;
     const txtPctDelta = (100 * pctDelta).toFixed(1) + '%';
 
     const textCur = numFormat(curValue);
