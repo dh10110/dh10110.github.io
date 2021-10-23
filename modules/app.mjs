@@ -162,6 +162,7 @@ function runElectionWorker(stvDistrict) {
                 const [cid, state, vote, order] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
+                c.prevVote = c.vote; //TODO: use this
                 c.vote = vote;
                 c.order = order;
             }
