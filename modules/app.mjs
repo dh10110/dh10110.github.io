@@ -58,6 +58,7 @@ async function showResults() {
             stvDistrict.addDistrict(oldDistrict);
             for (const candidate of oldDistrict.candidates) {
                 candidate.originalDistrict = oldDistrict.districtNumber;
+                candidate.vote = 0; //STV count, not original votes
                 const partyObj = parties[candidate.partyName] || parties.default;
                 candidate.color = partyObj.color;
                 const partyKey = partyObj.abbr === 'Other' ? 'Other' : candidate.partyName;
