@@ -53,6 +53,18 @@ summary:hover {
     background-color: #eee;
 }
 
+article > details > summary {
+    position: sticky;
+    top: 1px;
+    background-color: #fff;
+}
+article > details > section > details > summary {
+    position: sticky;
+    top: 1.4em;
+    background-color: #fff;
+}
+
+
 details > section {
     padding: 0.5em;
 }
