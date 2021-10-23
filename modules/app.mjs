@@ -162,7 +162,7 @@ function runElectionWorker(stvDistrict) {
                 const [cid, state, vote] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
-                c.vote += vote;
+                c.vote = vote;
             }
         }
         if (rpt.q) {
@@ -194,62 +194,6 @@ function runElectionWorker(stvDistrict) {
             `);
         }
     });
-    /*
-    worker.addEventListener('message', e => {
-        const rpt = e.data; //we're passing large objects around; deserialize is slow
-        if (typeof rpt.progress !== 'undefined') {
-            progress = rpt.progress;
-        }
-        if (rpt.final) {
-            document.getElementById(dotsId).insertAdjacentHTML('beforeend', `
-                ${concat(orderBy(rpt.candidates, compareStvCandidates), c =>
-                    `<span style="color: ${c.color};" title="${c.surname} - ${c.partyName}">⬤</span>`
-                )}
-            `);
-        }
-        if (rpt.heading) {
-            //document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
-            roundQueue.push(`
-                <details>
-                    <summary>${rpt.heading}</summary>
-                    <section class="details-body">
-                        ${rpt.quota ?
-                            makeVoteLine({
-                                heading: 'Quota',
-                                votes: rpt.quota,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#333'
-                            })
-                            : ''
-                        }
-                        ${rpt.candidates ?
-                            concat(orderBy(rpt.candidates, compareStvCandidates), c => 
-                                makeVoteLine({
-                                    heading:
-                                        `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
-                                        ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                    votes: c.stv.vote,
-                                    voteTotal: stvDistrict.validVotes,
-                                    color: c.color
-                                })
-                            )
-                            : ''
-                        }
-                        ${rpt.exhausted ?
-                            makeVoteLine({
-                                heading: 'Exhausted Ballots',
-                                votes: rpt.exhausted,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#888'
-                            })
-                            : ''
-                        }
-                    </section>
-                </details>
-            `);
-        }
-    });
-    */
     window.requestAnimationFrame(showProgress);
     //worker.postMessage({ stvDistrict, method: 'wigm' });
     /* TODO:
