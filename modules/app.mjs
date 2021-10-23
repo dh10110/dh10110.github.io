@@ -158,11 +158,14 @@ function runElectionWorker(stvDistrict) {
             `);
         }
         if (rpt.c) {
+            for (const c of stvDistrict.candidates) {
+                c.prevVote = null;
+            }
             for (const cc of rpt.c) {
                 const [cid, state, vote, order] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
-                c.prevVote = c.vote; //TODO: use this
+                c.prevVote = c.vote;
                 c.vote = vote;
                 c.order = order;
             }
@@ -441,7 +444,7 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const txtPctCur = (100 * pctCur).toFixed(1) + '%';
 
     const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
-    const deltaColor = (delta > 0 ? '#080' : '#800');
+    const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
 
     const deltaTag = delta === 0 ? '' : `<span style="width:${txtPctDelta}; background-color: ${deltaColor}">`;
     const deltaAddOn = delta === 0 ? '' : ` (${textDelta})`;
