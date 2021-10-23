@@ -171,6 +171,7 @@ function runElectionWorker(stvDistrict) {
             stvDistrict.quota = rpt.q;
         }
         if (rpt.x) {
+            stvDistrict.prevExhausted = stvDistrict.exhausted;
             stvDistrict.exhausted = rpt.x;
         }
         if (rpt.h) {
@@ -186,11 +187,20 @@ function runElectionWorker(stvDistrict) {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.vote,
+                                prevVotes: c.prevVote,
                                 voteTotal: stvDistrict.validVotes,
                                 color: c.color
                             });
                         })}
-                        ${stvDistrict.exhausted ? makeVoteLine({ heading: 'Exhausted Ballots', votes: stvDistrict.exhausted, voteTotal: stvDistrict.validVotes, color: '#888' }) : ''}
+                        ${stvDistrict.exhausted ?
+                            makeVoteLine({
+                                heading: 'Exhausted Ballots',
+                                votes: stvDistrict.exhausted,
+                                prevVotes: stvDistrict.prevExhausted,
+                                voteTotal: stvDistrict.validVotes,
+                                color: '#888'
+                            })
+                        : ''}
                     </section>
                 </details>
             `);
@@ -397,11 +407,14 @@ function makeInitialHtml(stvDistrict) {
     `;
 }
 
-function makeVoteLine({ heading, votes, voteTotal, color = '#aaa'} = {}) {
+function makeVoteLine({ heading, votes, prevVotes, voteTotal, color = '#aaa'} = {}) {
     return `
                     <div class="vote-total">
                         <div>${colorDot(color)}${heading}</div>
-                        ${makeMeter(votes, voteTotal, color)}
+                        ${prevVotes ?
+                            makeDeltaMeter(votes, prevVotes, voteTotal, color) :
+                            makeMeter(votes, voteTotal, color)
+                        }
                     </div>
     `;
 }
@@ -413,6 +426,28 @@ function makeMeter(numerator, denominator, barColor) {
     return `<div class="flex-meter"><span style="width:${txtPct}; background-color: ${barColor}"></span><span class="label">${text} (${txtPct})</span></div>`;
 }
 
+function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
+    const delta = curValue - prevValue;
+    const lower = curValue < prevValue ? curValue : prevValue;
+
+    const pctLow = curValue / denominator;
+    const txtPctLow = (100 * pctLow).toFixed(1) + '%';
+
+    const pctDelta = delta / denominator;
+    const txtPctDelta = (100 * pctDelta).toFixed(1) + '%';
+
+    const textCur = numFormat(curValue);
+    const pctCur = curValue / denominator;
+    const txtPctCur = (100 * pctCur).toFixed(1) + '%';
+
+    const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
+    const deltaColor = (delta > 0 ? '#080' : '#800');
+
+    const deltaTag = delta === 0 ? '' : `<span style="width:${txtPctDelta}; background-color: ${deltaColor}">`;
+    const deltaAddOn = delta === 0 ? '' : ` (${textDelta})`;
+
+    return `<div class="flex-meter"><span style="width:${txtPctLow}; background-color: ${barColor}"></span>${deltaTag}</span><span class="label">${textCur} (${txtPctCur})${deltaAddOn}</span></div>`;
+}
 
 function start() {
     showStatus('Fetching Data...');
