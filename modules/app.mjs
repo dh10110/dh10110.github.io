@@ -446,10 +446,11 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
     const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
 
+    const lowTag = curValue === 0 ? '' : `<span style="width:${txtPctLow}; background-color: ${barColor}"></span>`;
     const deltaTag = delta === 0 ? '' : `<span style="width:${txtPctDelta}; background-color: ${deltaColor}">`;
     const deltaAddOn = delta === 0 ? '' : ` (${textDelta})`;
 
-    return `<div class="flex-meter"><span style="width:${txtPctLow}; background-color: ${barColor}"></span>${deltaTag}</span><span class="label">${textCur} (${txtPctCur})${deltaAddOn}</span></div>`;
+    return `<div class="flex-meter">${lowTag}${deltaTag}</span><span class="label">${textCur} (${txtPctCur})${deltaAddOn}</span></div>`;
 }
 
 function start() {
