@@ -16,7 +16,8 @@ function candidatesToPost(...candidateSets) {
             arr.push([
                 candidate.candidateId,
                 candidate.state.code,
-                candidate.vote
+                candidate.vote,
+                candidate.winnerOrder || -candidate.defeatOrder || 0
             ]);
         }
     }
@@ -152,6 +153,7 @@ export class ElectWigm {
         this.hopeful.delete(lowCandidate);
         lowCandidate.state = stvCandidateState.DEFEATED;
         this.defeated.add(lowCandidate);
+        lowCandidate.defeatOrder = this.defeated.size;
         lowCandidate.vote = 0;
 
         const countComplete = this.testCountComplete(); //D.3

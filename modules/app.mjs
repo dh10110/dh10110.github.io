@@ -159,10 +159,11 @@ function runElectionWorker(stvDistrict) {
         }
         if (rpt.c) {
             for (const cc of rpt.c) {
-                const [cid, state, vote] = cc;
+                const [cid, state, vote, order] = cc;
                 const c = stvDistrict.candidateById.get(cid);
                 c.state = state;
                 c.vote = vote;
+                c.order = order;
             }
         }
         if (rpt.q) {
@@ -180,7 +181,7 @@ function runElectionWorker(stvDistrict) {
                     }, ', ')}</summary>
                     <section class="details-body">
                         ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
-                        ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote)), c => {
+                        ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote), c => c.order), c => {
                             return makeVoteLine({
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.vote,
@@ -210,11 +211,11 @@ function runElectionWorker(stvDistrict) {
         root: [round:@, action:@, quota:#, exhausted:#, [candidates]]
         candidate: [candidateId:#, state:#, vote:#]
     */
-   worker.postMessage({
-       b: 'party-vote',
-       c: 'wigm',
-       d: compressForPostMessage(stvDistrict)
-   })
+    worker.postMessage({
+        b: 'party-vote',
+        c: 'wigm',
+        d: compressForPostMessage(stvDistrict)
+    });
 }
 
 function compressForPostMessage(stvDistrict) {
