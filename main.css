@@ -49,6 +49,9 @@ summary {
     padding: 0.2em 0.5em 0.3em;
     cursor: pointer;
 }
+summary:hover {
+    background-color: #eee;
+}
 
 details > section {
     padding: 0.5em;
