@@ -30,10 +30,6 @@ export class ElectWigm {
 
         this.districtName = stvDistrict.districtName;
         this.seats = stvDistrict.seats;
-        /*this.candidates = candidates.map(c => {
-            const [candidateId] = c;
-            return new StvCandidate({ candidateId, vote: 0 });
-        });*/
         this.candidates = stvDistrict.candidates;
         this.precision = 4;
         this.ballots = ballots;
@@ -96,6 +92,7 @@ export class ElectWigm {
         }
         //show initial count
         this.postMessage({
+            i: 'I',
             h: 'Initial Count',
             q: this.quota,
             c: candidatesToPost(this.hopeful)
@@ -137,6 +134,7 @@ export class ElectWigm {
             highCandidate.vote = this.quota;
             //this.postMessage changes
             this.postMessage({
+                i: this.roundNum,
                 h: `Round ${this.roundNum} - Elected`,
                 a: [highCandidate.candidateId],
                 x: this.exhaustedBallots,
@@ -163,6 +161,7 @@ export class ElectWigm {
         }
         //this.postMessage changes
         this.postMessage({
+            i: this.roundNum,
             h: `Round ${this.roundNum} - Defeated`,
             a: [lowCandidate.candidateId],
             x: this.exhaustedBallots,
@@ -187,14 +186,16 @@ export class ElectWigm {
         //pm changes
         if (electedPending.size > 0) {
             this.postMessage({
-               h: 'Finish Count - Elect Pending',
-               a: map(electedPending, c => c.candidateId),
-               c: candidatesToPost(electedPending)
+                i: 'EP',
+                h: 'Finish Count - Elect Pending',
+                a: map(electedPending, c => c.candidateId),
+                c: candidatesToPost(electedPending)
             });
         }
         //All seats filled?
         const remainingHopeful = new Set(this.hopeful);
         const isFilled = this.elected.size + this.pending.size === this.seats;
+        let lastIndex = isFilled ? 'DH' : 'EH';
         let lastAct = isFilled ? 'Defeated' : 'Elected';
         if (isFilled) {
             //defeat all remaining hopeful candidates
@@ -212,6 +213,7 @@ export class ElectWigm {
         }
         this.hopeful.clear();
         this.postMessage({
+            i: lastIndex,
             h: `Finish Count - ${lastAct} Hopeful`,
             a: map(remainingHopeful, c => c.candidateId),
             c: candidatesToPost(remainingHopeful)

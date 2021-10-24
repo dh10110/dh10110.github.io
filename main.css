@@ -89,3 +89,53 @@ details[open] summary ~ * {
 .color-bar {
     height: 10px;
 }
+
+
+/*#region tabs*/
+.snap-tabs {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+.snap-tabs > header {
+    flex-shrink: 0;
+    min-block-size: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+.snap-tabs > section {
+    block-size: 100%;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+}
+.snap-tabs > * {
+    overflow: auto hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+}
+@media(hover: none) {
+    .snap-tabs > * {
+        scrollbar-width: none;
+    }
+    .snap-tabs > *::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}
+.snap-tabs > header > nav {
+    display: flex;
+}
+.snap-tabs > header > nav > a {
+    scroll-snap-align: start;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+}
+.snap-tabs > section > article {
+    scroll-snap-align: start;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+}
+/*#endregion*/

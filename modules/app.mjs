@@ -106,6 +106,8 @@ function runElectionWorker(stvDistrict) {
     const detailsId = `stv-${stvDistrict.districtName}`;
     const statusId = `stat-${stvDistrict.districtName}`;
     const dotsId = `dots-${stvDistrict.districtName}`;
+    const tabsNavId = `tn-${stvDistrict.districtName}`;
+    const tabsBodyId = `tb-${stvDistrict.districtName}`;
     let progress = 'Starting...';
     let lastProgress = null;
     let roundQueue = [];
@@ -114,7 +116,12 @@ function runElectionWorker(stvDistrict) {
         <article>
             <details>
                 <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
-                <section class="details-body" id="${detailsId}">
+                <section class="details-body snap-tabs" id="${detailsId}">
+                    <header>
+                        <nav id="${tabsNavId}"></nav>
+                        <span class="snap-indicator"></span>
+                    </header>
+                    <section id="${tabsBodyId}"></section>
                 </section>
             </details>
         </article>
@@ -178,6 +185,42 @@ function runElectionWorker(stvDistrict) {
             stvDistrict.exhausted = rpt.x;
         }
         if (rpt.h) {
+            const tabId = Math.random().toString().substr(2);
+            //Header Nav
+            document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
+                <a href="#${tabId}">${rpt.i}</a>
+            `);
+            //Body Content
+            document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
+                <article id="${tabId}">
+                    <header>${rpt.h} ${concat(rpt.a, cid => {
+                        const c = stvDistrict.candidateById.get(cid);
+                        return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
+                    }, ', ')}</header>
+                    <section class="body">
+                        ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
+                        ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote), c => c.order), c => {
+                            return makeVoteLine({
+                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
+                                votes: c.vote,
+                                prevVotes: c.prevVote,
+                                voteTotal: stvDistrict.validVotes,
+                                color: c.color
+                            });
+                        })}
+                        ${stvDistrict.exhausted ?
+                            makeVoteLine({
+                                heading: 'Exhausted Ballots',
+                                votes: stvDistrict.exhausted,
+                                prevVotes: stvDistrict.prevExhausted,
+                                voteTotal: stvDistrict.validVotes,
+                                color: '#888'
+                            })
+                        : ''}
+                    </section>
+                </article>
+            `);
+            //Old
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
@@ -210,21 +253,6 @@ function runElectionWorker(stvDistrict) {
         }
     });
     window.requestAnimationFrame(showProgress);
-    //worker.postMessage({ stvDistrict, method: 'wigm' });
-    /* TODO:
-        serialize and deserialize for postMessage is slow for large objects 
-        was seeing run times of 90s, even though count finished in 15s
-
-        Idea custom serialization for postMessage
-        →worker
-        options: [countMethod, ballotMethod]
-        district: [districtId:#, seats:#, [candidates]]
-        candidate: [candidateId:#, partyId:#, originalVote:#, originalDistrictId:#]
-
-        →return
-        root: [round:@, action:@, quota:#, exhausted:#, [candidates]]
-        candidate: [candidateId:#, state:#, vote:#]
-    */
     worker.postMessage({
         b: 'party-vote',
         c: 'wigm',
