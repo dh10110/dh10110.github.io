@@ -491,7 +491,8 @@ function start() {
     addEventListener('click', e => {
         const el = e.target.closest('a');
         if (el) {
-            const id = el.href.substr(1);
+            //TODO: check for # 
+            const id = el.getAttribute(href).substr(1);
             document.getElementById(id).scrollIntoView();
             e.preventDefault();
         }
