@@ -492,7 +492,7 @@ function start() {
         const el = e.target.closest('a');
         if (el) {
             //TODO: check for # 
-            const id = el.getAttribute(href).substr(1);
+            const id = el.getAttribute('href').substr(1);
             document.getElementById(id).scrollIntoView();
             e.preventDefault();
         }
