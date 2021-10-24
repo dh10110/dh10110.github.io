@@ -4,6 +4,10 @@ body {
     font-size: 1em;
 }
 
+[title] {
+    cursor: help;
+}
+
 #data-container details {
     border: 1px solid #cca;
     background-color: #ffd;
@@ -159,4 +163,6 @@ nav.vote-steps > a:active {
 }
 .vote-district h3 {
     text-align: center;
+    margin-top: 0.3em;
+    margin-bottom: 0.2em;
 }
