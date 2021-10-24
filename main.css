@@ -142,12 +142,15 @@ details[open] summary ~ * {
 
 nav.vote-steps > a {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 150%;
-    padding: 1em;
+    font-size: 120%;
+    padding: 0.2em 0.3em;
     text-decoration: none;
     border-radius: 5px;
 }
 nav.vote-steps > a:hover {
     text-decoration: underline;
     background-color: #eee;
+}
+nav.vote-steps > a:active {
+    background-color: #ffd;
 }

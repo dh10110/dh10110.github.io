@@ -113,7 +113,7 @@ function runElectionWorker(stvDistrict) {
     let roundQueue = [];
 
     document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
-        <article>
+        <article class="vote-district">
             <details>
                 <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
                 <section class="details-body snap-tabs" id="${detailsId}">
@@ -221,6 +221,7 @@ function runElectionWorker(stvDistrict) {
                 </article>
             `);
             //Old
+            /*
             document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
                 <details>
                     <summary>${rpt.h} ${concat(rpt.a, cid => {
@@ -250,6 +251,7 @@ function runElectionWorker(stvDistrict) {
                     </section>
                 </details>
             `);
+            */
         }
     });
     window.requestAnimationFrame(showProgress);
