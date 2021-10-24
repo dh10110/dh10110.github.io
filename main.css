@@ -154,3 +154,6 @@ nav.vote-steps > a:hover {
 nav.vote-steps > a:active {
     background-color: #ffd;
 }
+.vote-district h3 {
+    text-align: center;
+}

@@ -193,10 +193,10 @@ function runElectionWorker(stvDistrict) {
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
                 <article id="${tabId}">
-                    <header>${rpt.h} ${concat(rpt.a, cid => {
+                    <header><h3>${rpt.h} ${concat(rpt.a, cid => {
                         const c = stvDistrict.candidateById.get(cid);
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
-                    }, ', ')}</header>
+                    }, ', ')}</h3></header>
                     <section class="body">
                         ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
                         ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote), c => c.order), c => {
