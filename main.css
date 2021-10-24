@@ -139,3 +139,9 @@ details[open] summary ~ * {
     overscroll-behavior-y: contain;
 }
 /*#endregion*/
+
+nav.vote-steps > a {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 150%;
+    padding: 1em;
+}

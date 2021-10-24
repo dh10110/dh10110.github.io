@@ -118,7 +118,7 @@ function runElectionWorker(stvDistrict) {
                 <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
                 <section class="details-body snap-tabs" id="${detailsId}">
                     <header>
-                        <nav id="${tabsNavId}"></nav>
+                        <nav id="${tabsNavId}" class="vote-steps"></nav>
                         <span class="snap-indicator"></span>
                     </header>
                     <section id="${tabsBodyId}"></section>
