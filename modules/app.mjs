@@ -99,7 +99,7 @@ async function showResults() {
             runElectionWorker(stvDistrict);
             //break; //Only do one for testing
         }
-    }, 5000);
+    }, 1000);
 }
 
 function runElectionWorker(stvDistrict) {
