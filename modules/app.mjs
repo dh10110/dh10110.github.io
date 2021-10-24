@@ -486,6 +486,16 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
 function start() {
     showStatus('Fetching Data...');
     showResults();
+
+    //scroll internal links into view
+    addEventListener('click', e => {
+        const el = e.target.closest('a');
+        if (el) {
+            const id = el.href.substr(1);
+            document.getElementById(id).scrollIntoView();
+            e.preventDefault();
+        }
+    }, true);
 }
 
 $(start);
