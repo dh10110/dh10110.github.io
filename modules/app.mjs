@@ -495,6 +495,7 @@ function start() {
             const id = el.getAttribute('href').substr(1);
             document.getElementById(id).scrollIntoView();
             e.preventDefault();
+            e.stopPropagation();
         }
     }, true);
 }
