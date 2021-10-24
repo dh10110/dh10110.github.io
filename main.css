@@ -144,4 +144,10 @@ nav.vote-steps > a {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     font-size: 150%;
     padding: 1em;
+    text-decoration: none;
+    border-radius: 5px;
+}
+nav.vote-steps > a:hover {
+    text-decoration: underline;
+    background-color: #eee;
 }
