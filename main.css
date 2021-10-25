@@ -24,10 +24,6 @@ body {
     border-bottom: 1px solid #cca;
 }
 
-article + article {
-    margin-top: 1em;
-}
-
 .vote-total + .vote-total {
     margin-top: 0.3em;
 }
@@ -95,72 +91,6 @@ details[open] summary ~ * {
 }
 
 
-/*#region tabs*/
-.snap-tabs {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    position: relative;
-}
-.snap-tabs > header {
-    flex-shrink: 0;
-    min-block-size: fit-content;
-    display: flex;
-    flex-direction: column;
-}
-.snap-tabs > section {
-    block-size: 100%;
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 100%;
-}
-.snap-tabs > * {
-    overflow: auto hidden;
-    overscroll-behavior-x: contain;
-    scroll-snap-type: x mandatory;
-}
-@media(hover: none) {
-    .snap-tabs > * {
-        scrollbar-width: none;
-    }
-    .snap-tabs > *::-webkit-scrollbar {
-        width: 0;
-        height: 0;
-    }
-}
-.snap-tabs > header > nav {
-    display: flex;
-}
-.snap-tabs > header > nav > a {
-    scroll-snap-align: start;
-    display: inline-flex;
-    align-items: center;
-    white-space: nowrap;
-}
-.snap-tabs > section > article {
-    scroll-snap-align: start;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-}
-/*#endregion*/
-.snap-tabs > section > article + article {
-    margin-top: 0;
-}
-
-nav.vote-steps > a {
-    font-family: Verdana, Geneva, Tahoma, sans-serif;
-    font-size: 120%;
-    padding: 0.2em 0.3em;
-    text-decoration: none;
-    border-radius: 5px;
-}
-nav.vote-steps > a:hover {
-    text-decoration: underline;
-    background-color: #eee;
-}
-nav.vote-steps > a:active {
-    background-color: #ffd;
-}
 .vote-district button {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
