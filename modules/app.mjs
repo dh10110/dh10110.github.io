@@ -188,7 +188,7 @@ function runElectionWorker(stvDistrict) {
             //Header Nav
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
                 <button data-page="${tabId}">${rpt.i}</button>
-            `);
+            `);//TODO: ✘ ✔ or ✖ 
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
                 <article id="${tabId}" data-group="${tabsBodyId}">
@@ -200,6 +200,7 @@ function runElectionWorker(stvDistrict) {
                         ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
                         ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote), c => c.order), c => {
                             return makeVoteLine({
+                                state: c.state,
                                 heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
                                 votes: c.vote,
                                 prevVotes: c.prevVote,
@@ -359,9 +360,9 @@ function makeInitialHtml(stvDistrict) {
     `;
 }
 
-function makeVoteLine({ heading, votes, prevVotes, voteTotal, color = '#aaa'} = {}) {
+function makeVoteLine({ heading, votes, prevVotes, voteTotal, state, color = '#aaa'} = {}) {
     return `
-                    <div class="vote-total">
+                    <div class="vote-total state-${state}">
                         <div>${colorDot(color)}${heading}</div>
                         ${prevVotes ?
                             makeDeltaMeter(votes, prevVotes, voteTotal, color) :
