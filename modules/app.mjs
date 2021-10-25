@@ -413,7 +413,7 @@ function start() {
             const pageId = el.dataset.page;
             const pageEl = document.getElementById(pageId);
             const pageGroup = pageEl.dataset.group;
-            const allGroupPages = document.querySelectorAll(`[data-group=${pageGroup}]`);
+            const allGroupPages = document.querySelectorAll(`[data-group='${pageGroup}']`);
             allGroupPages.forEach(elPg).style.display = 'none';
             pageEl.style.display = 'revert';
         }
