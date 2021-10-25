@@ -116,10 +116,9 @@ function runElectionWorker(stvDistrict) {
         <article class="vote-district">
             <details>
                 <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
-                <section class="details-body snap-tabs" id="${detailsId}">
+                <section class="details-body" id="${detailsId}">
                     <header>
                         <nav id="${tabsNavId}" class="vote-steps"></nav>
-                        <span class="snap-indicator"></span>
                     </header>
                     <section id="${tabsBodyId}"></section>
                 </section>
@@ -188,11 +187,11 @@ function runElectionWorker(stvDistrict) {
             const tabId = Math.random().toString().substr(2);
             //Header Nav
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
-                <a href="#${tabId}">${rpt.i}</a>
+                <button data-page="${tabId}">${rpt.i}</button>
             `);
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
-                <article id="${tabId}">
+                <article id="${tabId}" data-group="${tabsBodyId}">
                     <header><h3>${rpt.h} ${concat(rpt.a, cid => {
                         const c = stvDistrict.candidateById.get(cid);
                         return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
@@ -274,86 +273,6 @@ function compressForPostMessage(stvDistrict) {
             c.originalDistrict
         ])
     ];
-}
-
-function runElection(stvDistrict) {
-    const detailsId = `stv-${stvDistrict.districtName}`;
-    const statusId = `stat-${stvDistrict.districtName}`;
-    let progress = 'Starting...';
-    let lastProgress = null;
-
-    document.getElementById('vote-stv').insertAdjacentHTML('beforeend', `
-        <article>
-            <details>
-                <summary>${stvDistrict.districtName} <span id="${statusId}"></span></summary>
-                <section class="details-body" id="${detailsId}">
-                </section>
-            </details>
-        </article>
-    `);
-
-    const showProgress = function () {
-        if (progress !== lastProgress) {
-            document.getElementById(statusId).textContent = progress;
-            lastProgress = progress;
-        }
-        if (progress) {
-            window.requestAnimationFrame(showProgress);
-        }
-    }
-
-    window.setTimeout(run, 1000);
-
-    function run() {
-        window.requestAnimationFrame(showProgress);
-
-        stv.doElection(stvDistrict, rpt => {
-            if (rpt.progress) {
-                progress = rpt.progress;
-            } else {
-                document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
-                    <details>
-                        <summary>${rpt.heading}</summary>
-                        <section class="details-body">
-                            ${rpt.quota ?
-                                makeVoteLine({
-                                    heading: 'Quota',
-                                    votes: rpt.quota,
-                                    voteTotal: stvDistrict.validVotes,
-                                    color: '#333'
-                                })
-                                : ''
-                            }
-                            ${rpt.candidates ?
-                                concat([...rpt.candidates].sort(compareStvCandidates), c => 
-                                    makeVoteLine({
-                                        heading:
-                                            `${c.stv.winnerOrder ? `<strong>${c.stv.winnerOrder}</strong>` : ''}
-                                            ${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                        votes: c.stv.vote,
-                                        voteTotal: stvDistrict.validVotes,
-                                        color: c.color
-                                    })
-                                )
-                                : ''
-                            }
-                            ${rpt.exhausted ?
-                                makeVoteLine({
-                                    heading: 'Exhausted Ballots',
-                                    votes: rpt.exhausted,
-                                    voteTotal: stvDistrict.validVotes,
-                                    color: '#888'
-                                })
-                                : ''
-                            }
-                        </section>
-                    </details>
-                `);
-            }
-        });
-
-        progress = null;
-    }
 }
 
 const compareStvCandidates = orderCriteria(
@@ -489,13 +408,14 @@ function start() {
 
     //scroll internal links into view
     addEventListener('click', e => {
-        const el = e.target.closest('a');
+        const el = e.target.closest('button[data-page]');
         if (el) {
-            //TODO: check for # 
-            const id = el.getAttribute('href').substr(1);
-            document.getElementById(id).scrollIntoView();
-            e.preventDefault();
-            e.stopPropagation();
+            const pageId = el.dataset.page;
+            const pageEl = document.getElementById(pageId);
+            const pageGroup = pageEl.dataset.group;
+            const allGroupPages = document.querySelectorAll(`[data-group=${pageGroup}]`);
+            allGroupPages.forEach(elPg).style.display = 'none';
+            pageEl.style.display = 'revert';
         }
     }, true);
 }
