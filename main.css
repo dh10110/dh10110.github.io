@@ -161,8 +161,28 @@ nav.vote-steps > a:hover {
 nav.vote-steps > a:active {
     background-color: #ffd;
 }
+.vote-district button {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
 .vote-district h3 {
     text-align: center;
     margin-top: 0.3em;
     margin-bottom: 0.2em;
+}
+.vote-district > details > .details-body {
+    display: flex;
+    flex-direction: row;
+    gap: 1em;
+}
+.vote-district > details > .details-body > header {
+    position: relative;
+}
+.vote-district > details > .details-body > header > nav {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+}
+.vote-district > details > .details-body > section {
+    flex-grow: 1;
 }
