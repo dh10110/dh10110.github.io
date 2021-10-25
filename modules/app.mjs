@@ -414,7 +414,7 @@ function start() {
             const pageEl = document.getElementById(pageId);
             const pageGroup = pageEl.dataset.group;
             const allGroupPages = document.querySelectorAll(`[data-group='${pageGroup}']`);
-            allGroupPages.forEach(elPg).style.display = 'none';
+            allGroupPages.forEach(elPg => elPg.style.display = 'none');
             pageEl.style.display = 'revert';
         }
     }, true);
