@@ -118,7 +118,16 @@ function runElectionWorker(stvDistrict) {
                 <summary>${stvDistrict.districtName} <small id="${statusId}"></small><span id="${dotsId}"></summary>
                 <section class="details-body" id="${detailsId}">
                     <header>
-                        <nav id="${tabsNavId}" class="vote-steps"></nav>
+                        <nav class="vote-steps select-record-dropdown">
+                            <button class="nav-first">❚◄</button>
+                            <button class="nav-prev">◄</button>
+                            <span>
+                                <div class="nav-list" id="${tabsNavId}">
+                                </div>
+                            </span>
+                            <button class="nav-next">►</button>
+                            <button class="nav-last">►❚</button>        
+                        </nav>
                     </header>
                     <section id="${tabsBodyId}"></section>
                 </section>
@@ -187,18 +196,10 @@ function runElectionWorker(stvDistrict) {
             const tabId = Math.random().toString().substr(2);
             //Header Nav
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
-                <button class="nav-first">❚◄</button>
-                <button class="nav-prev">◄</button>
-                <span>
-                    <div class="nav-list">
-                        <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
-                            const c = stvDistrict.candidateById.get(cid);
-                            return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>`;
-                        })}</button>
-                    </div>
-                </span>
-                <button class="nav-next">►</button>
-                <button class="nav-last">►❚</button>
+                <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
+                    const c = stvDistrict.candidateById.get(cid);
+                    return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>`;
+                })}</button>
             `);
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
