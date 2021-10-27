@@ -400,9 +400,9 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const rgbColor = getRgb(barColor);
     //const rgbShift = getRgb(deltaShift);
     const rgbDelta = [
-        (rgbColor[0] + rgbShift[0])*deltaFactor,
-        (rgbColor[1] + rgbShift[1])*deltaFactor,
-        (rgbColor[2] + rgbShift[2])*deltaFactor
+        (rgbColor[0] + 255)*deltaFactor,
+        (rgbColor[1] + 255)*deltaFactor,
+        (rgbColor[2] + 255)*deltaFactor
     ]; //TODO: use an actual interpolater; this math is wrong
     const deltaColor = `rgb(${rgbDelta[0]}, ${rgbDelta[1]}, ${rgbDelta[2]})`;
 
