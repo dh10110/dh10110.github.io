@@ -379,6 +379,10 @@ function makeMeter(numerator, denominator, barColor) {
     return `<div class="flex-meter"><span style="width:${txtPct}; background-color: ${barColor}"></span><span class="label">${text} (${txtPct})</span></div>`;
 }
 
+function interpolate(from, to, pct) {
+    return from + (to - from) * pct;
+}
+
 function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const delta = curValue - prevValue;
     const lower = curValue < prevValue ? curValue : prevValue;
@@ -400,10 +404,10 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const rgbColor = getRgb(barColor);
     //const rgbShift = getRgb(deltaShift);
     const rgbDelta = [
-        (rgbColor[0] + 255)*deltaFactor,
-        (rgbColor[1] + 255)*deltaFactor,
-        (rgbColor[2] + 255)*deltaFactor
-    ]; //TODO: use an actual interpolater; this math is wrong
+        interpolate(rgbColor[0], 255, deltaFactor),
+        interpolate(rgbColor[1], 255, deltaFactor),
+        interpolate(rgbColor[2], 255, deltaFactor)
+    ];
     const deltaColor = `rgb(${rgbDelta[0]}, ${rgbDelta[1]}, ${rgbDelta[2]})`;
 
     const lowTag = curValue === 0 ? '' : `<span style="width:${txtPctLow}; background-color: ${barColor}"></span>`;
