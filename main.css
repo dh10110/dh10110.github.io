@@ -100,19 +100,19 @@ details[open] summary ~ * {
     margin-bottom: 0.2em;
 }
 .vote-district > details > .details-body {
-    display: flex;
-    flex-direction: row;
-    gap: 1em;
+    /*display: flex;*/
+    /*flex-direction: row;*/
+    /*gap: 1em;*/
 }
 .vote-district > details > .details-body > header {
-    position: relative;
+    /*position: relative;*/
 }
 .vote-district > details > .details-body > header > nav {
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: 0;
+    /*display: flex;*/
+    /*flex-direction: column;*/
+    /*position: sticky;*/
+    /*top: 0;*/
 }
 .vote-district > details > .details-body > section {
-    flex-grow: 1;
+    /*flex-grow: 1;*/
 }

@@ -121,12 +121,10 @@ function runElectionWorker(stvDistrict) {
                         <nav class="vote-steps select-record-dropdown">
                             <button class="nav-first">❚◄</button>
                             <button class="nav-prev">◄</button>
-                            <span>
-                                <div class="nav-list" id="${tabsNavId}">
-                                </div>
-                            </span>
+                            <div class="nav-list" id="${tabsNavId}"></div>
+                            <button class="nav-cur"></button>
                             <button class="nav-next">►</button>
-                            <button class="nav-last">►❚</button>        
+                            <button class="nav-last">►❚</button>
                         </nav>
                     </header>
                     <section id="${tabsBodyId}"></section>
@@ -140,7 +138,7 @@ function runElectionWorker(stvDistrict) {
             //Progress text
             if (!progress) {
                 document.getElementById(statusId).textContent = '';
-            }else {
+            } else {
                 document.getElementById(statusId).textContent = `(${progress})`;
             }
             lastProgress = progress;
