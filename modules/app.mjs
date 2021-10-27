@@ -187,11 +187,19 @@ function runElectionWorker(stvDistrict) {
             const tabId = Math.random().toString().substr(2);
             //Header Nav
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
-                <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
-                    const c = stvDistrict.candidateById.get(cid);
-                    return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>`;
-                })}</button>
-            `);//TODO: ✘ ✔ or ✖ 
+                <button class="nav-first">❚◄</button>
+                <button class="nav-prev">◄</button>
+                <span>
+                    <div class="nav-list">
+                        <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
+                            const c = stvDistrict.candidateById.get(cid);
+                            return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>`;
+                        })}</button>
+                    </div>
+                </span>
+                <button class="nav-next">►</button>
+                <button class="nav-last">►❚</button>
+            `);
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
                 <article id="${tabId}" data-group="${tabsBodyId}">
