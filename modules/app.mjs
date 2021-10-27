@@ -360,10 +360,22 @@ function makeInitialHtml(stvDistrict) {
     `;
 }
 
+function stateSymbol(state) {
+    switch (state) {
+        case 2:
+            return '✘';
+        case 4:
+        case 5:
+            return '✔';
+        default:
+            return '⬤';
+    }
+}
+
 function makeVoteLine({ heading, votes, prevVotes, voteTotal, state, color = '#aaa'} = {}) {
     return `
                     <div class="vote-total state-${state}">
-                        <div>${colorDot(color)}${heading}</div>
+                        <div><span style="color: ${c.color};" title="${c.partyName}">${stateSymbol(c.state)}</span>${heading}</div>
                         ${prevVotes ?
                             makeDeltaMeter(votes, prevVotes, voteTotal, color) :
                             makeMeter(votes, voteTotal, color)
