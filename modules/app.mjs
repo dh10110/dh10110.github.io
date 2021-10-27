@@ -395,10 +395,15 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
 
     const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
     //const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
-    const deltaShift = (delta > 0 ? '#888' : '#fff');
+    //const deltaShift = (delta > 0 ? '#888' : '#fff');
+    const deltaFactor = (delta > 0 ? 0.5 : 0.75);
     const rgbColor = getRgb(barColor);
-    const rgbShift = getRgb(deltaShift);
-    const rgbDelta = [(rgbColor[0] + rgbShift[0])/2, (rgbColor[1] + rgbShift[1])/2, (rgbColor[2] + rgbShift[2])/2];
+    //const rgbShift = getRgb(deltaShift);
+    const rgbDelta = [
+        (rgbColor[0] + rgbShift[0])*deltaFactor,
+        (rgbColor[1] + rgbShift[1])*deltaFactor,
+        (rgbColor[2] + rgbShift[2])*deltaFactor
+    ]; //TODO: use an actual interpolater; this math is wrong
     const deltaColor = `rgb(${rgbDelta[0]}, ${rgbDelta[1]}, ${rgbDelta[2]})`;
 
     const lowTag = curValue === 0 ? '' : `<span style="width:${txtPctLow}; background-color: ${barColor}"></span>`;
