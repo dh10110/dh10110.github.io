@@ -158,6 +158,8 @@ export class ElectWigm {
         let lowChanges = new Set();
         if (!countComplete) {
             lowChanges = this.transferBallots(lowCandidate);
+        } else {
+            lowChanges.add(lowCandidate);
         }
         //this.postMessage changes
         this.postMessage({

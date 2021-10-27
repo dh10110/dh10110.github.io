@@ -187,7 +187,10 @@ function runElectionWorker(stvDistrict) {
             const tabId = Math.random().toString().substr(2);
             //Header Nav
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
-                <button data-page="${tabId}">${rpt.i}</button>
+                <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
+                    const c = stvDistrict.candidateById.get(cid);
+                    return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>${c.surname}`;
+                })}</button>
             `);//TODO: ✘ ✔ or ✖ 
             //Body Content
             document.getElementById(tabsBodyId).insertAdjacentHTML('beforeend', `
@@ -220,38 +223,6 @@ function runElectionWorker(stvDistrict) {
                     </section>
                 </article>
             `);
-            //Old
-            /*
-            document.getElementById(detailsId).insertAdjacentHTML('beforeend', `
-                <details>
-                    <summary>${rpt.h} ${concat(rpt.a, cid => {
-                        const c = stvDistrict.candidateById.get(cid);
-                        return `<span style="color: ${c.color};" title="${c.partyName}">⬤</span>${c.surname}`;
-                    }, ', ')}</summary>
-                    <section class="details-body">
-                        ${stvDistrict.quota ? makeVoteLine({ heading: 'Quota', votes: stvDistrict.quota, voteTotal: stvDistrict.validVotes, color: '#333' }) : ''}
-                        ${concat(orderBy(stvDistrict.candidates, desc(c => c.state.code), desc(c => c.vote), c => c.order), c => {
-                            return makeVoteLine({
-                                heading: `${c.surname} <small>${c.givenName}</small> - ${c.partyName}`,
-                                votes: c.vote,
-                                prevVotes: c.prevVote,
-                                voteTotal: stvDistrict.validVotes,
-                                color: c.color
-                            });
-                        })}
-                        ${stvDistrict.exhausted ?
-                            makeVoteLine({
-                                heading: 'Exhausted Ballots',
-                                votes: stvDistrict.exhausted,
-                                prevVotes: stvDistrict.prevExhausted,
-                                voteTotal: stvDistrict.validVotes,
-                                color: '#888'
-                            })
-                        : ''}
-                    </section>
-                </details>
-            `);
-            */
         }
     });
     window.requestAnimationFrame(showProgress);
@@ -365,6 +336,7 @@ function stateSymbol(state) {
         case 2:
             return '✘';
         case 4:
+            return '✓';
         case 5:
             return '✔';
         default:
