@@ -375,7 +375,7 @@ function stateSymbol(state) {
 function makeVoteLine({ heading, votes, prevVotes, voteTotal, state, color = '#aaa'} = {}) {
     return `
                     <div class="vote-total state-${state}">
-                        <div><span style="color: ${c.color};" title="${c.partyName}">${stateSymbol(c.state)}</span>${heading}</div>
+                        <div><span style="color: ${color};">${stateSymbol(state)}</span>${heading}</div>
                         ${prevVotes ?
                             makeDeltaMeter(votes, prevVotes, voteTotal, color) :
                             makeMeter(votes, voteTotal, color)
