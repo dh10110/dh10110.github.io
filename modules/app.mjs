@@ -189,7 +189,7 @@ function runElectionWorker(stvDistrict) {
             document.getElementById(tabsNavId).insertAdjacentHTML('beforeend', `
                 <button data-page="${tabId}">${rpt.i} ${concat(rpt.a, cid => {
                     const c = stvDistrict.candidateById.get(cid);
-                    return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>${c.surname}`;
+                    return `<span style="color: ${c.color};" title="${c.partyName} - ${c.surname}">${stateSymbol(c.state)}</span>`;
                 })}</button>
             `);//TODO: ✘ ✔ or ✖ 
             //Body Content
