@@ -409,7 +409,7 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
 }
 
 function getRgb(hex) {
-    const m1 = /^#?([0-9a-f]){3}$/.exec(hex);
+    const m1 = /^#?([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(hex);
     if (m1) {
         return [
             parseInt(m1[1], 16) * 0x11,
@@ -417,7 +417,7 @@ function getRgb(hex) {
             parseInt(m1[3], 16) * 0x11
         ];
     }
-    const m2 = /^#?([0-9a-f]{2}){3}$/.exec(hex);
+    const m2 = /^#?([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i.exec(hex);
     if (m2) {
         return [
             parseInt(m2[1], 16),
