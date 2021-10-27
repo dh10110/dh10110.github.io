@@ -398,11 +398,8 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const txtPctCur = (100 * pctCur).toFixed(1) + '%';
 
     const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
-    //const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
-    //const deltaShift = (delta > 0 ? '#888' : '#fff');
     const deltaFactor = (delta > 0 ? 0.5 : 0.75);
     const rgbColor = getRgb(barColor);
-    //const rgbShift = getRgb(deltaShift);
     const rgbDelta = [
         interpolate(rgbColor[0], 255, deltaFactor),
         interpolate(rgbColor[1], 255, deltaFactor),
