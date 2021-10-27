@@ -92,7 +92,7 @@ export class ElectWigm {
         }
         //show initial count
         this.postMessage({
-            i: 'I',
+            i: 'Init',
             h: 'Initial Count',
             q: this.quota,
             c: candidatesToPost(this.hopeful)
