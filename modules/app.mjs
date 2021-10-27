@@ -394,13 +394,38 @@ function makeDeltaMeter(curValue, prevValue, denominator, barColor) {
     const txtPctCur = (100 * pctCur).toFixed(1) + '%';
 
     const textDelta = (delta >= 0 ? '+' : '') + numFormat(delta);
-    const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
+    //const deltaColor = (delta > 0 ? '#cfc' : '#fcc');
+    const deltaShift = (delta > 0 ? '#888' : '#fff');
+    const rgbColor = getRgb(barColor);
+    const rgbShift = getRgb(deltaShift);
+    const rgbDelta = [(rgbColor[0] + rgbShift[0])/2, (rgbColor[1] + rgbShift[1])/2, (rgbColor[2] + rgbShift[2])/2];
+    const deltaColor = `rgb(${rgbDelta[0]}, ${rgbDelta[1]}, ${rgbDelta[2]})`;
 
     const lowTag = curValue === 0 ? '' : `<span style="width:${txtPctLow}; background-color: ${barColor}"></span>`;
     const deltaTag = delta === 0 ? '' : `<span style="width:${txtPctDelta}; background-color: ${deltaColor}">`;
     const deltaAddOn = delta === 0 ? '' : ` (${textDelta})`;
 
     return `<div class="flex-meter">${lowTag}${deltaTag}</span><span class="label">${textCur} (${txtPctCur})${deltaAddOn}</span></div>`;
+}
+
+function getRgb(hex) {
+    const m1 = /^#?([0-9a-f]){3}$/.exec(hex);
+    if (m1) {
+        return [
+            parseInt(m1[1], 16) * 0x11,
+            parseInt(m1[2], 16) * 0x11,
+            parseInt(m1[3], 16) * 0x11
+        ];
+    }
+    const m2 = /^#?([0-9a-f]{2}){3}$/.exec(hex);
+    if (m2) {
+        return [
+            parseInt(m2[1], 16),
+            parseInt(m2[2], 16),
+            parseInt(m2[3], 16)
+        ];
+    }
+    throw new Error('Invalid hex color: ' + hex);
 }
 
 function start() {
